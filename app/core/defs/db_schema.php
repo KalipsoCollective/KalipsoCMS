@@ -19,7 +19,6 @@ return [
     'tables' => [
 
         /* Users Table */
-
         'users' => [
             'cols' => [
                 'id' => [

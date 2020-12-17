@@ -34,5 +34,7 @@ function autoLoader($class)
     }
 }
 
+require ROOT_PATH . 'app/core/libs/tools.php';
+
 $app = new App();
 $app->start();
