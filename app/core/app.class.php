@@ -19,8 +19,8 @@ class App
     public $url;
     public $request;
     public $route;
+    public $contentFile = null;
     public $currentDirectory = '';
-
     /*
      * Default page parts
      */
@@ -47,7 +47,9 @@ class App
 
     public function routeDetector() {
 
+        if (in_array('', available_langs)) $this->request[0]
 
+        varFuck($this->request);
 
     }
 
@@ -55,8 +57,15 @@ class App
 
         foreach ($this->pageParts as $part) {
 
-            $filePath = path('view/' .trim($this->currentDirectory.'/'.$part, '/').'.php');
-            require includeFile( $filePath );
+            if ($part == '_') {
+                if (is_null($this->contentFile)) {
+                    continue;
+                } else {
+                    $part = $this->contentFile;
+                }
+            }
+            $filePath = path('app/view/' .trim($this->currentDirectory.'/'.$part, '/').'.php');
+            require includeFile( $filePath, true );
 
         }
 

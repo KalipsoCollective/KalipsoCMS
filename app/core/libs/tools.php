@@ -80,9 +80,11 @@ function includeFile($file, $create = false): string
 
     if (! file_exists($file)) {
 
-        // $log = new Log();
-        // $log->errorRecord('sys_file', $file);
-        exit("$file" . ' not loaded');
+        /*
+            // $log = new Log();
+            // $log->errorRecord('sys_file', $file);
+            exit("$file" . ' not loaded');
+        */
 
         if ($create) touch($file);
     }
