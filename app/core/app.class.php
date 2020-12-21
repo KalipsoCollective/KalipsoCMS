@@ -18,10 +18,24 @@ class App
 
     public $url;
     public $request;
+    public $route;
+    public $currentDirectory = '';
+
+    /*
+     * Default page parts
+     */
+    public $pageParts = [
+        'head',
+        'nav',
+        '_',
+        'footer',
+        'end'
+    ];
 
     function __construct()
     {
-        $this->url = trim($_SERVER['REQUEST_URI'], '/');
+        $this->url = parse_url(base().trim(strip_tags($_SERVER['REQUEST_URI']), '/'));
+        $this->url = trim($this->url['path'], '/');
 
         $this->request = strpos($this->url, '/') ? explode('/', $this->url) : [$this->url];
 
@@ -31,8 +45,28 @@ class App
         session_start();
     }
 
+    public function routeDetector() {
+
+
+
+    }
+
+    public function fire() {
+
+        foreach ($this->pageParts as $part) {
+
+            $filePath = path('view/' .trim($this->currentDirectory.'/'.$part, '/').'.php');
+            require includeFile( $filePath );
+
+        }
+
+    }
+
     public function start()
     {
+
+        $this->routeDetector();
+        $this->fire();
 
     }
 }
