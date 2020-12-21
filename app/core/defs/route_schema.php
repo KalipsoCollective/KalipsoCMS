@@ -43,8 +43,19 @@ return [
         'login' => [
             'file'      => 'login',
             'title'     => 'd',
+            'page_parts' => [
+                'head',
+                '_',
+                'end'
+            ],
             'auth'      => false,
             'menu'      => false,
+        ],
+        'index' => [
+            'file'      => 'home',
+            'title'     => '',
+            'auth'      => true,
+            'menu'      => true,
         ],
     ]
 
