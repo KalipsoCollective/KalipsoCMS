@@ -2,6 +2,7 @@
             <div class="row justify-content-center">
                 <div class="col-4">
                     <form class="login-form mt-5">
+                        <a href="<?php echo $this->"></a>
                         <img class="mb-4 d-flex mx-auto"
                              src="<?php echo assets('admin/img/logo.svg') ;?>"
                              alt="logo"
