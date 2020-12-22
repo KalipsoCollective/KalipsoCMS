@@ -23,6 +23,8 @@ class App
     public ?string $route;
     public ?string $contentFile = null;
     public ?string $currentDirectory = '';
+    public ?string $pageTitle = '';
+    public ?string $pageDescription = '';
     /*
      * Default page parts
      */
@@ -76,17 +78,27 @@ class App
         session_start();
     }
 
-    public function routeDetector()
+    public function localize()
     {
-        global $routeSchema;
+        global $languageKeys;
 
-        // Language Detection from URL
         if ($this->request[0] !== ''  AND in_array($this->request[0], config('app.available_langs'))) {
 
             $this->currentLang = $this->request[0];
             array_shift($this->request);
 
         }
+
+        $languageKeys = include path('app/lang/' . $this->currentLang . '.php');
+
+    }
+
+    public function routeDetector()
+    {
+        global $routeSchema;
+
+        // Language Detection from URL
+        $this->localize();
 
         // Directory Detection from URL
         if (isset ($this->request[0]) !== false
@@ -99,27 +111,35 @@ class App
 
         }
 
-        foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
+        if (isset($this->request[0]) !== false AND $this->request[0] == 'script') {
 
-            if ($value['auth'] == $this->isLogged) {
+            $this->loadJS();
+            $this->pageParts = [];
 
-                $this->route = $key;
-                $this->contentFile = isset($value['file']) !== false ? $value['file'] : $key;
+        } else {
 
-                if (isset($value['page_parts']) !== false) {
-                    $this->pageParts = $value['page_parts'];
+            foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
+
+                if ($value['auth'] == $this->isLogged) {
+
+                    $this->route = $key;
+                    $this->contentFile = isset($value['file']) !== false ? $value['file'] : $key;
+
+                    if (isset($value['page_parts']) !== false) {
+                        $this->pageParts = $value['page_parts'];
+                        $this->pageTitle = lang(isset($value['name']) !== false ? $value['name'] : $key);
+                    }
+                    break;
+
                 }
-                break;
 
             }
-
         }
 
     }
 
     public function fire()
     {
-
         foreach ($this->pageParts as $part) {
 
             if ($part == '_') {
@@ -132,11 +152,12 @@ class App
 
             }
 
-            $filePath = path('app/view/' . trim($this->currentDirectory . '/' . $part, '/') . '.php');
+            $filePath = path(
+                'app/view/' . trim($this->currentDirectory . '/' . $part, '/') . '.php'
+            );
             require includeFile($filePath, true);
 
         }
-
     }
 
     public function start()
@@ -145,5 +166,73 @@ class App
         $this->routeDetector();
         $this->fire();
 
+    }
+
+    public function loadJS()
+    {
+        require includeFile(
+            path(
+            'app/view/' . trim($this->currentDirectory . '/script', '/') . '.php'
+            ), true
+        );
+    }
+
+    public function title(): string
+    {
+        return trim(
+            $this->pageTitle . ' ' . config('settings.seperator') . ' ' .config('settings.name'),
+            config('settings.seperator')
+        );
+    }
+
+    public function description()
+    {
+        $description = $this->pageDescription;
+
+        if ($description == '') {
+            $description = config('settings.description');
+        }
+        return $description;
+    }
+
+    public function meta()
+    {
+        /*
+
+
+         FB OG
+        <meta property="fb:app_id" content="123456789">
+        <meta property="og:url" content="https://example.com/page.html">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Content Title">
+        <meta property="og:image" content="https://example.com/image.jpg">
+        <meta property="og:image:alt" content="A description of what is in the image (not a caption)">
+        <meta property="og:description" content="Description Here">
+        <meta property="og:site_name" content="Site Name">
+        <meta property="og:locale" content="en_US">
+        <meta property="article:author" content="">
+
+        Twitter Card
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="@site_account">
+        <meta name="twitter:creator" content="@individual_account">
+        <meta name="twitter:url" content="https://example.com/page.html">
+        <meta name="twitter:title" content="Content Title">
+        <meta name="twitter:description" content="Content description less than 200 characters">
+        <meta name="twitter:image" content="https://example.com/image.jpg">
+        <meta name="twitter:image:alt" content="A text description.">
+
+        Robots
+        <meta name="robots" content="index,follow,noodp">
+        <meta name="googlebot" content="index,follow">
+
+        Verification
+        <meta name="google-site-verification" content="verification_token">
+        <meta name="yandex-verification" content="verification_token">
+        <meta name="msvalidate.01" content="verification_token">
+        <meta name="alexaVerifyID" content="verification_token">
+        <meta name="p:domain_verify" content="code from pinterest">
+        <meta name="norton-safeweb-site-verification" content="norton code">
+         */
     }
 }

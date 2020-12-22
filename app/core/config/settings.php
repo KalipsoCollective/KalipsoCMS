@@ -3,7 +3,7 @@
 return [
     'name'                  => 'Kalipso CMS',
     'description'           => 'A creative project.',
-    'contact_emaii'         => 'hello@koalapix.com',
+    'contact_email'         => 'hello@koalapix.com',
     'seperator'             => '·',
     'register_active'       => true,
     'default_user_group'    => 'user',

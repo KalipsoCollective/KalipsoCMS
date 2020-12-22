@@ -1,20 +1,26 @@
-        <div class="container">
+        <div class="container login-screen">
             <div class="row justify-content-center">
-                <div class="col-4 text-center">
-                    <form class=" mt-5">
-                        <img class="mb-4" src="<?php echo assets('admin/img/logo.svg') ;?>" alt="" width="72">
-                        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-                        <label for="inputEmail" class="sr-only">Email address</label>
-                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                        <label for="inputPassword" class="sr-only">Password</label>
-                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                        <div class="checkbox mb-3">
-                            <label>
-                                <input type="checkbox" value="remember-me"> Remember me
-                            </label>
+                <div class="col-4">
+                    <form class="login-form mt-5">
+                        <img class="mb-4 d-flex mx-auto"
+                             src="<?php echo assets('admin/img/logo.svg') ;?>"
+                             alt="logo"
+                        >
+                        <h1 class="h3 mb-3 font-weight-normal text-center"><?php echo lang('welcome'); ?></h1>
+                        <div class="form-group">
+                            <label for="email"><?php echo lang('email_or_username'); ?></label>
+                            <input type="text" name="username" class="form-control" id="username" autofocus required>
                         </div>
-                        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-                        <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+                        <div class="form-group">
+                            <label for="password"><?php echo lang('password'); ?></label>
+                            <input type="password" name="password" class="form-control" id="password" required>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">
+                            <?php echo lang('login'); ?>
+                        </button>
+                        <p class="mt-5 mb-3 text-muted text-center small">
+                            <?php echo config('app.name') . ' &copy; ' . date('Y'); ?>
+                        </p>
                     </form>
                 </div>
             </div>

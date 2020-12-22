@@ -20,13 +20,14 @@ function varFuck($output, $exit = false)
 
 /**
  * Base URL
+ * @param string $dir
  * @return string $base main url
  */
 
-function base(): string
+function base($dir = ''): string
 {
-
-    return (config('settings.ssl') ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/';
+    return (config('settings.ssl') ? 'https://' : 'http://') .
+        $_SERVER['HTTP_HOST'] . '/'. trim($dir, '/');
 }
 
 
@@ -162,4 +163,35 @@ function assets(string $filename, $version = true, $tag = false, $echo = false, 
     } else {
         return $return;
     }
+}
+
+/**
+ * Language Translation Return
+ * @param string $key
+ * @param string $transform
+ * @param null $change
+ * @return string
+ */
+
+function lang($key='', $transform='', $change=null): string
+{
+
+    global $languageKeys;
+
+    if (isset($languageKeys[$key]) !== false) {
+
+        $key = $languageKeys[$key];
+
+    }/* else {
+
+        // $log = new Log();
+        // $log->errorRecord('sys_lang', $key);
+    }*/
+
+    if ($transform != '' OR $change != null) {
+
+        $key = $languageKeys($key, $transform, $change);
+    }
+
+    return $key;
 }

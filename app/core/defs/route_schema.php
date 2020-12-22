@@ -26,7 +26,7 @@ return [
             'auth'      => false,
             'menu'      => false,
         ],
-        'register' => [
+        'register2' => [
             'file'      => 'register',
             'title'     => 'd',
             'auth'      => false,
