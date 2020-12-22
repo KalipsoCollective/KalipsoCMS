@@ -1,4 +1,4 @@
-        <div class="container login-screen">
+        <div class="container login-screen" id="wrap">
             <div class="row justify-content-center">
                 <div class="col-4">
                     <form class="login-form mt-5">
@@ -8,7 +8,7 @@
                         >
                         <h1 class="h3 mb-3 font-weight-normal text-center"><?php echo lang('welcome'); ?></h1>
                         <div class="form-group">
-                            <label for="email"><?php echo lang('email_or_username'); ?></label>
+                            <label for="username"><?php echo lang('email_or_username'); ?></label>
                             <input type="text" name="username" class="form-control" id="username" autofocus required>
                         </div>
                         <div class="form-group">
@@ -18,7 +18,21 @@
                         <button class="btn btn-lg btn-primary btn-block" type="submit">
                             <?php echo lang('login'); ?>
                         </button>
-                        <p class="mt-5 mb-3 text-muted text-center small">
+                        <p class="mt-5 mb-3 text-muted text-center">
+                            <?php
+                            foreach (config('app.available_langs') as $lang) {
+                                if ($lang == $this->currentLang) continue;
+
+                                echo '
+                                <a href="'.$this->generateLinkForOtherLanguages($lang, $this->route).'" 
+                                class="badge badge-dark">
+                                    '.mb_strtoupper($lang).'
+                                </a>';
+                            }
+                            ?>
+                        </p>
+                        <hr class="my-2" />
+                        <p class="text-muted text-center small">
                             <?php echo config('app.name') . ' &copy; ' . date('Y'); ?>
                         </p>
                     </form>

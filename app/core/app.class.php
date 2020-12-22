@@ -140,6 +140,10 @@ class App
 
     public function fire()
     {
+        if (isset($_SERVER['HTTP_X_PJAX']) !== false) {
+            echo '<title>'.$this->title().'</title>';
+        }
+
         foreach ($this->pageParts as $part) {
 
             if ($part == '_') {
@@ -150,6 +154,10 @@ class App
                     $part = $this->contentFile;
                 }
 
+            }
+
+            if (isset($_SERVER['HTTP_X_PJAX']) !== false AND ($part == 'head' OR $part == 'nav' OR $part == 'footer')) {
+                continue;
             }
 
             $filePath = path(
@@ -234,5 +242,16 @@ class App
         <meta name="p:domain_verify" content="code from pinterest">
         <meta name="norton-safeweb-site-verification" content="norton code">
          */
+    }
+
+    public function generateLinkForOtherLanguages($lang, $route = '', $directory = ''): string
+    {
+        if ($route == '') {
+            $directory = 'x';
+        }
+
+        if ($directory == '') $directory = $this->currentDirectory;
+
+        return base(trim($lang . '/' . $directory . '/', '/'));
     }
 }
