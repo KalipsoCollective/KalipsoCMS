@@ -686,3 +686,7 @@ body {
 .show>.btn-primary.dropdown-toggle:focus {
     box-shadow: 0 0 0 0.2rem rgb(105 186 2 / 0.5);
 }
+
+.border-primary {
+    border-color: #69BA02!important;
+}

@@ -120,7 +120,7 @@ class App
 
             foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
 
-                if ($value['auth'] == $this->isLogged) {
+                if ($value['auth'] != $this->isLogged) { // temp
 
                     $this->route = $key;
                     $this->contentFile = isset($value['file']) !== false ? $value['file'] : $key;
@@ -253,5 +253,10 @@ class App
         if ($directory == '') $directory = $this->currentDirectory;
 
         return base(trim($lang . '/' . $directory . '/', '/'));
+    }
+
+    public function url(): string
+    {
+        return trim(base() . $this->currentLang . '/'. $this->currentDirectory, '/');
     }
 }
