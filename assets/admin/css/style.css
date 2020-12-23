@@ -572,7 +572,7 @@
 }
 
 #nprogress .bar {
-    background: #ADE16A;
+    background: #ade16a;
     position: fixed;
     z-index: 1031;
     top: 0;
@@ -587,7 +587,7 @@
     right: 0;
     width: 100px;
     height: 100%;
-    box-shadow: 0 0 10px #ADE16A, 0 0 5px #ADE16A;
+    box-shadow: 0 0 10px #ade16a, 0 0 5px #ade16a;
     opacity: 1.0;
     -webkit-transform: rotate(3deg) translate(0px, -4px);
     -ms-transform: rotate(3deg) translate(0px, -4px);
@@ -787,8 +787,8 @@ body {
 
 .btn-primary {
     color: #386500;
-    background-color: #ADE16A;
-    border-color: #ADE16A;
+    background-color: #ade16a;
+    border-color: #ade16a;
 }
 
 .btn-primary:hover {

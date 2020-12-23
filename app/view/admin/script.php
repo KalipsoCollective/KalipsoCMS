@@ -68,33 +68,52 @@ if (defined('INLINE_JS')) { ?>
     $(document).on('submit', 'form.section-loader', function(){
 
         NProgress.start();
-        let form = $(this)
-        let formId = form.attr('id')
-        let formSubmitButton = $(this).find('button[type="submit"]')
-        let formSubmitButtonContent = formSubmitButton.html()
 
+        // Variable definitions
+        let form = this
+        let formId = form.getAttribute('id')
+        let method = form.getAttribute('method')
+        let action = form.getAttribute('action')
+        let formData = new FormData(document.querySelector("#" + formId));
+        let formSubmitButton = this.querySelector('button[type="submit"]')
 
         // Append loader SVG
-        if (form.find('.section-loader-spinner').length === 0) {
-            form.append('<div class="section-loader-spinner">' +
+        if (!!form.querySelectorAll('.section-loader-spinner')) {
+            form.innerHTML += '<div class="section-loader-spinner">' +
                 '<svg width="40px" height="40px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">' +
                 '<circle fill="none" stroke-width="4" stroke-linecap="round" cx="33" cy="33" r="30" class="circle">'+
-                '</circle></svg></div>')
+                '</circle></svg></div>'
+
         }
 
-        formSubmitButton.html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true">'+
-            '</span><span class="sr-only"><?php echo lang('loading'); ?></span>').prop('disabled', true);
-        form.addClass('section-loader-active')
+        formSubmitButton.disabled = true
+        form.classList.add('section-loader-active')
+
+        console.log(formSubmitButton)
 
         setTimeout(() => {
-            formSubmitButton.html(formSubmitButtonContent).prop('disabled', false);
-            form.removeClass('section-loader-active');
+            formSubmitButton.disabled = false;
+            form.classList.remove('section-loader-active')
             NProgress.done();
-        }, 755000)
+        }, 1500)
 
-        console.log(form);
-        console.log(formId);
-        console.log(formSubmitButton);
+        let request = new XMLHttpRequest();
+        request.open(method, '<?php echo base(); ?>async/' + action, true);
+        request.setRequestHeader("Content-type", "application/x-form-urlencoded");
+        request.onload = function() {
+            if (this.status >= 200 && this.status < 400) {
+                // Success!
+                let resp = this.response;
+                console.log(resp);
+            } else {
+
+            }
+            console.log(this);
+        };
+        request.onerror = function() {
+            console.log(this);
+        };
+        request.send(formData);
 
     });
 

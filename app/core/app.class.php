@@ -116,6 +116,11 @@ class App
             $this->loadJS();
             $this->pageParts = [];
 
+        } elseif (isset($this->request[0]) !== false AND $this->request[0] == 'async') {
+
+            $this->loadXhrResponse();
+            $this->pageParts = [];
+
         } else {
 
             foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
@@ -181,7 +186,17 @@ class App
         http('content_type', 'js');
         require includeFile(
             path(
-            'app/view/' . trim($this->currentDirectory . '/script', '/') . '.php'
+                'app/view/' . trim($this->currentDirectory . '/script', '/') . '.php'
+            ), true
+        );
+    }
+
+    public function loadXhrResponse()
+    {
+        http('content_type', 'json');
+        require includeFile(
+            path(
+                'app/view/' . trim($this->currentDirectory . '/script', '/') . '.php'
             ), true
         );
     }
