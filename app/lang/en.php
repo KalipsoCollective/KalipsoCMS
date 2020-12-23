@@ -18,5 +18,6 @@ return [
     'email_or_username'                 => 'Email Address or Username',
     'password'                          => 'Password',
     'login'                             => 'Login',
+    'loading'                           => 'Loading...',
 
 ];

@@ -566,16 +566,7 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-body {
-    background-color: #f6f6f6;
-    font-family: 'Inter', sans-serif;
-}
-
-.login-form img {
-    max-width: 120px;
-}
-
-/* Make clicks pass-through */
+/* NProgress */
 #nprogress {
     pointer-events: none;
 }
@@ -590,11 +581,10 @@ body {
     height: 2px;
 }
 
-/* Fancy blur effect */
 #nprogress .peg {
     display: block;
     position: absolute;
-    right: 0px;
+    right: 0;
     width: 100px;
     height: 100%;
     box-shadow: 0 0 10px #ADE16A, 0 0 5px #ADE16A;
@@ -604,7 +594,6 @@ body {
     transform: rotate(3deg) translate(0px, -4px);
 }
 
-/* Remove these to get rid of the spinner */
 #nprogress .spinner {
     display: block;
     position: fixed;
@@ -644,7 +633,149 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Default Style Changes */
+
+/* Section Loader */
+.section-loader {
+    position: relative;
+    height: 100%;
+    padding: 5px;
+}
+
+.section-loader:after {
+    position: absolute;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    content: "";
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(2px);
+    -webkit-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
+    z-index: 2;
+}
+
+.section-loader .section-loader-spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    margin-top: -20px;
+    margin-right: -20px;
+    z-index: 3
+}
+
+.section-loader .section-loader-spinner svg {
+    -webkit-animation: spinner-rotation 1.4s linear infinite;
+    animation: spinner-rotation 1.4s linear infinite;
+    stroke: #69BA02;
+}
+
+.section-loader .section-loader-spinner svg .circle {
+    stroke-dasharray: 187;
+    stroke-dashoffset: 0;
+    -webkit-transform-origin: center;
+    -ms-transform-origin: center;
+    transform-origin: center;
+    -webkit-animation: spinner-turn 1.4s ease-in-out infinite;
+    animation: spinner-turn 1.4s ease-in-out infinite
+}
+
+.section-loader-active {
+    user-select: none;
+}
+
+.section-loader-active:after {
+    visibility: visible;
+    opacity: 1;
+    border-radius: 6px;
+}
+
+.section-loader-active .section-loader-spinner {
+    display: block
+}
+
+@-webkit-keyframes spinner-rotation {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+    100% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg)
+    }
+}
+
+@keyframes spinner-rotation {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+    100% {
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg)
+    }
+}
+
+@-webkit-keyframes spinner-turn {
+    0% {
+        stroke-dashoffset: 187
+    }
+    50% {
+        stroke-dashoffset: 46.75;
+        -webkit-transform: rotate(135deg);
+        transform: rotate(135deg)
+    }
+    100% {
+        stroke-dashoffset: 187;
+        -webkit-transform: rotate(450deg);
+        transform: rotate(450deg)
+    }
+}
+
+@keyframes spinner-turn {
+    0% {
+        stroke-dashoffset: 187
+    }
+    50% {
+        stroke-dashoffset: 46.75;
+        -webkit-transform: rotate(135deg);
+        transform: rotate(135deg)
+    }
+    100% {
+        stroke-dashoffset: 187;
+        -webkit-transform: rotate(450deg);
+        transform: rotate(450deg)
+    }
+}
+
+/* App Styles */
+
+::-webkit-scrollbar {
+    width: 3px !important;
+    height: 3px !important
+}
+
+::-webkit-scrollbar-track {
+    background: #e3ebf6 !important
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2c7be5 !important
+}
+
+body {
+    background-color: #f6f6f6;
+    font-family: 'Inter', sans-serif;
+}
+
+.login-form img {
+    max-width: 120px;
+}
 
 .form-control:focus {
     color: #495057;
@@ -685,6 +816,12 @@ body {
 .btn-primary:not(:disabled):not(.disabled):active:focus,
 .show>.btn-primary.dropdown-toggle:focus {
     box-shadow: 0 0 0 0.2rem rgb(105 186 2 / 0.5);
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #386500;
+    border-color: #386500;
 }
 
 .border-primary {

@@ -72,8 +72,8 @@ class App
 
         $this->currentLang = config('app.default_lang');
 
+        http('powered_by');
         ob_start();
-
         session_name(config('app.session'));
         session_start();
     }
@@ -120,7 +120,7 @@ class App
 
             foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
 
-                if ($value['auth'] != $this->isLogged) { // temp
+                if ($value['auth'] == $this->isLogged) { // temp
 
                     $this->route = $key;
                     $this->contentFile = isset($value['file']) !== false ? $value['file'] : $key;
@@ -178,6 +178,7 @@ class App
 
     public function loadJS()
     {
+        http('content_type', 'js');
         require includeFile(
             path(
             'app/view/' . trim($this->currentDirectory . '/script', '/') . '.php'

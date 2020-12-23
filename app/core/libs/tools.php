@@ -195,3 +195,94 @@ function lang($key='', $transform='', $change=null): string
 
     return $key;
 }
+
+
+/**
+ * Create Header Definition
+ * @param string|int $code
+ * @param null $data
+ * @param null $extra
+ */
+
+function http($code, $data = null, $extra = null) {
+
+    switch ($code)
+    {
+        case 'powered_by':
+            header('X-Powered-By: KalipsoCMS');
+            break;
+
+        case 301:
+            header('HTTP/1.1 301 Moved Permanently');
+            if (! is_null($data)) {
+                header('Location: '.$data);
+                exit;
+            }
+            break;
+
+        case 401:
+            header('HTTP/1.1 401 Unauthorized');
+            if (!is_null($data))
+            {
+                echo $data;
+                exit;
+            }
+            break;
+
+        case 403:
+            header('HTTP/1.1 403 Forbidden');
+            if (!is_null($data)) {
+                echo $data;
+                exit;
+            }
+            break;
+
+        case 404:
+            header('HTTP/1.1 404 Not Found');
+            if (!is_null($data)) {
+                echo $data;
+                exit;
+            }
+            break;
+
+        case 'refresh':
+            header('refresh:'.$data['second'].'; url='.$data['url'] );
+            break;
+
+        case 'location':
+            header('Location: '.$data );
+            exit;
+
+        case 'content_type':
+            $charset = config('app.charset');
+            if (! is_null($extra)) {
+
+                header('Content-Type: '.$extra.'; Charset='.$charset);
+                echo $data;
+
+            } else {
+
+                switch ($data) {
+                    case 'application/javascript':
+                    case 'js': $ctype = 'application/javascript'; break;
+
+                    case 'application/zip':
+                    case 'zip': $ctype = 'application/zip'; break;
+
+                    case 'text/plain':
+                    case 'txt': $ctype = 'text/plain'; break;
+
+                    case 'text/xml':
+                    case 'xml': $ctype = 'text/xml'; break;
+
+                    case 'vcf': $ctype = 'text/x-vcard'; break;
+
+                    default: $ctype = 'text/html'; break;
+                }
+                header('Content-Type: '.$ctype.'; Charset='.$charset);
+            }
+            break;
+
+        default: break;
+    }
+}

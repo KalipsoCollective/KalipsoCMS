@@ -18,5 +18,6 @@ return [
     'email_or_username'                 => 'Eposta Adresi ya da Kullanıcı Adı',
     'password'                          => 'Şifre',
     'login'                             => 'Giriş Yap',
+    'loading'                           => 'Yükleniyor...',
 
 ];
