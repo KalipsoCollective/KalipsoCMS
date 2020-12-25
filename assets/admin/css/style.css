@@ -771,6 +771,7 @@
 body {
     background-color: #f6f6f6;
     font-family: 'Inter', sans-serif;
+    letter-spacing: -0.03rem;
 }
 
 .login-form img {

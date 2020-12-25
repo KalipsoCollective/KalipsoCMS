@@ -1,17 +1,17 @@
         <div class="container login-screen" id="wrap">
             <div class="row justify-content-center">
                 <div class="col-4 mt-5">
+                    <a href="<?php echo $this->url(); ?>">
+                        <img class="mb-2 d-flex mx-auto"
+                             src="<?php echo assets('admin/img/logo.svg'); ?>"
+                             alt="logo"
+                        / >
+                    </a>
                     <div class="card mt-5 shadow bg-white
                     rounded border-bottom-0 border-left-0 border-right-0 border-primary border-top">
                         <div class="card-body">
                             <form class="section-loader" action="login" method="post" id="loginForm"
                                   onsubmit="return false">
-                                <a href="<?php echo $this->url(); ?>">
-                                    <img class="mb-4 d-flex mx-auto"
-                                         src="<?php echo assets('admin/img/logo.svg'); ?>"
-                                         alt="logo"
-                                    / >
-                                </a>
                                 <h1 class="h3 mb-3 font-weight-normal text-center">
                                     <?php echo lang('welcome'); ?>
                                 </h1>
