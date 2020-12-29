@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <form class="section-loader" action="login" method="post" id="loginForm"
                                   onsubmit="return false">
-                                <h1 class="h3 mb-3 font-weight-normal text-center">
+                                <h1 class="h3 mb-3 text-center">
                                     <?php echo lang('welcome'); ?>
                                 </h1>
                                 <div class="form-group">

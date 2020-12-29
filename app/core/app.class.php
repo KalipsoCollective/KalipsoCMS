@@ -121,6 +121,12 @@ class App
             $this->loadXhrResponse();
             $this->pageParts = [];
 
+        } elseif (config('settings.debug_mode') AND
+            (isset($this->request[0]) !== false AND $this->request[0] == 'sandbox')) {
+
+            $this->loadDeveloperMode();
+            $this->pageParts = [];
+
         } else {
 
             foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
@@ -186,7 +192,7 @@ class App
         http('content_type', 'js');
         require includeFile(
             path(
-                'app/view/' . trim($this->currentDirectory . '/script', '/') . '.php'
+                'app/view/' . trim($this->currentDirectory . '/_script', '/') . '.php'
             ), true
         );
     }
@@ -204,7 +210,7 @@ class App
     public function title(): string
     {
         return trim(
-            $this->pageTitle . ' ' . config('settings.seperator') . ' ' .config('settings.name'),
+            $this->pageTitle . ' ' . config('settings.separator') . ' ' .config('settings.name'),
             config('settings.seperator')
         );
     }
@@ -274,5 +280,10 @@ class App
     public function url(): string
     {
         return trim(base() . $this->currentLang . '/'. $this->currentDirectory, '/');
+    }
+
+    public function loadDeveloperMode()
+    {
+        require path('app/core/sandbox.php');
     }
 }

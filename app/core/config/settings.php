@@ -4,7 +4,7 @@ return [
     'name'                  => 'Kalipso CMS',
     'description'           => 'A creative project.',
     'contact_email'         => 'hello@koalapix.com',
-    'seperator'             => '·',
+    'separator'             => '·',
     'register_active'       => true,
     'default_user_group'    => 'user',
     'language'              => 'tr',
@@ -12,6 +12,7 @@ return [
     'default_date_format'   => 'j F, Y',
     'default_time_format'   => 'H:i',
     'start_of_week'         => 1,
+    'debug_mode'            => true,
 
     'mail_send_type'        => 'phpmailer',
     'smtp_address'          => 'mail.yourhost.com',
