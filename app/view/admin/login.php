@@ -7,7 +7,7 @@
                              alt="logo"
                         / >
                     </a>
-                    <div class="card mt-5 shadow bg-white
+                    <div class="card mt-5 shadow-lg bg-white
                     rounded border-bottom-0 border-left-0 border-right-0 border-primary border-top">
                         <div class="card-body">
                             <form class="section-loader" action="login" method="post" id="loginForm"
