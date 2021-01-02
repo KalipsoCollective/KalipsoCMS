@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace app\core;
 
-
 /**
  * Main App Class
  * @package  Kalipso
@@ -25,6 +24,7 @@ class App
     public ?string $currentDirectory = '';
     public ?string $pageTitle = '';
     public ?string $pageDescription = '';
+    public ?object $db;
     /*
      * Default page parts
      */
@@ -64,6 +64,9 @@ class App
                 }
             }
         }
+
+        $this->handler = new KalipsoException;
+        $this->db = new db;
 
         $url = parse_url(base() . trim(strip_tags($_SERVER['REQUEST_URI']), '/'));
         $this->url = trim($url['path'], '/');
