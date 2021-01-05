@@ -60,30 +60,33 @@ class KalipsoException
      *                  int    $e->statusCode         → HTTP response status code
      * @return bool
      */
-    public function exception(object $e)
+    public function exception(object $e = null)
     {
-        $traceString = preg_split("/#[\d]/", $e->getTraceAsString());
+        if (! is_null($e)) {
+            $traceString = preg_split("/#[\d]/", $e->getTraceAsString());
 
-        unset($traceString[0]);
-        array_pop($traceString);
+            unset($traceString[0]);
+            array_pop($traceString);
 
-        $trace = "\r\n<hr>BACKTRACE:\r\n";
+            $trace = "\r\n<hr>BACKTRACE:\r\n";
 
-        foreach ($traceString as $key => $value) {
-            $trace .= "\n" . $key . ' ·' . $value;
+            foreach ($traceString as $key => $value) {
+                $trace .= "\n" . $key . ' ·' . $value;
+            }
+
+            $this->setParams(
+                'Exception',
+                $e->getCode(),
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine(),
+                $trace,
+                (isset($e->statusCode)) ? $e->statusCode : 0
+            );
+
+            return $this->render();
+            return $this->render();
         }
-
-        $this->setParams(
-            'Exception',
-            $e->getCode(),
-            $e->getMessage(),
-            $e->getFile(),
-            $e->getLine(),
-            $trace,
-            (isset($e->statusCode)) ? $e->statusCode : 0
-        );
-
-        return $this->render();
     }
 
     /**
@@ -418,31 +421,36 @@ class KalipsoException
                 urlencode($stack['message'] . ' KalipsoCMS')
             ],
             '
-            <div class="jst-alert Default [TYPE]">
-                <span class="jst-head">
-                    [CODE]
-                    [TYPE]
-                    <a target="_blank" href="https://stackoverflow.com/search?q=[php][MESSAGE_ENCODED]" class="so-link">&#9906;</a>
-                </span>
-                <span class="jst-head jst-right">
-                    [MODE]
-                </span>
-                <span class="jst-message"><br><br>
-                    [MESSAGE]
-                </span><br><br>
-                <div class="jst-preview">
-                    <span class="jst-file">
-                        [FILE]
-                    </span><br>
-                    <code>
-                        [PREVIEW]
-                    </code>
+            <!doctype html>
+                <head>
+                
+                </head>
+                <div class="jst-alert Default [TYPE]">
+                    <span class="jst-head">
+                        [CODE]
+                        [TYPE]
+                        <a target="_blank" href="https://stackoverflow.com/search?q=[php][MESSAGE_ENCODED]" class="so-link">&#9906;</a>
+                    </span>
+                    <span class="jst-head jst-right">
+                        [MODE]
+                    </span>
+                    <span class="jst-message"><br><br>
+                        [MESSAGE]
+                    </span><br><br>
+                    <div class="jst-preview">
+                        <span class="jst-file">
+                            [FILE]
+                        </span><br>
+                        <code>
+                            [PREVIEW]
+                        </code>
+                    </div>
+                    <div class="jst-trace">
+                        [TRACE]
+                    </div>
+                    <br>
                 </div>
-                <div class="jst-trace">
-                    [TRACE]
-                </div>
-                <br>
-            </div>');
+            </html>');
 
         return true;
     }
