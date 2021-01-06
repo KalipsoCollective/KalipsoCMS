@@ -31,11 +31,8 @@ class KalipsoException
     /**
      * Custom methods.
      *
-     * @since 1.1.3
-     *
      * @var bool
      */
-    public static ?bool $customMethods = false;
 
     public function __construct()
     {
@@ -51,7 +48,7 @@ class KalipsoException
      *
      * Optionally for libraries used in Eliasis PHP Framework: $e->statusCode
      *
-     * @param object $e
+     * @param object|null $e
      *                  string $e->getMessage()       → exception message
      *                  int    $e->getCode()          → exception code
      *                  string $e->getFile()          → file
@@ -60,7 +57,7 @@ class KalipsoException
      *                  int    $e->statusCode         → HTTP response status code
      * @return bool
      */
-    public function exception(object $e = null)
+    public function exception(object $e = null): ?bool
     {
         if (! is_null($e)) {
             $traceString = preg_split("/#[\d]/", $e->getTraceAsString());
@@ -85,7 +82,11 @@ class KalipsoException
             );
 
             return $this->render();
-            return $this->render();
+
+        } else {
+
+            return null;
+
         }
     }
 
@@ -93,13 +94,13 @@ class KalipsoException
      * Handle error catch.
      *
      * @param int $code → error code
-     * @param int $msg → error message
-     * @param int $file → error file
+     * @param int|string|null $msg → error message
+     * @param string|null $file → error file
      * @param int $line → error line
      *
      * @return bool
      */
-    public function error(int $code, int $msg, int $file, int $line): bool
+    public function error(int $code, ?string $msg, ?string $file, int $line): bool
     {
         $type = $this->getErrorType($code);
 
@@ -120,51 +121,36 @@ class KalipsoException
         switch ($code) {
             // 1
             case E_WARNING:
-                return self::$stack['type'] = 'Warning'; // 2
+                return self::$stack['type'] = 'warning'; // 2
             case E_PARSE:
-                return self::$stack['type'] = 'Parse'; // 4
+                return self::$stack['type'] = 'parse'; // 4
             case E_NOTICE:
-                return self::$stack['type'] = 'Notice'; // 8
+                return self::$stack['type'] = 'notice'; // 8
             case E_CORE_ERROR:
-                return self::$stack['type'] = 'Core-Error'; // 16
+                return self::$stack['type'] = 'core-error'; // 16
             case E_CORE_WARNING:
-                return self::$stack['type'] = 'Core Warning'; // 32
+                return self::$stack['type'] = 'core warning'; // 32
             case E_COMPILE_ERROR:
-                return self::$stack['type'] = 'Compile Error'; // 64
+                return self::$stack['type'] = 'compile error'; // 64
             case E_COMPILE_WARNING:
-                return self::$stack['type'] = 'Compile Warning'; // 128
+                return self::$stack['type'] = 'compile warning'; // 128
             case E_USER_ERROR:
-                return self::$stack['type'] = 'User Error'; // 256
+                return self::$stack['type'] = 'user error'; // 256
             case E_USER_WARNING:
-                return self::$stack['type'] = 'User Warning'; // 512
+                return self::$stack['type'] = 'user warning'; // 512
             case E_USER_NOTICE:
-                return self::$stack['type'] = 'User Notice'; // 1024
+                return self::$stack['type'] = 'user notice'; // 1024
             case E_STRICT:
-                return self::$stack['type'] = 'Strict'; // 2048
+                return self::$stack['type'] = 'strict'; // 2048
             case E_RECOVERABLE_ERROR:
-                return self::$stack['type'] = 'Recoverable Error'; // 4096
+                return self::$stack['type'] = 'recoverable error'; // 4096
             case E_DEPRECATED:
-                return self::$stack['type'] = 'Deprecated'; // 8192
+                return self::$stack['type'] = 'deprecated'; // 8192
             case E_USER_DEPRECATED:
-                return self::$stack['type'] = 'User Deprecated'; // 16384
+                return self::$stack['type'] = 'user deprecated'; // 16384
             default:
-                return self::$stack['type'] = 'Error';
+                return self::$stack['type'] = 'error';
         }
-    }
-
-    /**
-     * Set customs methods to renderizate.
-     *
-     * @param string|object $class → class name or class object
-     * @param string $method → method name
-     * @param int $repeat → number of times to repeat method
-     * @param bool $default → show default view
-     * @since 1.1.3
-     *
-     */
-    public static function setCustomMethod($class, string $method, $repeat = 0, $default = false)
-    {
-        self::$customMethods[] = [$class, $method, $repeat, $default];
     }
 
     /**
@@ -172,14 +158,13 @@ class KalipsoException
      *
      * @param string $type
      * @param int $code → exception/error code
-     * @param ?string $msg → exception/error message
-     * @param ?string $file → exception/error file
+     * @param int|string|null $msg → exception/error message
+     * @param string|null $file → exception/error file
      * @param int $line → exception/error line
      * @param ?string $trace → exception/error trace
      * @param ?int $http → HTTP response status code
      *
      * @return array → stack
-     * @since 1.1.3
      */
     protected function setParams(
         string $type, int $code, ?string $msg, ?string $file, int $line, ?string $trace, ?int $http
@@ -200,7 +185,6 @@ class KalipsoException
     /**
      * Get preview of the error line.
      *
-     * @since 1.1.0
      */
     protected function getPreviewCode()
     {
@@ -219,55 +203,15 @@ class KalipsoException
 
             if ($i == $line - 1) {
                 self::$stack['preview'] .=
-                    "<span class='jst-line'>" . ($i + 1) . '</span>' .
-                    "<span class='jst-mark text'>" . $text . '</span><br>';
+                    "<span class='kpx-line'>" . ($i + 1) . '</span>' .
+                    "<span class='kpx-mark text'>" . $text . '</span><br>';
                 continue;
             }
 
             self::$stack['preview'] .=
-                "<span class='jst-line'>" . ($i + 1) . '</span>' .
+                "<span class='kpx-line'>" . ($i + 1) . '</span>' .
                 "<span class='text'>" . $text . '</span><br>';
         }
-    }
-
-    /**
-     * Get customs methods to renderizate.
-     *
-     * @since 1.1.3
-     */
-    protected function getCustomMethods(): bool
-    {
-        $showDefaultView = true;
-        $params = [self::$stack];
-
-        unset($params[0]['trace'], $params[0]['preview']);
-
-        $count = count(self::$customMethods);
-        $customMethods = self::$customMethods;
-
-        for ($i = 0; $i < $count; $i++) {
-            $custom = $customMethods[$i];
-            $class = isset($custom[0]) ? $custom[0] : false;
-            $method = isset($custom[1]) ? $custom[1] : false;
-            $repeat = $custom[2];
-            $showDefault = $custom[3];
-
-            if ($showDefault === false) {
-                $showDefaultView = false;
-            }
-
-            if ($repeat === 0) {
-                unset(self::$customMethods[$i]);
-            } else {
-                self::$customMethods[$i] = [$class, $method, $repeat--];
-            }
-
-            call_user_func_array([$class, $method], $params);
-        }
-
-        self::$customMethods = false;
-
-        return $showDefaultView;
     }
 
     /**
@@ -279,20 +223,32 @@ class KalipsoException
     {
         self::$stack['mode'] = defined('HHVM_VERSION') ? 'HHVM' : 'PHP';
 
-        if (self::$customMethods && ! $this->getCustomMethods()) {
-            return false;
-        }
-
         $this->getPreviewCode();
 
         if (! self::$styles) {
             self::$styles = true;
             self::$stack['css'] = '
-            hr {
-                width: 30%;
+            ::-webkit-scrollbar {
+                width: 5px;
+                height: 8px;
+                background-color: #aaa;
             }
             
-            .jst-alert {
+            ::-webkit-scrollbar-thumb {
+                background: #000;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                background: #222222
+            }
+            
+            hr {
+                width: 30%;
+                border-color: rgb(255 255 255 / 20%);
+            }
+            
+            .kpx-alert {
                 padding: 15px 25px;
                 border-radius: 2px;
                 word-break: break-all;
@@ -304,55 +260,55 @@ class KalipsoException
                 color: #fff;
             }
             
-            .jst-right {
-                color: rgba(255, 255, 255, 0.31) !important;
+            .kpx-right {
+                color: rgba(255, 255, 255, 0.4) !important;
                 float: right;
             }
             
-            .jst-head {
+            .kpx-head {
                 font-size: 18px;
-                color: rgba(255, 255, 255, 0.5);
                 top: 18px;
                 font-weight: 600;
             }
             
-            .Default {
-                background-color: #446CB3;
+            .default {
+                background-color: #9a3b3b;
             }
             
-            .Error {
-                background-color: #D91E18;
+            .error {
+                background-color: #c3251d;
             }
             
-            .Warning {
-                background-color: #F9690E;
+            .warning {
+                background-color: #d2701d;
             }
             
-            .Notice {
-                background-color: #674172;
+            .notice {
+                background-color: #4f7241;
             }
             
-            .jst-mark {
-                background: #D91E18;
+            .kpx-mark {
+                background: #464646;
                 padding: 4px;
                 margin-left: -4px;
-                color: white;
+                color: #fff;
             }
             
-            .jst-preview {
+            .kpx-preview {
                 width: 85%;
                 margin-left: auto;
                 margin-right: auto;
                 overflow-x: auto;
                 white-space: nowrap;
-                background: white;
-                color: #333;
+                background: #222222;
+                color: #6b6b6b;
                 padding: 2pc;
+                border-radius: 20px 20px 0px 0px;
             }
             
             .so-link {
                 text-decoration: none;
-                color: rgba(255, 255, 255, 0.5);
+                opacity: 0.5;
                 cursor: pointer;
                 display: inline-block;
                 font-weight: inherit;
@@ -362,44 +318,52 @@ class KalipsoException
                 -moz-transform: rotate(-35deg);
                 -o-transform: rotate(-35deg);
                 font-size: 23px;
+                -webkit-transition: 0.2s ease-out;
+                -o-transition: 0.2s ease-out;
+                transition: 0.2s ease-out
             }
             
-            .jst-line {
+            .so-link:hover {
+                opacity: 1;
+            }
+            
+            .kpx-line {
                 margin-left: -10px;
-                background: rgba(0, 0, 0, .14);
+                background: rgba(0, 0, 0, .20);
                 padding: 2px 2px;
-                margin-top: -1px;
+                margin-bottom: 2px;
                 margin-right: 14px;
                 width: 44px;
                 display: inline-table;
                 text-align: center;
             }
             
-            .jst-trace {
+            .kpx-trace {
                 font-weight: 300;
                 padding: 0pc 2pc 0pc 2pc;
             }
             
-            .jst-file {
+            .kpx-file {
                 float: right;
                 font-weight: 300;
                 font-size: 14px;
                 margin-right: -18px;
                 word-break: break-all;
-                color: #363838;
+                color: #737373;
                 margin-top: -24px;
             }
             
-            .jst-preview code {
+            .kpx-preview code {
+                font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
                 margin-top: -16px;
                 display: block;
             }
             
             @media (max-width: 600px) {
-                .jst-preview {
+                .kpx-preview {
                     width: auto;
                 }
-                .jst-file {
+                .kpx-file {
                     float: left;
                     margin-left: -9px;
                 }
@@ -422,34 +386,42 @@ class KalipsoException
             ],
             '
             <!doctype html>
+            </html lang="en">
                 <head>
-                
+                    <title>Kalipso Exception</title>
+                    <meta charset="UTF-8">
+                    <style>
+                        '.$stack['css'].'
+                    </style>
                 </head>
-                <div class="jst-alert Default [TYPE]">
-                    <span class="jst-head">
-                        [CODE]
-                        [TYPE]
-                        <a target="_blank" href="https://stackoverflow.com/search?q=[php][MESSAGE_ENCODED]" class="so-link">&#9906;</a>
-                    </span>
-                    <span class="jst-head jst-right">
-                        [MODE]
-                    </span>
-                    <span class="jst-message"><br><br>
-                        [MESSAGE]
-                    </span><br><br>
-                    <div class="jst-preview">
-                        <span class="jst-file">
-                            [FILE]
-                        </span><br>
-                        <code>
-                            [PREVIEW]
-                        </code>
+                <body>
+                    <div class="kpx-alert default [TYPE]">
+                        <span class="kpx-head">
+                            [CODE]
+                            [TYPE]
+                            <a target="_blank" href="https://stackoverflow.com/search?q=[php][MESSAGE_ENCODED]" 
+                            class="so-link">🔗</a>
+                        </span>
+                        <span class="kpx-head kpx-right">
+                            [MODE]
+                        </span>
+                        <span class="kpx-message"><br><br>
+                            [MESSAGE]
+                        </span><br><br>
+                        <div class="kpx-preview">
+                            <span class="kpx-file">
+                                [FILE]
+                            </span><br>
+                            <code>
+                                [PREVIEW]
+                            </code>
+                        </div>
+                        <div class="kpx-trace">
+                            [TRACE]
+                        </div>
+                        <br>
                     </div>
-                    <div class="jst-trace">
-                        [TRACE]
-                    </div>
-                    <br>
-                </div>
+                </body>
             </html>');
 
         return true;

@@ -21,7 +21,13 @@ if (isset($_GET['action']) !== false) {
     switch ($_GET['action']) {
         case 'db_init':
             $dbSchema = require path('app/core/defs/db_schema.php');
-            $output = $dbSchema;
+            $output = 'Preparing...<br>';
+            $init = $this->db->dbInit($dbSchema);
+            if ($init) {
+                $output .= 'Database has been prepared successfully.';
+            } else {
+                $output .= 'There was a problem while preparing the database. -> ' . $init;
+            }
             $preActive = true;
             break;
         case 'db_commit':
@@ -45,7 +51,7 @@ if (isset($_GET['action']) !== false) {
 
 ?>
 <!doctype html>
-<html>
+<html lang="tr">
     <head>
         <title>KalipsoCMS Sandbox</title>
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -75,6 +81,7 @@ if (isset($_GET['action']) !== false) {
             .navbar-link.is-active,
             .navbar-link:focus,
             .navbar-link:focus-within,
+            .navbar-link:hover,
             .navbar-link:hover,
             a.navbar-item.is-active,
             a.navbar-item:focus,

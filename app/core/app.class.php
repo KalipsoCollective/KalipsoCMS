@@ -65,8 +65,8 @@ class App
             }
         }
 
-        $this->handler = new KalipsoException;
-        $this->db = new db;
+        $this->handler = new KalipsoException();
+        $this->db = new db();
 
         $url = parse_url(base() . trim(strip_tags($_SERVER['REQUEST_URI']), '/'));
         $this->url = trim($url['path'], '/');
@@ -214,7 +214,7 @@ class App
     {
         return trim(
             $this->pageTitle . ' ' . config('settings.separator') . ' ' .config('settings.name'),
-            config('settings.seperator')
+            config('settings.separator')
         );
     }
 
