@@ -58,7 +58,7 @@ class db
             foreach ($columns['cols'] as $column => $attributes) {
 
                 switch ($attributes) {
-                    
+
                 }
 
                 $sql .= '`' . $column . '` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,' . PHP_EOL;
