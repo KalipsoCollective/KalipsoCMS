@@ -50,26 +50,65 @@ class db
 
     public function dbInit($schema) {
 
+        $sql = '';
 	    foreach ($schema['tables'] as $table => $columns) {
 
-            $sql = 'DROP TABLE IF EXISTS `' . $table . '`;' . PHP_EOL;
+            $sql .= PHP_EOL . 'DROP TABLE IF EXISTS `' . $table . '`;' . PHP_EOL;
             $sql .= 'CREATE TABLE `' . $table . '` (' . PHP_EOL;
 
             foreach ($columns['cols'] as $column => $attributes) {
 
-                switch ($attributes) {
+                $type = '';
+
+                switch ($attributes['type']) {
+                    case 'int':
+                        $type = 'int('.$attributes['type_values'] . ')';
+                        break;
+
+                    case 'varchar':
+                        $type = 'varchar(' . $attributes['type_values'] . ') COLLATE ' .
+                            (isset($attributes['collate']) !== false ? $attributes['collate'] :
+                                $schema['table_values']['collate']);
+
+                        break;
+
+                    case 'text':
+                        $type = 'text' . ' COLLATE ' .
+                            (isset($attributes['collate']) !== false ? $attributes['collate'] :
+                                $schema['table_values']['collate']);
+                        break;
+
+                    case 'longtext':
+                        $type = 'longtext' . ' COLLATE ' .
+                            (isset($attributes['collate']) !== false ? $attributes['collate'] :
+                                $schema['table_values']['collate']);
+                        break;
+
+                    case 'enum':
+                        $type = "enum('".implode("', '", $attributes['type_values'])."')";
+                        break;
 
                 }
 
-                $sql .= '`' . $column . '` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,' . PHP_EOL;
+                if (isset($attributes['nullable']) === false OR ! $attributes['nullable']) {
+                    $type .= ' NOT NULL';
+                }
+
+                if (isset($attributes['default']) !== false) {
+                    $type .= ' DEFAULT \'' . $attributes['default'] . '\'';
+                }
+
+                $sql .= '   `' . $column . '` '.$type.',' . PHP_EOL;
 
             }
 
-            $sql .= ') ENGINE=' . $schema['table_values']['engine'] .
+            $sql = rtrim($sql, ',' . PHP_EOL) . PHP_EOL . ') ENGINE=' . $schema['table_values']['engine'] .
                 ' DEFAULT CHARSET=' . $schema['table_values']['charset'] .
-                ' COLLATE=' . $schema['table_values']['collate'];
+                ' COLLATE=' . $schema['table_values']['collate'] . PHP_EOL;
 
         }
+
+	    varFuck($sql);
 
 	        /*
 	         *

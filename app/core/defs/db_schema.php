@@ -22,61 +22,63 @@ return [
         'users' => [
             'cols' => [
                 'id' => [
-                    'type'          => 'INT',
+                    'type'          => 'int',
                     'auto_inc'      => true,
                     'attr'          => 'unsigned',
                     'type_values'   => 11,
                     'index'         => 'PRIMARY'
                 ],
                 'u_name' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80,
                     'index'         => 'UNIQUE'
                 ],
                 'f_name' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80
                 ],
                 'l_name' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80
                 ],
                 'email' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80
                 ],
                 'password' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 120
                 ],
                 'token' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 48
                 ],
                 'auth_group_id' => [
-                    'type'          => 'INT',
+                    'type'          => 'int',
                     'type_values'   => 10
                 ],
                 'created_at' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80
                 ],
                 'created_by' => [
-                    'type'          => 'INT',
+                    'type'          => 'int',
                     'type_values'   => 10
                 ],
                 'updated_at' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80,
-                    'nullable'      => true
+                    'nullable'      => true,
+                    'default'       => 'NULL'
                 ],
                 'updated_by' => [
-                    'type'          => 'INT',
+                    'type'          => 'int',
                     'type_values'   => 10,
-                    'nullable'      => true
+                    'nullable'      => true,
+                    'default'       => 'NULL'
                 ],
                 'status' => [
-                    'type'          => 'ENUM',
+                    'type'          => 'enum',
                     'type_values'   => ['active', 'deleted'],
                     'default'       => 'active'
                 ],
@@ -87,40 +89,42 @@ return [
         'auth_groups' => [
             'cols' => [
                 'id' => [
-                    'type'          => 'INT',
+                    'type'          => 'int',
                     'auto_inc'      => true,
                     'attr'          => 'unsigned',
                     'type_values'   => 11,
                     'index'         => 'PRIMARY'
                 ],
                 'name' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80,
                 ],
                 'view_checkpoints' => [
-                    'type'          => 'TEXT',
+                    'type'          => 'text',
                     'nullable'      => true
                 ],
                 'action_checkpoints' => [
-                    'type'          => 'TEXT',
+                    'type'          => 'text',
                     'nullable'      => true
                 ],
                 'created_by' => [
-                    'type'          => 'INT',
+                    'type'          => 'int',
                     'type_values'   => 10
                 ],
                 'updated_at' => [
-                    'type'          => 'VARCHAR',
+                    'type'          => 'varchar',
                     'type_values'   => 80,
-                    'nullable'      => true
+                    'nullable'      => true,
+                    'default'       => 'NULL',
                 ],
                 'updated_by' => [
-                    'type'          => 'INT',
+                    'type'          => 'int',
                     'type_values'   => 10,
-                    'nullable'      => true
+                    'nullable'      => true,
+                    'default'       => 'NULL',
                 ],
                 'status' => [
-                    'type'          => 'ENUM',
+                    'type'          => 'enum',
                     'type_values'   => ['active', 'deleted'],
                     'default'       => 'active'
                 ],

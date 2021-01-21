@@ -46,8 +46,6 @@ class KalipsoException
     /**
      * Handle exceptions catch.
      *
-     * Optionally for libraries used in Eliasis PHP Framework: $e->statusCode
-     *
      * @param object|null $e
      *                  string $e->getMessage()       → exception message
      *                  int    $e->getCode()          → exception code
