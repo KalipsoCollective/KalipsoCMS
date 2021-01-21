@@ -48,13 +48,16 @@ class db
         return $this->pdo;
 	}
 
-    public function dbInit($schema) {
+    public function dbInit($schema): bool
+    {
 
         $sql = '';
-	    foreach ($schema['tables'] as $table => $columns) {
+        foreach ($schema['tables'] as $table => $columns) {
 
             $sql .= PHP_EOL . 'DROP TABLE IF EXISTS `' . $table . '`;' . PHP_EOL;
-            $sql .= 'CREATE TABLE `' . $table . '` (' . PHP_EOL;
+            $sql .= 'CREATE TABLE `' . $table . '` (';
+
+            $externalParams = [];
 
             foreach ($columns['cols'] as $column => $attributes) {
 
@@ -62,7 +65,7 @@ class db
 
                 switch ($attributes['type']) {
                     case 'int':
-                        $type = 'int('.$attributes['type_values'] . ')';
+                        $type = 'int(' . $attributes['type_values'] . ')';
                         break;
 
                     case 'varchar':
@@ -85,8 +88,36 @@ class db
                         break;
 
                     case 'enum':
-                        $type = "enum('".implode("', '", $attributes['type_values'])."')";
+                        $type = "enum('" . implode("', '", $attributes['type_values']) . "')";
                         break;
+
+                }
+
+                if (isset($attributes['index']) !== false) {
+
+                    switch ($attributes['index']) {
+                        case 'PRIMARY':
+                            $externalParams[] = 'PRIMARY KEY (`' . $column . '`)';
+                            break;
+
+                        case 'INDEX':
+                            $externalParams[] = 'INDEX `' . $column . '` (`' . $column . '`)';
+                            break;
+
+                        case 'UNIQUE':
+                            $externalParams[] = 'UNIQUE(`' . $column . '`)';
+                            break;
+
+                        case 'FULLTEXT':
+                            $externalParams[] = 'FULLTEXT(`' . $column . '`)';
+                            break;
+                    }
+
+                }
+
+                if (isset($attributes['attr']) !== false) {
+
+                    $type .= ' ' . $attributes['attr'];
 
                 }
 
@@ -95,38 +126,113 @@ class db
                 }
 
                 if (isset($attributes['default']) !== false) {
-                    $type .= ' DEFAULT \'' . $attributes['default'] . '\'';
+                    switch ($attributes['default']) {
+                        case 'NULL':
+                        case 'CURRENT_TIMESTAMP':
+                            $type .= ' DEFAULT ' . $attributes['default'];
+                            break;
+                        default:
+                            $type .= ' DEFAULT \'' . $attributes['default'] . '\'';
+                            break;
+                    }
                 }
 
-                $sql .= '   `' . $column . '` '.$type.',' . PHP_EOL;
+                if (isset($attributes['auto_inc']) !== false AND $attributes['auto_inc']) {
+                    $type .= ' AUTO_INCREMENT';
+                }
+
+                $sql .= PHP_EOL . '   `' . $column . '` '. $type .',';
 
             }
 
-            $sql = rtrim($sql, ',' . PHP_EOL) . PHP_EOL . ') ENGINE=' . $schema['table_values']['engine'] .
+            if (count($externalParams)) {
+
+                foreach ($externalParams as $param) {
+                    $sql .= PHP_EOL . '   ' . $param . ',';
+                }
+
+            }
+
+            $sql = rtrim($sql, ',' . PHP_EOL);
+
+            $sql .= PHP_EOL . ') ENGINE=' . $schema['table_values']['engine'] .
                 ' DEFAULT CHARSET=' . $schema['table_values']['charset'] .
-                ' COLLATE=' . $schema['table_values']['collate'] . PHP_EOL;
+                ' COLLATE=' . $schema['table_values']['collate'] . ';' . PHP_EOL;
 
         }
 
-	    varFuck($sql);
+        try {
 
-	        /*
-	         *
-	         CREATE TABLE `bids` (
-              `id` int(11) UNSIGNED NOT NULL,
-              `title` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-              `type` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-              `revised_for` int(11) DEFAULT '0',
-              `message` text COLLATE utf8mb4_unicode_520_ci,
-              `file_id` int(10) UNSIGNED NOT NULL,
-              `customer_id` int(10) UNSIGNED DEFAULT '0',
-              `process_id` int(10) UNSIGNED NOT NULL DEFAULT '0',
-              `last_validity_date` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-              `created_at` varchar(80) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-              `created_by` int(11) NOT NULL,
-              `status` enum('sent','viewed','deleted') COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'sent'
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-	         */
+            $this->pdo->exec($sql);
+            return true;
+
+        } catch(PDOException $e) {
+
+            throw new Exception('DB Init action is not completed. ' . $e->getMessage());
+            return false;
+
+        }
+
+    }
+
+    public function dbSeed($schema) {
+
+        $sql = '';
+
+
+        foreach ($schema['data'] as $table => $data) {
+
+
+
+            $sql .= PHP_EOL . 'INSERT INTO `' . $table . '` (';
+
+            $i = 0;
+            foreach ($data as $row) {
+
+                $values = '(';
+                $item = [];
+                $i++;
+
+                foreach ($row as $column => $value) {
+
+                    if ($i == 1) $sql .= '`' . $column . '`, ';
+
+                    if ($value === 'NULL') {
+                        $value = 'NULL';
+                    } elseif (is_numeric($value)) {
+                        $value = $value;
+                    } else {
+                        $value = '`' . $value . '`';
+                    }
+
+                    $item[] = $value;
+
+                    // $sql .= PHP_EOL . '   `' . $column . '` ' . $type . ',';
+
+                }
+
+                $values .= implode(', ', $item) . ')';
+
+            }
+
+            $sql = rtrim($sql, ', ' . PHP_EOL) . ') VALUES ' . PHP_EOL . $values . '; ' . PHP_EOL;
+
+
+
+        }
+
+        varFuck($sql);
+
+        try {
+
+            // $this->pdo->exec($sql);
+            return true;
+
+        } catch(PDOException $e) {
+
+            throw new Exception('DB Init action is not completed. ' . $e->getMessage());
+
+        }
 
     }
 

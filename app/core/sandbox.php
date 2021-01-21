@@ -28,13 +28,23 @@ if (isset($_GET['action']) !== false) {
             } else {
                 $output .= 'There was a problem while preparing the database. -> ' . $init;
             }
-            $preActive = true;
+            // $preActive = true;
+            break;
+        case 'db_seed':
+            $dbSchema = require path('app/core/defs/db_schema.php');
+            $output = 'Seeding...<br>';
+            $init = $this->db->dbSeed($dbSchema);
+            if ($init) {
+                $output .= 'Database has been seeded successfully.';
+            } else {
+                $output .= 'There was a problem while seeding the database. -> ' . $init;
+            }
             break;
         case 'db_commit':
             $output = '
             <div class="columns is-mobile is-centered">
                 <div class="column is-half">
-                    <p class="my-6">Soon...</p>
+                    <p class="my-6">Maybe one day...</p>
                 </div>
             </div>';
             break;
@@ -42,7 +52,7 @@ if (isset($_GET['action']) !== false) {
             $output = '
             <div class="columns is-mobile is-centered">
                 <div class="column is-half">
-                    <pre class="my-6">Sample value for test</pre>
+                    <pre class="my-6"></pre>
                 </div>
             </div>';
             break;
@@ -76,6 +86,7 @@ if (isset($_GET['action']) !== false) {
 
             nav.navbar {
                 background: #181818;
+                margin-bottom: 2rem;
             }
 
             .navbar-link.is-active,
@@ -153,7 +164,10 @@ if (isset($_GET['action']) !== false) {
                         </a>
                         <div class="navbar-dropdown">
                             <a class="navbar-item" href="<?php echo base('sandbox?action=db_init') ?>">
-                                Initial Setup
+                                Prepare DB
+                            </a>
+                            <a class="navbar-item" href="<?php echo base('sandbox?action=db_seed') ?>">
+                                Seed
                             </a>
                             <a class="navbar-item" href="<?php echo base('sandbox?action=db_commit') ?>">
                                 Commit

@@ -286,3 +286,25 @@ function http($code, $data = null, $extra = null) {
         default: break;
     }
 }
+
+/**
+ * Generate a Token
+ * @param int $length
+ * @return string
+ */
+
+function tokenGenerator($length = 120): string
+{
+
+    $key = '';
+    list($usec, $sec) = explode(' ', microtime());
+    mt_srand((float) $sec + ((float) $usec * 100000));
+
+    $inputs = array_merge(range('z','a'),range(0,9),range('A','Z'));
+
+    for($i=0; $i<$length; $i++)
+    {
+        $key .= $inputs[mt_rand(0,61)];
+    }
+    return $key;
+}
