@@ -8,12 +8,6 @@
 return [
 
     '' => [
-        'install' => [
-            'file'      => 'install',
-            'title'     => 'd',
-            'auth'      => false,
-            'menu'      => false,
-        ],
         'login' => [
             'file'      => 'login',
             'title'     => 'd',
@@ -22,12 +16,6 @@ return [
         ],
         'lost_pass' => [
             'file'      => 'lost_pass',
-            'title'     => 'd',
-            'auth'      => false,
-            'menu'      => false,
-        ],
-        'register2' => [
-            'file'      => 'register',
             'title'     => 'd',
             'auth'      => false,
             'menu'      => false,

@@ -23,7 +23,7 @@ if (isset($_GET['action']) !== false) {
             $dbSchema = require path('app/core/defs/db_schema.php');
             $output = 'Preparing...<br>';
             $init = $this->db->dbInit($dbSchema);
-            if ($init) {
+            if ($init === 0) {
                 $output .= 'Database has been prepared successfully.';
             } else {
                 $output .= 'There was a problem while preparing the database. -> ' . $init;
@@ -34,7 +34,7 @@ if (isset($_GET['action']) !== false) {
             $dbSchema = require path('app/core/defs/db_schema.php');
             $output = 'Seeding...<br>';
             $init = $this->db->dbSeed($dbSchema);
-            if ($init) {
+            if ($init === 0) {
                 $output .= 'Database has been seeded successfully.';
             } else {
                 $output .= 'There was a problem while seeding the database. -> ' . $init;

@@ -47,17 +47,15 @@ return [
                 'email' => [
                     'type'          => 'varchar',
                     'type_values'   => 80,
-                    'index'         => 'INDEX'
+                    'index'         => 'UNIQUE'
                 ],
                 'password' => [
                     'type'          => 'varchar',
                     'type_values'   => 120,
-                    'index'         => 'INDEX'
                 ],
                 'token' => [
                     'type'          => 'varchar',
                     'type_values'   => 48,
-                    'index'         => 'INDEX'
                 ],
                 'auth_group_id' => [
                     'type'          => 'int',
@@ -79,14 +77,12 @@ return [
                     'type_values'   => 80,
                     'nullable'      => true,
                     'default'       => 'NULL',
-                    'index'         => 'INDEX'
                 ],
                 'updated_by' => [
                     'type'          => 'int',
                     'type_values'   => 10,
                     'nullable'      => true,
                     'default'       => 'NULL',
-                    'index'         => 'INDEX'
                 ],
                 'status' => [
                     'type'          => 'enum',
@@ -112,11 +108,11 @@ return [
                     'type_values'   => 80,
                     'index'         => 'INDEX',
                 ],
-                'view_checkpoints' => [
+                'view_points' => [
                     'type'          => 'text',
                     'nullable'      => true
                 ],
-                'action_checkpoints' => [
+                'action_points' => [
                     'type'          => 'text',
                     'nullable'      => true
                 ],
@@ -134,15 +130,13 @@ return [
                     'type'          => 'varchar',
                     'type_values'   => 80,
                     'nullable'      => true,
-                    'default'       => 'NULL',
-                    'index'         => 'INDEX'
+                    'default'       => 'NULL'
                 ],
                 'updated_by' => [
                     'type'          => 'int',
                     'type_values'   => 10,
                     'nullable'      => true,
-                    'default'       => 'NULL',
-                    'index'         => 'INDEX'
+                    'default'       => 'NULL'
                 ],
                 'status' => [
                     'type'          => 'enum',
@@ -152,11 +146,130 @@ return [
                 ],
             ],
         ],
+
+        /* Sessions Table */
+        'sessions' => [
+            'cols' => [
+                'id' => [
+                    'type'          => 'int',
+                    'auto_inc'      => true,
+                    'attr'          => 'unsigned',
+                    'type_values'   => 11,
+                    'index'         => 'PRIMARY'
+                ],
+                'auth_code' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 50,
+                    'index'         => 'INDEX',
+                ],
+                'user_id' => [
+                    'type'          => 'int',
+                    'index'         => 'INDEX',
+                ],
+                'header' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 250,
+                ],
+                'ip' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 250,
+                ],
+                'auth_group_id' => [
+                    'type'          => 'int',
+                    'index'         => 'INDEX',
+                ],
+                'update_session' => [
+                    'type'          => 'enum',
+                    'type_values'   => ['true', 'false'],
+                    'default'       => 'false',
+                    'index'         => 'INDEX'
+                ],
+                'last_action_date' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 80,
+                ],
+                'last_action_point' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 250,
+                ]
+            ]
+        ],
+
+        /* Contents Table */
+        'contents' => [
+            'cols' => [
+                'id' => [
+                    'type'          => 'int',
+                    'auto_inc'      => true,
+                    'attr'          => 'unsigned',
+                    'type_values'   => 11,
+                    'index'         => 'PRIMARY'
+                ],
+                'type' => [
+                    'type'          => 'enum',
+                    'type_values'   => ['page', 'blog', 'part'],
+                    'default'       => 'blog',
+                    'index'         => 'INDEX'
+                ],
+                'content' => [
+                    'type'          => 'text',
+                    'index'         => 'FULLTEXT',
+                ],
+                'title' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 250,
+                    'index'         => 'INDEX',
+                ],
+                'category_id' => [
+                    'type'          => 'int',
+                    'index'         => 'INDEX',
+                    'default'       => '0'
+                ],
+                'slug' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 250,
+                    'index'         => 'UNIQUE',
+                ],
+                'created_at' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 80,
+                    'index'         => 'INDEX'
+                ],
+                'created_by' => [
+                    'type'          => 'int',
+                    'type_values'   => 10,
+                    'index'         => 'INDEX'
+                ],
+                'updated_at' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 80,
+                    'nullable'      => true,
+                    'default'       => 'NULL'
+                ],
+                'updated_by' => [
+                    'type'          => 'int',
+                    'type_values'   => 10,
+                    'nullable'      => true,
+                    'default'       => 'NULL'
+                ],
+                'status' => [
+                    'type'          => 'enum',
+                    'type_values'   => ['active', 'draft', 'deleted'],
+                    'default'       => 'draft',
+                    'index'         => 'INDEX'
+                ],
+            ]
+        ]
     ],
     'table_values' => [
         'charset'   => 'utf8mb4', // You can use 'utf8' if the structure is causing problems.
         'collate'   => 'utf8mb4_unicode_520_ci', // You can use 'utf8_general_ci' if the structure is causing problems.
-        'engine'    => 'InnoDB'
+        'engine'    => 'InnoDB',
+        'specific'  => [ // You can give specific value.
+            'sessions' => [
+                'engine'    => 'MEMORY'
+            ]
+        ]
     ],
     'data'  => [
         'users' => [
@@ -176,8 +289,8 @@ return [
         'auth_groups' => [
             [
                 'name'                  => 'admin',
-                'view_checkpoints'      => 'admin,login',
-                'action_checkpoints'    => 'Content/addContent,Content/editContent',
+                'view_points'           => 'admin,login',
+                'action_points'         => 'Content/addContent,Content/editContent',
                 'created_at'            => 1611231432,
                 'created_by'            => 1,
                 'status'                => 'active'

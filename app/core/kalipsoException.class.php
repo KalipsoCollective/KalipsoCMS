@@ -246,6 +246,10 @@ class KalipsoException
                 border-color: rgb(255 255 255 / 20%);
             }
             
+            code {
+                background-color: #292929 !important;
+            }
+            
             .kpx-alert {
                 padding: 15px 25px;
                 border-radius: 2px;

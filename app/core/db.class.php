@@ -48,7 +48,7 @@ class db
         return $this->pdo;
 	}
 
-    public function dbInit($schema): bool
+    public function dbInit($schema): ?int
     {
 
         $sql = '';
@@ -65,6 +65,7 @@ class db
 
                 switch ($attributes['type']) {
                     case 'int':
+                        if (isset($attributes['type_values']) === false) $attributes['type_values'] = 11;
                         $type = 'int(' . $attributes['type_values'] . ')';
                         break;
 
@@ -155,27 +156,40 @@ class db
 
             $sql = rtrim($sql, ',' . PHP_EOL);
 
-            $sql .= PHP_EOL . ') ENGINE=' . $schema['table_values']['engine'] .
-                ' DEFAULT CHARSET=' . $schema['table_values']['charset'] .
-                ' COLLATE=' . $schema['table_values']['collate'] . ';' . PHP_EOL;
+            $engine = isset($schema['table_values']['specific'][$table]['engine'])  !== false ?
+                $schema['table_values']['specific'][$table]['engine']
+                : $schema['table_values']['engine'];
+
+            $charset = isset($schema['table_values']['specific'][$table]['charset'])  !== false ?
+                $schema['table_values']['specific'][$table]['charset']
+                : $schema['table_values']['charset'];
+
+            $collate = isset($schema['table_values']['specific'][$table]['collate'])  !== false ?
+                $schema['table_values']['specific'][$table]['collate']
+                : $schema['table_values']['collate'];
+
+
+            $sql .= PHP_EOL . ') ENGINE=' . $engine .
+                ' DEFAULT CHARSET=' . $charset .
+                ' COLLATE=' . $collate . ';' . PHP_EOL;
 
         }
 
         try {
 
-            $this->pdo->exec($sql);
-            return true;
+            return $this->pdo->exec($sql);
 
         } catch(PDOException $e) {
 
             throw new Exception('DB Init action is not completed. ' . $e->getMessage());
-            return false;
+            return 1;
 
         }
 
     }
 
-    public function dbSeed($schema) {
+    public function dbSeed($schema): ?int
+    {
 
         $sql = '';
 
@@ -183,13 +197,13 @@ class db
         foreach ($schema['data'] as $table => $data) {
 
 
-
-            $sql .= PHP_EOL . 'INSERT INTO `' . $table . '` (';
+            $values = '';
+            $sql .= PHP_EOL . 'TRUNCATE `' . $table . '`;' . PHP_EOL . 'INSERT INTO `' . $table . '` (';
 
             $i = 0;
             foreach ($data as $row) {
 
-                $values = '(';
+                $values .= '(';
                 $item = [];
                 $i++;
 
@@ -202,35 +216,31 @@ class db
                     } elseif (is_numeric($value)) {
                         $value = $value;
                     } else {
-                        $value = '`' . $value . '`';
+                        $value = '"' . $value . '"';
                     }
 
                     $item[] = $value;
 
-                    // $sql .= PHP_EOL . '   `' . $column . '` ' . $type . ',';
-
                 }
 
-                $values .= implode(', ', $item) . ')';
+                $values .= implode(', ', $item) . '),' . PHP_EOL;
 
             }
 
-            $sql = rtrim($sql, ', ' . PHP_EOL) . ') VALUES ' . PHP_EOL . $values . '; ' . PHP_EOL;
+            $sql = rtrim($sql, ', ' . PHP_EOL) . ') VALUES ' . PHP_EOL .
+                rtrim($values, ',' . PHP_EOL) . '; ' . PHP_EOL;
 
 
 
         }
 
-        varFuck($sql);
-
         try {
 
-            // $this->pdo->exec($sql);
-            return true;
+            return $this->pdo->exec($sql);
 
         } catch(PDOException $e) {
 
-            throw new Exception('DB Init action is not completed. ' . $e->getMessage());
+            throw new Exception('DB Seed action is not completed. ' . $e->getMessage());
 
         }
 
