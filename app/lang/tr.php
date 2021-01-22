@@ -12,6 +12,8 @@ return [
     'dir'								=> 'ltr',
     'plural_suffix'						=> '', // for example: system(s)
 
+    'other_languages_en'                => 'English',
+
 
     'welcome'                           => 'Hoş Geldiniz!',
     'no_js'                             => 'Tarayıcınız Javascript çalıştıramıyor. Gerçek deneyim için JS desteği olan bir tarayıcı kullanın.',
@@ -19,5 +21,10 @@ return [
     'password'                          => 'Şifre',
     'login'                             => 'Giriş Yap',
     'loading'                           => 'Yükleniyor...',
+    'sending'                           => 'Gönderiliyor...',
+    'error'                             => 'Hata!',
+    'a_problem_occurred'                => 'Bir sorun oluştu!',
+    'try_again'                         => 'Tekrar Dene',
+    'close'                             => 'Kapat',
 
 ];

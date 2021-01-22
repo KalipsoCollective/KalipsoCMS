@@ -1,7 +1,11 @@
 <?php
+$directory = $this->currentDirectory;
+
 if (defined('INLINE_JS')) { ?>
 <script>
-<?php } ?>
+<?php } else {
+    http('content_type', 'js');
+} ?>
     NProgress.start();
     (function(a) {
         "use strict";
@@ -67,47 +71,55 @@ if (defined('INLINE_JS')) { ?>
 
     $(document).on('submit', 'form.section-loader', function(){
 
-        NProgress.start();
-
         // Variable definitions
-        let form = this
-        let formId = form.getAttribute('id')
-        let method = form.getAttribute('method')
-        let action = form.getAttribute('action')
-        let formData = new FormData(document.querySelector("#" + formId));
-        let formSubmitButton = this.querySelector('button[type="submit"]')
+        let xhr = true;
+        let form = $(this)
+        let formId = form.attr('id')
+        let method = form.attr('method')
+        let action = form.attr('action')
+        let formData = new FormData($('#' + formId)[0])
+        let formSubmitButton = $('#' + formId + ' button[type="submit"]')
+        let formSubmitButtonContent = formSubmitButton.html()
 
         // Append loader SVG
-        if (!!form.querySelectorAll('.section-loader-spinner')) {
-            form.innerHTML += '<div class="section-loader-spinner">' +
+        if (form.find('.section-loader-spinner').length === 0) {
+            form.append('<div class="section-loader-spinner">' +
                 '<svg width="40px" height="40px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">' +
                 '<circle fill="none" stroke-width="4" stroke-linecap="round" cx="33" cy="33" r="30" class="circle">'+
-                '</circle></svg></div>'
-
+                '</circle></svg></div>')
         }
 
-        formSubmitButton.disabled = true
-        form.classList.add('section-loader-active')
+        if (xhr) {
 
-        setTimeout(() => {
-            formSubmitButton.disabled = false;
-            form.classList.remove('section-loader-active')
-            NProgress.done();
-        }, 1500)
+            NProgress.start();
 
-        let request = new XMLHttpRequest();
-        request.open(method, '<?php echo base(); ?>async/' + action, true);
-        request.setRequestHeader("Content-type", "application/x-form-urlencoded");
-        request.onload = function() {
-            if (typeof this.status !== "undefined") {
-                xhrCompleted(this);
-            }
-        };
-        request.onerror = function() {
-            xhrProblem(this);
-        };
-        request.send(formData);
+            formSubmitButton.prop('disabled', true).html('<?php echo lang('sending'); ?>')
+            form.addClass('section-loader-active')
 
+            $.ajax({
+                type: method,
+                url: '<?php echo base(); ?>async/' + action,
+                dataType: "json",
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                complete: function(response){
+                    setTimeout(() => {
+                        if (typeof response.responseJSON === 'object') {
+                            let data = response.responseJSON;
+                            xhrCompleted(data, formId);
+
+                        } else {
+                            xhrProblem(formId);
+                        }
+                        formSubmitButton.prop("disabled", false).html(formSubmitButtonContent);
+                        $("#"+formId).removeClass('section-loader-active');
+                        NProgress.done();
+                    }, 1000);
+                }
+            });
+        }
     });
 
     $(document).on('pjax:send', function() {
@@ -133,8 +145,43 @@ if (defined('INLINE_JS')) { ?>
         console.log(xhr, textStatus, error, options)
     })
 
-    function xhrProblem(xhr) {
-        console.log('error', xhr)
+    function xhrProblem(form = false) {
+        if (form) {
+            var b = {
+                tryAgain: {
+                    text: '<?php echo lang('try_again'); ?>',
+                    btnClass: 'btn-red',
+                    action: function(){
+                        setTimeout(() => {
+                            $('#'+form).submit();
+                        }, 1500);
+                    }
+                },
+                close: {
+                    text: '<?php echo lang('close'); ?>',
+                    action: function(){
+
+                    }
+                },
+            }
+        } else {
+            var b = {
+                close: {
+                    text: '<?php echo lang('close'); ?>',
+                    action: function(){
+
+                    }
+                },
+            }
+        }
+        $.confirm({
+            icon: 'mdi mdi-alert',
+            title: '<?php echo lang('error'); ?>',
+            content: '<?php echo lang('a_problem_occurred'); ?>',
+            type: 'red',
+            typeAnimated: true,
+            buttons: b
+        });
     }
 
     function xhrCompleted(xhr) {

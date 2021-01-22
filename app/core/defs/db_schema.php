@@ -259,6 +259,50 @@ return [
                     'index'         => 'INDEX'
                 ],
             ]
+        ],
+        /* Contents Table */
+        'logs' => [
+            'cols' => [
+                'id' => [
+                    'type'          => 'int',
+                    'auto_inc'      => true,
+                    'attr'          => 'unsigned',
+                    'type_values'   => 11,
+                    'index'         => 'PRIMARY'
+                ],
+                'date' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 80,
+                ],
+                'action' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 250,
+                ],
+                'endpoint' => [
+                    'type'          => 'text',
+                ],
+                'http_status' => [
+                    'type'          => 'int',
+                ],
+                'auth_code' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 80,
+                ],
+                'user_id' => [
+                    'type'          => 'int',
+                    'nullable'      => true,
+                    'default'       => 0
+                ],
+                'ip' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 80,
+                ],
+                'external_data' => [
+                    'type'          => 'text',
+                    'nullable'      => true,
+                    'default'       => 'NULL'
+                ]
+            ]
         ]
     ],
     'table_values' => [

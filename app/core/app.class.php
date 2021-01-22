@@ -81,7 +81,7 @@ class App
         session_start();
     }
 
-    public function localize()
+    protected function localize()
     {
         global $languageKeys;
 
@@ -89,7 +89,14 @@ class App
 
             $this->currentLang = $this->request[0];
             array_shift($this->request);
+            $_SESSION['lang'] = $this->currentLang;
 
+        }
+
+        if (isset($_SESSION['lang']) === false) {
+            $_SESSION['lang'] = $this->currentLang;
+        } else {
+            $this->currentLang = $_SESSION['lang'];
         }
 
         $languageKeys = include path('app/lang/' . $this->currentLang . '.php');
@@ -192,10 +199,9 @@ class App
 
     public function loadJS()
     {
-        http('content_type', 'js');
         require includeFile(
             path(
-                'app/view/' . trim($this->currentDirectory . '/_script', '/') . '.php'
+                'app/core/script.php'
             ), true
         );
     }
@@ -205,7 +211,7 @@ class App
         array_shift($this->request);
         require includeFile(
             path(
-                'app/modules/xhrController.php'
+                'app/controller/xhrController.php'
             ), true
         );
     }

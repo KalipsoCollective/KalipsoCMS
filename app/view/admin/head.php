@@ -10,6 +10,7 @@
         <title><?php echo $this->title(); ?></title>
         <link rel="canonical" href="">
         <?php echo assets('admin/libs/bootstrap/css/bootstrap.min.css', true, true); ?>
+        <?php echo assets('admin/libs/mdi/css/materialdesignicons.min.css', true, true); ?>
         <?php echo assets('admin/css/style.css', true, true); ?>
         <link rel="apple-touch-icon" sizes="180x180" href="<?php echo assets('admin/icons/apple-touch-icon.png'); ?>">
         <link rel="icon" type="image/png" sizes="32x32" href="<?php echo assets('admin/icons/favicon-32x32.png'); ?>">

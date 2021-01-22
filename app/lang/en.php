@@ -12,6 +12,8 @@ return [
     'dir'								=> 'ltr',
     'plural_suffix'						=> 's', // for example: system(s)
 
+    'other_languages_tr'                => 'Türkçe',
+
 
     'welcome'                           => 'Welcome!',
     'no_js'                             => 'Your browser is not running Javascript. For the real experience, use a browser with JS support.',
@@ -19,5 +21,9 @@ return [
     'password'                          => 'Password',
     'login'                             => 'Login',
     'loading'                           => 'Loading...',
-
+    'sending'                           => 'Sending...',
+    'error'                             => 'Error!',
+    'a_problem_occurred'                => 'A problem occurred!',
+    'try_again'                         => 'Try Again',
+    'close'                             => 'Close',
 ];

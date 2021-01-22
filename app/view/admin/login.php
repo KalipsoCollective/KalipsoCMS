@@ -26,16 +26,17 @@
                                     <label for="password"><?php echo lang('password'); ?></label>
                                     <input type="password" name="password" class="form-control" id="password" required>
                                 </div>
-                                <button class="btn btn-lg btn-primary btn-block" id="loginFormSubmit" type="submit">
+                                <button class="btn btn-lg btn-primary btn-block" type="submit">
                                     <?php echo lang('login'); ?>
                                 </button>
-                                <p class="mt-5 mb-3 text-muted text-center">
+                                <p class="mt-5 mb-3 text-muted text-center small">
                                     <?php
                                     foreach (config('app.available_langs') as $lang) {
                                         if ($lang == $this->currentLang) continue;
 
                                         echo '
-                                        <a href="'.$this->generateLinkForOtherLanguages($lang, $this->route).'" 
+                                        <a data-toggle="tooltip" title="'.lang('other_languages_' . $lang).'" 
+                                        href="'.$this->generateLinkForOtherLanguages($lang, $this->route).'" 
                                         class="badge badge-dark">
                                             '.mb_strtoupper($lang).'
                                         </a>';
