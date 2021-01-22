@@ -202,10 +202,10 @@ class App
 
     public function loadXhrResponse()
     {
-        http('content_type', 'json');
+        array_shift($this->request);
         require includeFile(
             path(
-                'app/view/' . trim($this->currentDirectory . '/script', '/') . '.php'
+                'app/modules/xhrController.php'
             ), true
         );
     }

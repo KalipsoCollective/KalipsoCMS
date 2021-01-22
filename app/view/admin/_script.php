@@ -89,8 +89,6 @@ if (defined('INLINE_JS')) { ?>
         formSubmitButton.disabled = true
         form.classList.add('section-loader-active')
 
-        console.log(formSubmitButton)
-
         setTimeout(() => {
             formSubmitButton.disabled = false;
             form.classList.remove('section-loader-active')
@@ -101,17 +99,12 @@ if (defined('INLINE_JS')) { ?>
         request.open(method, '<?php echo base(); ?>async/' + action, true);
         request.setRequestHeader("Content-type", "application/x-form-urlencoded");
         request.onload = function() {
-            if (this.status >= 200 && this.status < 400) {
-                // Success!
-                let resp = this.response;
-                console.log(resp);
-            } else {
-
+            if (typeof this.status !== "undefined") {
+                xhrCompleted(this);
             }
-            console.log(this);
         };
         request.onerror = function() {
-            console.log(this);
+            xhrProblem(this);
         };
         request.send(formData);
 
@@ -139,6 +132,14 @@ if (defined('INLINE_JS')) { ?>
     $(document).on('pjax:error', function(xhr, textStatus, error, options) {
         console.log(xhr, textStatus, error, options)
     })
+
+    function xhrProblem(xhr) {
+        console.log('error', xhr)
+    }
+
+    function xhrCompleted(xhr) {
+        console.log('completed', xhr)
+    }
 <?php
 if (defined('INLINE_JS')) { ?>
 </script>

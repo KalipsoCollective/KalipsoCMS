@@ -222,7 +222,7 @@ function http($code, $data = null, $extra = null) {
 
         case 401:
             header('HTTP/1.1 401 Unauthorized');
-            if (!is_null($data))
+            if (! is_null($data))
             {
                 echo $data;
                 exit;
