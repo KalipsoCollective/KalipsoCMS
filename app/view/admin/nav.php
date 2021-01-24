@@ -11,7 +11,7 @@
            aria-controls="accountMenu">
             <?php echo trim($_SESSION['user']->f_name . ' ' . $_SESSION['user']->l_name); ?>
         </a>
-        <div class="collapse" id="accountMenu">
+        <div class="navbar-collapse collapse" id="accountMenu">
             <ul class="nav nav-sm flex-column">
                 <li class="nav-item">
                     <a href="#" class="nav-link">

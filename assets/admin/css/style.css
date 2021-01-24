@@ -850,6 +850,13 @@ body {
 .jconfirm-buttons .btn:focus {
     box-shadow: none
 }
+.navbar-vertical.navbar-expand-md {
+    background: #1b1b1b;
+}
+
+.navbar-vertical .navbar-brand .navbar-brand-img {
+    width: 46px;
+}
 
 @media (min-width: 768px) {
     .navbar-vertical.navbar-expand-md {
@@ -875,19 +882,21 @@ body {
         padding: 20px;
         min-height: 100vh;
     }
+
+    .navbar-vertical .navbar-brand {
+        max-width: 100%;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-vertical .navbar-brand .navbar-brand-img {
+        width: 125px;
+    }
 }
 
-.navbar-vertical .navbar-brand {
-    max-width: 100%;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: flex;
-    align-items: center;
-}
 
-.navbar-vertical .navbar-brand .navbar-brand-img {
-    width: 125px;
-}
 
 .navbar-vertical a.nav-link {
     background: #3e3e3e;
@@ -915,9 +924,6 @@ body {
     width: 4px;
     background: #6fbd0b;
     height: 100%;
-}
-
-.navbar-vertical .nav-item .nav-item {
 }
 
 .navbar-vertical .nav-item .nav {
