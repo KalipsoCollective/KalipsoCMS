@@ -273,29 +273,51 @@ return [
                 'date' => [
                     'type'          => 'varchar',
                     'type_values'   => 80,
+                    'index'         => 'INDEX'
                 ],
                 'action' => [
                     'type'          => 'varchar',
                     'type_values'   => 250,
+                    'index'         => 'INDEX'
+                ],
+                'route' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 150,
+                    'index'         => 'INDEX'
                 ],
                 'endpoint' => [
                     'type'          => 'text',
+                    'index'         => 'FULLTEXT'
                 ],
                 'http_status' => [
                     'type'          => 'int',
+                    'index'         => 'INDEX'
                 ],
                 'auth_code' => [
                     'type'          => 'varchar',
                     'type_values'   => 80,
+                    'nullable'      => true,
+                    'default'       => 'NULL',
+                    'index'         => 'INDEX'
                 ],
                 'user_id' => [
                     'type'          => 'int',
                     'nullable'      => true,
-                    'default'       => 0
+                    'default'       => 0,
+                    'index'         => 'INDEX'
                 ],
                 'ip' => [
                     'type'          => 'varchar',
                     'type_values'   => 80,
+                    'nullable'      => true,
+                    'default'       => 'NULL',
+                    'index'         => 'INDEX'
+                ],
+                'header' => [
+                    'type'          => 'varchar',
+                    'type_values'   => 180,
+                    'nullable'      => true,
+                    'default'       => 'NULL',
                 ],
                 'external_data' => [
                     'type'          => 'text',

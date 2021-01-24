@@ -23,4 +23,6 @@
         <meta name="theme-color" content="#ffffff">
     </head>
     <body>
+    <div class="toast-notification flex-column" id="toastArea">
+    </div>
     <noscript><?php echo lang('no_js'); ?></noscript>

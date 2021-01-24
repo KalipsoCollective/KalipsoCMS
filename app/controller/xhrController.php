@@ -1,7 +1,5 @@
 <?php
 
-http('content_type', 'json');
-
 use app\modules\User;
 
 $returnCode = 401;
@@ -15,7 +13,7 @@ if (isset($this->request[0]) !== false) {
 
                 switch ($this->request[1]) {
                     case 'login': {
-                        $return = (new User(false))->login();
+                        $return = (new User())->login();
                     }
                 }
 
@@ -28,7 +26,7 @@ if (isset($this->request[0]) !== false) {
 
 if (isset($return) !== false AND is_array($return)) {
 
-    echo 'response';
+    http('content_type', json_encode(generateResponse($return)), 'json');
 
 } else {
 

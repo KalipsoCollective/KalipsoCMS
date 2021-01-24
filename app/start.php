@@ -1,7 +1,5 @@
 <?php
 
-use \app\core\App;
-
 define('ROOT_PATH',  rtrim($_SERVER["DOCUMENT_ROOT"], '/').'/');
 
 /**
@@ -15,7 +13,7 @@ spl_autoload_register('autoLoader');
  * @param string $class class name
  */
 
-function autoLoader($class)
+function autoLoader(string $class)
 {
     $file = ROOT_PATH . str_replace('\\', '/', $class) . '.class.php'; // strtolower() used
 
@@ -34,7 +32,6 @@ function autoLoader($class)
     }
 }
 
+require ROOT_PATH . 'app/core/libs/system.php';
 require ROOT_PATH . 'app/core/libs/tools.php';
-
-$app = new App();
-$app->start();
+require ROOT_PATH . 'app/core/libs/io.php';

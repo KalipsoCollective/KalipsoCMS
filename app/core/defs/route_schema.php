@@ -30,7 +30,7 @@ return [
     'admin' => [
         'login' => [
             'file'      => 'login',
-            'title'     => 'd',
+            'title'     => 'login',
             'page_parts' => [
                 'head',
                 '_',
@@ -40,8 +40,7 @@ return [
             'menu'      => false,
         ],
         'index' => [
-            'file'      => 'home',
-            'title'     => '',
+            'title'     => 'dashboard',
             'auth'      => true,
             'menu'      => true,
         ],

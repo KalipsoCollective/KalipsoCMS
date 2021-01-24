@@ -146,8 +146,11 @@ if (defined('INLINE_JS')) { ?>
     })
 
     function xhrProblem(form = false) {
+
+        let b;
+
         if (form) {
-            var b = {
+            b = {
                 tryAgain: {
                     text: '<?php echo lang('try_again'); ?>',
                     btnClass: 'btn-red',
@@ -165,7 +168,7 @@ if (defined('INLINE_JS')) { ?>
                 },
             }
         } else {
-            var b = {
+            b = {
                 close: {
                     text: '<?php echo lang('close'); ?>',
                     action: function(){
@@ -184,8 +187,146 @@ if (defined('INLINE_JS')) { ?>
         });
     }
 
-    function xhrCompleted(xhr) {
-        console.log('completed', xhr)
+    function xhrCompleted(data, form = null) {
+        if (data.modal_close !== undefined && data.modal_close !== null) {
+            $(data.modal_close).modal('hide');
+        }
+
+        if (form !== false && data.form_reset === true) {
+            document.getElementById(form).reset();
+        }
+
+        if (data.message !== "" && data.status) {
+            $("#"+form+" .form-info").fadeIn( "slow", function() {
+                $(this).html(data.message);
+            });
+        } else if (data.message !== "" && ! data.status) {
+            $.confirm({
+                icon: 'mdi mdi-alert',
+                title: '<?php echo lang('warning'); ?>',
+                content: data.message,
+                type: 'yellow',
+                typeAnimated: true,
+                buttons: {
+                    close: {
+                        text: '<?php echo lang('close'); ?>',
+                        action: function(){
+                        }
+                    }
+                }
+            });
+        }
+
+        if (data.toast !== undefined) {
+            let id = Math.floor(new Date().getTime() / 1000).toString();
+            id = 't_' + id;
+            let toast = data.toast.replace('[ID]', id);
+
+            $('#toastArea').append(toast);
+            $('.' + id).toast('show');
+        }
+
+        if (data.val !== undefined && typeof data.val !== 'undefined') {
+
+            for (const [key, value] of Object.entries(data.val)) {
+                $(key).val(value).trigger('change');
+            }
+        }
+
+        if (data.html !== undefined && typeof data.html !== 'undefined') {
+
+            for (const [key, value] of Object.entries(data.html)) {
+
+                $(key).html(value);
+            }
+        }
+
+        if (data.attr !== undefined && typeof data.attr !== 'undefined') {
+
+            for (const [selector, attrs] of Object.entries(data.attr)) {
+
+                for (const [attr, value] of Object.entries(attrs)) {
+
+                    if (attr === 'disabled') $(selector).prop(attr, value);
+                    else $(selector).attr(attr, value);
+                }
+            }
+        }
+
+        if (data.add_class !== undefined && typeof data.add_class !== 'undefined') {
+
+            for (const [key, value] of Object.entries(data.add_class)) {
+                $(key).addClass(value);
+            }
+        }
+
+        if (data.emergency !== undefined && window.emergency_alert === undefined) {
+
+            let b = {};
+
+            if (data.emergency.href_button) {
+
+                b['hey'] = {
+                    text: data.emergency.href_text,
+                    btnClass: 'btn-orange',
+                    action: function(){
+                        location.href = data.emergency.href_target;
+                    }
+                }
+
+            }
+
+            if (data.emergency.close_button) {
+
+                b['close'] = {
+                    text: data.emergency.close_text,
+                    action: function(){
+                        setTimeout(() => {
+                            window.emergency_alert = undefined
+                        }, 300000)
+                    }
+                }
+
+            }
+
+            window.emergency_alert = true
+            $.confirm({
+                icon: data.emergency.icon,
+                title: data.emergency.title,
+                content: data.emergency.message,
+                type: data.emergency.color,
+                typeAnimated: true,
+                buttons: b
+            });
+
+        }
+
+        if (data.refresh !== undefined) { // Page Refresh or Redirect
+            let second = (1000 * parseInt(data.refresh[0]) ); // Second to millisecond
+            let url = data.refresh[1];
+            let real =  data.refresh[2];
+
+            window.refreshVal = setTimeout( () => {
+
+                if (url != null) {
+
+                    if (real) {
+                        location.href = url;
+                    } else {
+                        $.pjax({ url: data.refresh[1], container: '#wrap' });
+                    }
+
+                } else {
+
+                    if (real) {
+                        location.reload();
+                    } else {
+                        $.pjax.reload({ container: '#wrap' });
+                    }
+
+                }
+            }, second);
+        }
     }
 <?php
 if (defined('INLINE_JS')) { ?>

@@ -771,11 +771,11 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #e3ebf6 !important
+    background: #2a2f23 !important
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #2c7be5 !important
+    background: #6fbd0b !important
 }
 
 body {
@@ -849,4 +849,92 @@ body {
 
 .jconfirm-buttons .btn:focus {
     box-shadow: none
+}
+
+@media (min-width: 768px) {
+    .navbar-vertical.navbar-expand-md {
+        display: block;
+        position: fixed;
+        background: #1b1b1b;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 250px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        overflow-y: auto;
+        left: 0;
+        border-width: 0 1px 0 0;
+    }
+    .navbar-vertical.navbar-expand-md .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+    }
+    .navbar-vertical.navbar-expand-md.fixed-left:not([style*="display: none"])~.main-content {
+        margin-left: 250px;
+        padding: 20px;
+        min-height: 100vh;
+    }
+}
+
+.navbar-vertical .navbar-brand {
+    max-width: 100%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-vertical .navbar-brand .navbar-brand-img {
+    width: 125px;
+}
+
+.navbar-vertical a.nav-link {
+    background: #3e3e3e;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.9rem;
+    position: relative;
+    color: #adadad;
+    transition: 0.1s ease-out;
+}
+
+.navbar-vertical a.nav-link:hover,
+.navbar-vertical a.nav-link:focus {
+    background: #292929;
+    color: #6fbd0b;
+}
+
+.navbar-vertical a.nav-link.active:before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: -16px;
+    border-radius: 0 8px 8px 0;
+    width: 4px;
+    background: #6fbd0b;
+    height: 100%;
+}
+
+.navbar-vertical .nav-item .nav-item {
+}
+
+.navbar-vertical .nav-item .nav {
+    background: #4c4c4c;
+    border-radius: 8px;
+    padding: 8px;
+    padding-bottom: 3px;
+    margin-bottom: 8px;
+}
+
+.navbar-vertical a.account-button {
+    background: #6ebd0a;
+    color: #fff;
+}
+
+.navbar-vertical a.account-button:hover,
+.navbar-vertical a.account-button:focus {
+    background: #4d8a00;
+    color: #fff;
 }

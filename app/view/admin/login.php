@@ -15,6 +15,7 @@
                                 <h1 class="h3 mb-3 text-center">
                                     <?php echo lang('welcome'); ?>
                                 </h1>
+                                <div class="form-info"></div>
                                 <div class="form-group">
                                     <label for="username">
                                         <?php echo lang('email_or_username'); ?>

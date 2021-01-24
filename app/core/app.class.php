@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace app\core;
 
+use app\modules\Log;
+use app\modules\User;
+
 /**
  * Main App Class
  * @package  Kalipso
@@ -19,12 +22,15 @@ class App
     public ?bool $isLogged = false;
     public ?string $currentLang;
     public ?array $request;
-    public ?string $route;
+    public ?string $route = '';
     public ?string $contentFile = null;
     public ?string $currentDirectory = '';
     public ?string $pageTitle = '';
     public ?string $pageDescription = '';
     public ?object $db;
+    public ?int $userId = 0;
+    public ?string $authCode = '';
+    public ?int $httpStatus = 200;
     /*
      * Default page parts
      */
@@ -38,10 +44,24 @@ class App
 
     public function __construct()
     {
-        global $sysSettings;
         global $routeSchema;
+        global $authorityPoints;
+        global $sysSettings;
 
         $routeSchema = include(path('app/core/defs/route_schema.php'));
+
+        // view area's authority points init
+        foreach ($routeSchema as $dir => $pages) {
+
+            foreach ($pages as $key => $parameters) {
+
+                $authorityPoints['view'][trim($dir . '/' .$key, '/')] = [
+                    'name'      => $parameters['title'],
+                    'default'   => $parameters['auth'],
+                    'view'      => (! $parameters['auth'])
+                ];
+            }
+        }
 
         // configuration files initialize
         $confFiles = glob(path('app/core/config/*.php'));
@@ -63,9 +83,15 @@ class App
 
                 }
             }
+        } else {
+            exit('Configuration files not found!');
         }
 
-        $this->handler = new KalipsoException();
+        http('powered_by');
+        ob_start();
+        session_name(config('app.session'));
+        session_start();
+
         $this->db = new db();
 
         $url = parse_url(base() . trim(strip_tags($_SERVER['REQUEST_URI']), '/'));
@@ -75,10 +101,9 @@ class App
 
         $this->currentLang = config('app.default_lang');
 
-        http('powered_by');
-        ob_start();
-        session_name(config('app.session'));
-        session_start();
+        $this->authCode = (new User())->getAuthCode();
+        $this->userId = (new User())->getUserId();
+
     }
 
     protected function localize()
@@ -139,59 +164,35 @@ class App
 
         } else {
 
+            $detected = false;
             foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
 
                 if ($value['auth'] == $this->isLogged) { // temp
-
+                    $detected = true;
                     $this->route = $key;
                     $this->contentFile = isset($value['file']) !== false ? $value['file'] : $key;
+                    $this->pageTitle = lang(isset($value['title']) !== false ? $value['title'] : $key);
 
                     if (isset($value['page_parts']) !== false) {
                         $this->pageParts = $value['page_parts'];
-                        $this->pageTitle = lang(isset($value['name']) !== false ? $value['name'] : $key);
                     }
                     break;
 
                 }
 
             }
-        }
+            if (! $detected) {
 
-    }
-
-    public function fire()
-    {
-        if (isset($_SERVER['HTTP_X_PJAX']) !== false) {
-            echo '<title>'.$this->title().'</title>';
-        }
-
-        foreach ($this->pageParts as $part) {
-
-            if ($part == '_') {
-
-                if (is_null($this->contentFile)) {
-                    continue;
-                } else {
-                    $part = $this->contentFile;
-                }
+                $this->httpStatus = 404;
 
             }
-
-            if (isset($_SERVER['HTTP_X_PJAX']) !== false AND ($part == 'head' OR $part == 'nav' OR $part == 'footer')) {
-                continue;
-            }
-
-            $filePath = path(
-                'app/view/' . trim($this->currentDirectory . '/' . $part, '/') . '.php'
-            );
-            require includeFile($filePath, true);
-
         }
+
     }
 
     public function start()
     {
-
+        $this->isLogged = ! ($this->userId === 0);
         $this->routeDetector();
         $this->fire();
 
@@ -232,6 +233,44 @@ class App
             $description = config('settings.description');
         }
         return $description;
+    }
+
+    public function fire()
+    {
+        if (isset($_SERVER['HTTP_X_PJAX']) !== false) {
+            echo '<title>'.$this->title().'</title>';
+        }
+
+        foreach ($this->pageParts as $part) {
+
+            if ($part == '_') {
+
+                if (is_null($this->contentFile)) {
+                    continue;
+                } else {
+                    $part = $this->contentFile;
+                }
+
+            }
+
+            if (isset($_SERVER['HTTP_X_PJAX']) !== false AND ($part == 'head' OR $part == 'footer')) {
+                continue;
+            }
+
+            $filePath = path(
+                'app/view/' . trim($this->currentDirectory . '/' . $part, '/') . '.php'
+            );
+            require includeFile($filePath, true);
+
+        }
+
+        if ($this->route != '') {
+            (new Log())->record([
+                'action'        => 'view',
+                'route'         => $this->route,
+                'http_status'   => $this->httpStatus
+            ]);
+        }
     }
 
     public function meta()

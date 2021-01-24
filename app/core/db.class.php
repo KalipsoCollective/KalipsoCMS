@@ -36,7 +36,7 @@ class db
     protected ?int $insertId = null;
     protected ?string $query = null;
     protected ?string $error = null;
-    protected ?array $result = [];
+    protected $result = [];
     protected ?string $prefix = null;
     protected ?array $operators = ['=', '!=', '<', '>', '<=', '>=', '<>'];
     protected ?int $queryCount = 0;
@@ -1274,7 +1274,7 @@ class db
             }
         } else {
             $this->cache = null;
-            $this->result = (array) $cache;
+            $this->result = $cache;
             $this->numRows = is_array($this->result) ? count($this->result) : ($this->result === '' ? 0 : 1);
         }
 
