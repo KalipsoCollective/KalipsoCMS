@@ -77,7 +77,7 @@ class User
 
                                 $return = [
                                     'status'	=> 'warning',
-                                    'refresh'	=> [3, null, false],
+                                    'refresh'	=> [3, null, true],
                                     'title'		=> lang('warning'),
                                     'text'		=> lang('you_have_a_session')
                                 ];
@@ -144,7 +144,7 @@ class User
                                         'status'	=> 'success',
                                         'title'		=> lang('success'),
                                         'text'		=> lang('login_successful'),
-                                        'refresh'	=> [3, '', false]
+                                        'refresh'	=> [3, '', true]
                                     ];
                                     $externalData = 'login_successful';
 
