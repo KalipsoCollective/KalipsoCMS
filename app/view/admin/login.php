@@ -7,7 +7,7 @@
                              alt="logo"
                         / >
                     </a>
-                    <div class="card mt-5 shadow-lg bg-white
+                    <div class="card mt-5 shadow-lg bg-dark text-light
                     rounded border-bottom-0 border-left-0 border-right-0 border-primary border-top">
                         <div class="card-body">
                             <form class="section-loader" action="user/login" method="post" id="loginForm"
@@ -20,12 +20,15 @@
                                     <label for="username">
                                         <?php echo lang('email_or_username'); ?>
                                     </label>
-                                    <input type="text" name="username" class="form-control" id="username"
+                                    <input type="text" name="username" class="form-control bg-dark text-light
+                                    border-secondary" id="username"
                                            autofocus required>
                                 </div>
                                 <div class="form-group">
                                     <label for="password"><?php echo lang('password'); ?></label>
-                                    <input type="password" name="password" class="form-control" id="password" required>
+                                    <input type="password" name="password" class="form-control bg-dark text-light
+                                    border-secondary"
+                                           id="password" required>
                                 </div>
                                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                                     <?php echo lang('login'); ?>
