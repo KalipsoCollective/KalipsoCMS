@@ -305,7 +305,7 @@ class App
 
             }
 
-            if (isset($_SERVER['HTTP_X_PJAX']) !== false AND ($part == 'head' OR $part == 'footer')) {
+            if (isset($_SERVER['HTTP_X_PJAX']) !== false AND ($part == 'head' OR $part == 'footer' OR $part == 'end')) {
                 continue;
             }
 
