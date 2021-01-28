@@ -31,6 +31,7 @@ class App
     public ?int $userId = 0;
     public ?string $authCode = '';
     public ?int $httpStatus = 200;
+    public bool $sandbox = false;
     /*
      * Default page parts
      */
@@ -102,10 +103,16 @@ class App
         $this->currentLang = config('app.default_lang');
 
         $this->authCode = (new User())->getAuthCode();
-        $this->userId = (new User())->getUserId();
+        if ($this->request[0] != 'sandbox') {
+            $this->userId = (new User())->getUserId();
+        }
 
     }
 
+    /**
+     * Localization Detector
+     * @return void
+     */
     protected function localize()
     {
         global $languageKeys;
@@ -128,6 +135,10 @@ class App
 
     }
 
+    /**
+     * Route Detector
+     * @return void
+     */
     public function routeDetector()
     {
         global $routeSchema;
@@ -159,37 +170,58 @@ class App
         } elseif (config('settings.debug_mode') AND
             (isset($this->request[0]) !== false AND $this->request[0] == 'sandbox')) {
 
+            $this->sandbox = true;
             $this->loadDeveloperMode();
             $this->pageParts = [];
 
         } else {
-
-            $detected = false;
-            foreach ($routeSchema[$this->currentDirectory] as $key => $value) {
-
-                if ($value['auth'] == $this->isLogged) { // temp
-                    $detected = true;
-                    $this->route = $key;
-                    $this->contentFile = isset($value['file']) !== false ? $value['file'] : $key;
-                    $this->pageTitle = lang(isset($value['title']) !== false ? $value['title'] : $key);
-
-                    if (isset($value['page_parts']) !== false) {
-                        $this->pageParts = $value['page_parts'];
-                    }
-                    break;
-
-                }
-
-            }
-            if (! $detected) {
-
-                $this->httpStatus = 404;
-
-            }
+            $this->detectViewRoute($routeSchema[$this->currentDirectory]);
         }
 
     }
 
+    /**
+     * Init method
+     * @param $schema
+     * @return void
+     */
+    public function detectViewRoute($schema) {
+
+        $detected = false;
+
+        $index = 0;
+        foreach ($schema as $key => $value) {
+
+            if ($value['auth'] == $this->isLogged AND (
+                (isset($this->request[$index]) === false AND $key == 'index')
+                OR $this->request[$index] == lang($value['path'])
+                )
+            ) {
+                $detected = true;
+                $this->route = $key;
+                $this->contentFile = isset($value['file']) !== false ? $value['file'] : $key;
+                $this->pageTitle = lang(isset($value['title']) !== false ? $value['title'] : $key);
+
+                if (isset($value['page_parts']) !== false) {
+                    $this->pageParts = $value['page_parts'];
+                }
+                break;
+
+            }
+
+        }
+
+        if (! $detected) {
+            $this->httpStatus = 404;
+        } else {
+            $this->httpStatus = 200;
+        }
+    }
+
+    /**
+     * Init method
+     * @return void
+     */
     public function start()
     {
         $this->isLogged = ! ($this->userId === 0);
@@ -198,6 +230,10 @@ class App
 
     }
 
+    /**
+     * Dynamic JS Loader
+     * @return void
+     */
     public function loadJS()
     {
         require includeFile(
@@ -207,6 +243,10 @@ class App
         );
     }
 
+    /**
+     * XHR Interface Loader
+     * @return void
+     */
     public function loadXhrResponse()
     {
         array_shift($this->request);
@@ -217,6 +257,10 @@ class App
         );
     }
 
+    /**
+     * Title Generator
+     * @return string
+     */
     public function title(): string
     {
         return trim(
@@ -225,7 +269,11 @@ class App
         );
     }
 
-    public function description()
+    /**
+     * Description Generator
+     * @return string
+     */
+    public function description(): ?string
     {
         $description = $this->pageDescription;
 
@@ -235,6 +283,10 @@ class App
         return $description;
     }
 
+    /**
+     * Page Part Loader
+     * @return void
+     */
     public function fire()
     {
         if (isset($_SERVER['HTTP_X_PJAX']) !== false) {
@@ -273,7 +325,11 @@ class App
         }
     }
 
-    public function meta()
+    /**
+     * Meta Tag Generator
+     * @return string
+     */
+    public function meta(): string
     {
         /*
 
@@ -312,8 +368,17 @@ class App
         <meta name="p:domain_verify" content="code from pinterest">
         <meta name="norton-safeweb-site-verification" content="norton code">
          */
+
+        return '';
     }
 
+    /**
+     * URL Generator for Other Languages
+     * @param $lang
+     * @param string $route
+     * @param string $directory
+     * @return string
+     */
     public function generateLinkForOtherLanguages($lang, $route = '', $directory = ''): string
     {
         if ($route == '') {
@@ -325,11 +390,119 @@ class App
         return base(trim($lang . '/' . $directory . '/', '/'));
     }
 
-    public function url(): string
+    /**
+     * URL Generator
+     * @param null $key
+     * @param null $root
+     * @param null $lang
+     * @return string
+     */
+    public function url($key = null, $root = null, $lang = null): string
     {
-        return trim(base() . $this->currentLang . '/'. $this->currentDirectory, '/');
+        global $routeSchema;
+
+        if (is_null($root)) {
+            $root = $this->currentDirectory;
+        }
+
+        if (is_null($lang)) {
+            $lang = $this->currentLang;
+        }
+
+        $slug = $root;
+
+        if (isset($routeSchema[$root]) !== false) {
+
+            if (is_null($key) OR $key == '') {
+                $key = 'index';
+            }
+
+            if (isset($routeSchema[$root][$key]) !== false) {
+
+                $path = $routeSchema[$root][$key]['path'];
+
+                if ($path != '') {
+                    $path = lang($path);
+                }
+
+                $slug = trim($slug . '/' . $path, '/');
+            }
+        }
+
+        return trim(base() . $lang . '/'. $slug, '/');
     }
 
+    /**
+     * Menu Generator
+     * @param ?string $root
+     * @return string
+     */
+    public function menuGenerator($root = null): string
+    {
+        global $routeSchema;
+
+        $menu = '';
+
+        if (is_null($root)) {
+
+            $root = $this->currentDirectory;
+
+        }
+
+        if (isset($routeSchema[$root]) !== false) {
+
+            foreach ($routeSchema[$root] as $key => $route) {
+
+                if ($route['menu']) {
+
+                    $icon = '';
+
+                    if (isset($route['icon']) !== false AND $route['icon'] != '') {
+
+                        $icon = '<i class="' . $route['icon'] . '"></i> ';
+
+                    }
+
+                    $active = '';
+                    if ($this->route == $key) {
+                        $active = ' active';
+                    }
+
+                    $menu .= '
+                     <li class="nav-item">
+                        <a class="nav-link' . $active . '" href="'.$this->url($key, $root).'">
+                        ' . $icon . lang($route['title']).'
+                        </a>
+                    </li>';
+                }
+
+                /*
+                 * <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#usersSub"
+                           aria-controls="usersSub">Users</a>
+                        <div id="usersSub" class="collapse">
+                            <ul class="nav nav-small flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Users</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Add User</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                 */
+            }
+
+        }
+        return $menu;
+
+    }
+
+    /**
+     * Sandbox Loader
+     * @return void
+     */
     public function loadDeveloperMode()
     {
         require path('app/core/sandbox.php');

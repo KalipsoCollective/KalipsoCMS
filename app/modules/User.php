@@ -227,27 +227,21 @@ class User
      * @return int
      */
     public function getUserId(): ?int
-    {/*
-        try {
+    {
+        $return = 0;
 
-            $user = (new db())->table('sessions')
-                ->select('user_id')
-                ->where('auth_code', $this->authCode)
-                ->get();
+        $user = (new db())->table('sessions')
+            ->select('user_id')
+            ->where('auth_code', $this->authCode)
+            ->get();
 
-        } catch (\Exception $e) {
-
-            return 0;
-        }
 
         if (isset($user->user_id) !== false) {
 
             $this->userId = $user->user_id;
-            return $this->userId;
+            $return = $this->userId;
         }
-*/
-        return 0;
-
+        return $return;
     }
 
     /**

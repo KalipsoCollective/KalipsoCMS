@@ -17,7 +17,6 @@ if (defined('INLINE_JS')) { ?>
                     scrollTop: 0
                 }, "normal");
                 initialize();
-                NProgress.done();
                 // Async page change init
                 $(document).pjax('a:not([target="_blank"])', '#wrap');
                 $(document).on('submit', 'form[data-async]', function(event) {
@@ -54,6 +53,7 @@ if (defined('INLINE_JS')) { ?>
 
             // Bootstrap functions
             $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="dropdown"]').dropdown();
             $('[data-toggle="popover"]').popover({container: 'body'});
 
             $('.custom-file-input').on('change',function(){
@@ -66,6 +66,10 @@ if (defined('INLINE_JS')) { ?>
             if (popstate) {
                 console.log("It's popstate!")
             }
+
+            setTimeout(() => {
+                NProgress.done();
+            }, 1000)
         });
     }
 
@@ -122,19 +126,16 @@ if (defined('INLINE_JS')) { ?>
         }
     });
 
-    $(document).on('pjax:send', function() {
-
+    $(document).on('pjax:start', function() {
+        NProgress.start();
         if (window.refreshVal !== undefined) {
             clearTimeout(window.refreshVal);
             window.refreshVal = undefined;
         }
-
-        NProgress.start();
     })
 
     $(document).on('pjax:complete', function() {
         initialize();
-        NProgress.done();
     })
 
     $(document).on('pjax:popstate', function() {

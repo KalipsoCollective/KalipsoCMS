@@ -23,23 +23,7 @@
         </div>
         <div class="collapse navbar-collapse flex-column" id="sidebarMenu">
             <ul class="navbar-nav d-lg-block">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#usersSub"
-                       aria-controls="usersSub">Users</a>
-                    <div id="usersSub" class="collapse">
-                        <ul class="nav nav-small flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Users</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Add User</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+                <?php echo $this->menuGenerator(); ?>
             </ul>
         </div>
 

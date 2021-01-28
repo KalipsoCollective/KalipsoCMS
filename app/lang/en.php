@@ -38,4 +38,11 @@ return [
     'try_again'                         => 'Try Again',
     'close'                             => 'Close',
     'byte'                              => 'Byte',
+    'contents'                          => 'Contents',
+    'users'                             => 'Users',
+
+    /* Slugs */
+
+    'contents_slug'                    => 'contents',
+    'users_slug'                       => 'users',
 ];

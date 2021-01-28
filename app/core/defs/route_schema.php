@@ -43,6 +43,22 @@ return [
             'title'     => 'dashboard',
             'auth'      => true,
             'menu'      => true,
+            'path'      => '',
+            'icon'      => 'mdi mdi-view-dashboard'
+        ],
+        'contents' => [
+            'title'     => 'contents',
+            'auth'      => true,
+            'menu'      => true,
+            'path'      => 'contents_slug',
+            'icon'      => 'mdi mdi-file-document'
+        ],
+        'users' => [
+            'title'     => 'users',
+            'auth'      => true,
+            'menu'      => true,
+            'path'      => 'users_slug',
+            'icon'      => 'mdi mdi-account-group'
         ],
     ]
 

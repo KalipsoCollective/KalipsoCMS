@@ -39,5 +39,11 @@ return [
     'try_again'                         => 'Tekrar Dene',
     'close'                             => 'Kapat',
     'byte'                              => 'Bayt',
+    'contents'                          => 'İçerikler',
+    'users'                             => 'Kullanıcılar',
 
+    /* Slugs */
+
+    'contents_slug'                    => 'icerikler',
+    'users_slug'                       => 'kullanicilar',
 ];

@@ -20,14 +20,12 @@
                                     <label for="username">
                                         <?php echo lang('email_or_username'); ?>
                                     </label>
-                                    <input type="text" name="username" class="form-control bg-dark text-light
-                                    border-secondary" id="username"
+                                    <input type="text" name="username" class="form-control text-light" id="username"
                                            autofocus required>
                                 </div>
                                 <div class="form-group">
                                     <label for="password"><?php echo lang('password'); ?></label>
-                                    <input type="password" name="password" class="form-control bg-dark text-light
-                                    border-secondary"
+                                    <input type="password" name="password" class="form-control text-light"
                                            id="password" required>
                                 </div>
                                 <button class="btn btn-lg btn-primary btn-block" type="submit">
