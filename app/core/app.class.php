@@ -193,8 +193,8 @@ class App
         foreach ($schema as $key => $value) {
 
             if ($value['auth'] == $this->isLogged AND (
-                (isset($this->request[$index]) === false AND $key == 'index')
-                OR $this->request[$index] == lang($value['path'])
+                ((isset($this->request[$index]) === false AND $key == 'index'))
+                OR (isset($this->request[$index]) !== false AND $this->request[$index] == lang($value['path']))
                 )
             ) {
                 $detected = true;
@@ -212,6 +212,21 @@ class App
         }
 
         if (! $detected) {
+
+            if ($this->userId) {
+                $key = 'index';
+            } else {
+                $key = 'login';
+            }
+
+            $this->route = $key;
+            $this->contentFile = isset($schema[$key]['file']) !== false ? $schema[$key]['file'] : $key;
+            $this->pageTitle = lang(isset($schema[$key]['title']) !== false ? $schema[$key]['title'] : $key);
+
+            if (isset($schema[$key]['page_parts']) !== false) {
+                $this->pageParts = $schema[$key]['page_parts'];
+            }
+
             $this->httpStatus = 404;
         } else {
             $this->httpStatus = 200;
