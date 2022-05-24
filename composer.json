@@ -1,0 +1,32 @@
+{
+    "name": "halillusion/kn",
+    "type": "project",
+    "description": "KalipsoNext - a simple php framework/boilerplate",
+    "keywords": ["framework", "kalipso", "kalipsonext", "php-framework"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Halil Ibrahim Ercelik",
+            "email": "halillusion@gmail.com",
+            "homepage": "https://koalapix.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1|^8.0",
+        "ext-pdo": "*",
+        "izniburak/pdox": "^1.6",
+        "phpmailer/phpmailer": "^6.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "KN\\": "app"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
