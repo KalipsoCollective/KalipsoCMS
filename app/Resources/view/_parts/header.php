@@ -4,10 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><?php echo $title; ?></title>
-		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/bootstrap/bootstrap.min.css'); ?>">
+		<?php /*<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/bootstrap/bootstrap.min.css'); ?>"> */ ?>
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/kalipso.table.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/nprogress/nprogress.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/kalipso.libs.css'); ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/theme.min.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/kalipso.next.css'); ?>">
 		<link rel="canonical" href="<?php echo $this->url($this->request->uri); ?>" />
 		<meta name="copyright" content="<?php echo KN\Helpers\Base::config('settings.name'); ?>">
@@ -24,5 +25,6 @@
 		<meta property="twitter:title" content="<?php echo $title; ?>">
 		<meta property="twitter:description" content="<?php echo $description; ?>">
 	</head>
-	<body id="wrap">
+	<body id="wrap" class="bg-light">
+		<div id="db-wrapper">
 		<?php echo \KN\Helpers\Base::sessionStoredAlert(); ?>
