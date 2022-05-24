@@ -1,9 +1,8 @@
 <?php
 
 return [
-	'header',
+	'admin_header',
 	'admin_nav',
 	'_',
-	'admin_footer',
-	'end'
+	'admin_end'
 ];

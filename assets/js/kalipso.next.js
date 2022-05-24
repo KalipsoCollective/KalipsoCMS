@@ -257,7 +257,7 @@ function responseFormatter(response, dom = null) {
 NProgress.start();
 (function() {
 
-	window.vanillaPjax = new vPjax({selector: 'a:not([target="_blank"])', wrap: '#wrap', timeOut: 3000}).init() // .form('[data-vpjax]')
+	window.vanillaPjax = new vPjax({selector: 'a:not([target="_blank"]):not([href="#!"])', wrap: '#wrap', timeOut: 3000}).init() // .form('[data-vpjax]')
 	document.addEventListener("vPjax:start", (e) => {
 		NProgress.start();
 	})
