@@ -7,7 +7,7 @@
 					<p><?php echo $description; ?></p>
 				</header>
 				<div class="col-12 dash-content">
-					<div class="bg-white p-2 rounded shadow-sm" id="sessionsTable"></div>
+					<div class="bg-white p-2 mb-2 rounded shadow-sm" id="sessionsTable"></div>
 				</div>
 			</div>
 		</div>
