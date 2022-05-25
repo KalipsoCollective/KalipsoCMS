@@ -16,8 +16,8 @@
                             </li>
                         <?php
                         }
-                        if ($this->authority('/management/users') AND
-                            $this->authority('/management/roles') AND
+                        if ($this->authority('/management/users') OR
+                            $this->authority('/management/roles') OR
                             $this->authority('/management/sessions')) {
                             echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.users') . '</li>';
                         }
@@ -49,7 +49,32 @@
                         <?php
                         } 
 
-                        if ($this->authority('/management/logs') AND
+                        if ($this->authority('/management/contents') OR
+                            $this->authority('/management/pages')) {
+                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.contents') . '</li>';
+                        }
+
+                        if ($this->authority('/management/schemas')) {
+                        ?>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $this->currentLink('/management/schemas'); ?>" href="<?php echo $this->url('/management/schemas'); ?>">
+                                    <i class="ti ti-puzzle nav-icon"></i> <?php echo KN\Helpers\Base::lang('base.schemas'); ?>
+                                </a>
+                            </li>
+                        <?php
+                        } 
+
+                        if ($this->authority('/management/contents')) {
+                        ?>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $this->currentLink('/management/contents'); ?>" href="<?php echo $this->url('/management/contents'); ?>">
+                                    <i class="ti ti-float-right nav-icon"></i> <?php echo KN\Helpers\Base::lang('base.contents'); ?>
+                                </a>
+                            </li>
+                        <?php
+                        } 
+
+                        if ($this->authority('/management/logs') OR
                             $this->authority('/management/settings')) {
                             echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.system') . '</li>';
                         }

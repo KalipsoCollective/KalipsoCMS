@@ -67,6 +67,18 @@ return [
         'management_logs_ip_block' => 'Yönetim - Kayıtlar - IP Bloklama',
         'management_settings' => 'Yönetim - Ayarlar',
         'management_settings_update' => 'Yönetim - Ayarlar - Düzenle',
+        'management_schemas' => 'Yönetim - Şemalar',
+        'management_schemas_list' => 'Yönetim - Şemalar - Liste',
+        'management_schemas_add' => 'Yönetim - Şemalar - Ekle',
+        'management_schemas_detail' => 'Yönetim - Şemalar - Detay',
+        'management_schemas_update' => 'Yönetim - Şemalar - Düzenle',
+        'management_schemas_delete' => 'Yönetim - Şemalar - Sil',
+        'management_contents' => 'Yönetim - İçerikler',
+        'management_contents_list' => 'Yönetim - İçerikler - Liste',
+        'management_contents_add' => 'Yönetim - İçerikler - Ekle',
+        'management_contents_detail' => 'Yönetim - İçerikler - Detay',
+        'management_contents_update' => 'Yönetim - İçerikler - Düzenle',
+        'management_contents_delete' => 'Yönetim - İçerikler - Sil',
     ],
     'settings' => [
         'basic_settings' => 'Temel Ayarlar',
@@ -288,6 +300,8 @@ return [
         'maintenance_mode' => 'Bakım Modu',
         'maintenance_mode_desc' => 'Maalesef bakımda olduğumuz için şu an hizmet veremiyoruz, daha sonra tekrar deneyebilirsiniz.',
         'system' => 'Sistem',
+        'contents' => 'İçerikler',
+        'schemas' => 'Şemalar',
     ],
     'app' => [
         
