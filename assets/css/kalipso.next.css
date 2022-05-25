@@ -72,10 +72,13 @@ a {
 
 .navbar .navbar-nav .nav-item .nav-link {
     border-radius: 0.4rem;
+}
+
+.navbar.navbar-side .navbar-nav .nav-item .nav-link {
     position: relative;
 }
 
-.navbar .navbar-nav .nav-item .nav-link.active:before {
+.navbar.navbar-side .navbar-nav .nav-item .nav-link.active:before {
     left: -0.1rem;
     top: 0.5rem;
     bottom: 0.5rem;

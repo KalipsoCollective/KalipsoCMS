@@ -96,7 +96,7 @@
                             </li>
                             <div class="vr"></div>
                             <li class="nav-item">
-                                <a title="<?php echo KN\Helpers\Base::lang('base.logout'); ?>" data-bs-toggle="tooltip" data-bs-placement="left" class="nav-link" href="<?php echo $this->url('/auth/logout'); ?>">
+                                <a title="<?php echo KN\Helpers\Base::lang('base.logout'); ?>" data-bs-toggle="tooltip" data-bs-placement="left" class="nav-link text-danger" href="<?php echo $this->url('/auth/logout'); ?>">
                                     <i class="ti ti-power"></i>
                                 </a>
                             </li>
