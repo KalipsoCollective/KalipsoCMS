@@ -1,6 +1,6 @@
         <nav class="navbar-side navbar navbar-expand navbar-dark bg-black">
             <div class="container-fluid">
-                <a class="navbar-brand" href="<?php echo $this->url('/'); ?>">
+                <a class="navbar-brand" href="<?php echo $this->url('/management'); ?>">
                     <?php echo KN\Helpers\Base::config('app.name'); ?>
                     <small class="h6">_admin</small>    
                 </a>
@@ -90,14 +90,14 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link<?php echo $this->currentLink('/auth', 'active', false); ?>" href="<?php echo $this->url('/auth'); ?>">
-                                    <?php echo KN\Helpers\Base::lang('base.account'); ?>
+                                <a title="<?php echo KN\Helpers\Base::lang('base.account'); ?>" data-bs-toggle="tooltip" data-bs-placement="bottom" class="nav-link<?php echo $this->currentLink('/auth', 'active', false); ?>" href="<?php echo $this->url('/auth'); ?>">
+                                    <i class="ti ti-user"></i>
                                 </a>
                             </li>
                             <div class="vr"></div>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?php echo $this->url('/auth/logout'); ?>">
-                                    <i class="mdi mdi-power"></i> <?php echo KN\Helpers\Base::lang('base.logout'); ?>
+                                <a title="<?php echo KN\Helpers\Base::lang('base.logout'); ?>" data-bs-toggle="tooltip" data-bs-placement="left" class="nav-link" href="<?php echo $this->url('/auth/logout'); ?>">
+                                    <i class="ti ti-power"></i>
                                 </a>
                             </li>
                         </ul>

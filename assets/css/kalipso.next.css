@@ -38,6 +38,7 @@
 
 body {
     font-family: 'Manrope', sans-serif;
+    background: #f9fafb! important;
 }
 
 a {
@@ -55,8 +56,34 @@ a {
     min-height: 100vh;
 }
 
+.card {
+    border: 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgb(0 0 20 / 8%), 0 1px 2px rgb(0 0 20 / 8%) !important;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.tooltip {
+    font-family: 'Manrope', sans-serif;
+}
+
 .navbar .navbar-nav .nav-item .nav-link {
     border-radius: 0.4rem;
+    position: relative;
+}
+
+.navbar .navbar-nav .nav-item .nav-link.active:before {
+    left: -0.1rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 0.2rem;
+    content: '';
+    border-radius: 0.2rem;
+    background: var(--bs-primary);
+    position: absolute;
 }
 
 .navbar {
@@ -384,6 +411,36 @@ nav.navbar-side .navbar-nav .nav-item.nav-group {
     color: #444242;
     font-weight: 800;
     margin-top: 1rem;
+}
+
+.dash-header {
+    padding: 4rem 2rem 9rem;
+    color: #fff;
+    background: var(--bs-primary);
+    background: linear-gradient(180deg, var(--bs-primary) 0%, var(--bs-info) 100%);
+}
+
+.dash-header h1 {
+    letter-spacing: -0.1rem;
+}
+
+.dash-header p {
+    margin: 0;
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+
+.dash-content {
+    margin-top: -5rem;
+}
+
+.dash-icon {
+    font-size: 1.5rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.4rem;
+    background: var(--bs-primary);
+    color: var(--bs-light);
+    box-shadow: 0 0.2rem 0.6rem var(--bs-gray-500);
 }
 
 @media (max-width: 1200px) {
