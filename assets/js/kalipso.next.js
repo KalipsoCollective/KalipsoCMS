@@ -92,6 +92,9 @@ function kalipsoInit(firstLoad = false) {
 			
 		});
 	}
+
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 	
 	if (firstLoad) {
 
@@ -251,6 +254,16 @@ function responseFormatter(response, dom = null) {
 				}
 			}
 		}
+	}
+}
+
+function navOpen() {
+
+	const body = document.querySelector('body');
+	if (body.classList.contains('side-opened')) {
+		body.classList.remove('side-opened');
+	} else {
+		body.classList.add('side-opened');
 	}
 }
 

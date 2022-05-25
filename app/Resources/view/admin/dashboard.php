@@ -1,5 +1,5 @@
 		<div class="wrap">
-			<div class="container">
+			<div class="container-fluid">
 				<div class="row">
 					<div class="col-12">
 						<h1 class="h3 fw-bold"><?php echo \KN\Helpers\Base::lang('base.dashboard'); ?></h1>
