@@ -2,7 +2,7 @@
 			<div class="row">
 				<header class="col-12 dash-header">
 					<div class="d-flex align-items-center">
-						<h1><?php echo \KN\Helpers\Base::lang('base.users'); ?></h1>
+						<h1><i class="ti ti-users"></i> <?php echo \KN\Helpers\Base::lang('base.users'); ?></h1>
 						<?php
 						if ($this->authority('management/users/add')) {
 						?>

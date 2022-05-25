@@ -2,7 +2,7 @@
 			<div class="row">
 				<header class="col-12 dash-header">
 					<div class="d-flex align-items-center">
-						<h1><?php echo \KN\Helpers\Base::lang('base.logs'); ?></h1>
+						<h1><i class="ti ti-virus-search"></i> <?php echo \KN\Helpers\Base::lang('base.logs'); ?></h1>
 					</div>
 					<p><?php echo $description; ?></p>
 				</header>

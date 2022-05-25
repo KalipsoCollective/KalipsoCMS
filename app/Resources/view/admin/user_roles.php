@@ -2,7 +2,7 @@
 			<div class="row">
 				<header class="col-12 dash-header">
 					<div class="d-flex align-items-center">
-						<h1><?php echo \KN\Helpers\Base::lang('base.user_roles'); ?></h1>
+						<h1><i class="ti ti-chart-dots-3"></i> <?php echo \KN\Helpers\Base::lang('base.user_roles'); ?></h1>
 						<?php
 						if ($this->authority('management/roles/add')) {
 						?>

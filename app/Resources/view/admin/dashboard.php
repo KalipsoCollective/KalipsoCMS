@@ -2,7 +2,7 @@
 		<div class="container-fluid">
 			<div class="row">
                 <header class="col-12 dash-header">
-                    <h1><?php echo \KN\Helpers\Base::lang('base.dashboard'); ?></h1>
+                    <h1><i class="ti ti-layout-dashboard"></i> <?php echo \KN\Helpers\Base::lang('base.dashboard'); ?></h1>
                     <p><?php echo $description; ?></p>
                 </header>
                 <div class="col-12 dash-content">

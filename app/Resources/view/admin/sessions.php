@@ -2,7 +2,7 @@
 			<div class="row">
 				<header class="col-12 dash-header">
 					<div class="d-flex align-items-center">
-						<h1><?php echo \KN\Helpers\Base::lang('base.sessions'); ?></h1>
+						<h1><i class="ti ti-affiliate"></i> <?php echo \KN\Helpers\Base::lang('base.sessions'); ?></h1>
 					</div>
 					<p><?php echo $description; ?></p>
 				</header>
