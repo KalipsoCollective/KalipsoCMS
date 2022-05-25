@@ -1,16 +1,13 @@
-		<div class="wrap">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<div class="d-flex align-items-center">
-							<h1 class="h3 fw-bold"><?php echo \KN\Helpers\Base::lang('base.sessions'); ?></h1>
-							<?php // Action button ?>
-						</div>
-						<p><?php echo $description; ?></p>
+		<div class="container-fluid">
+			<div class="row">
+				<header class="col-12 dash-header">
+					<div class="d-flex align-items-center">
+						<h1><?php echo \KN\Helpers\Base::lang('base.sessions'); ?></h1>
 					</div>
-					<div class="col-12">
-						<div id="sessionsTable"></div>
-					</div>
+					<p><?php echo $description; ?></p>
+				</header>
+				<div class="col-12 dash-content">
+					<div class="bg-white p-2 rounded shadow-sm" id="sessionsTable"></div>
 				</div>
 			</div>
 		</div>
