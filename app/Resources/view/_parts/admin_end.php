@@ -1,16 +1,9 @@
+		</div>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/bootstrap/bootstrap.bundle.min.js'); ?>"></script>
-		
-		<script src="<?php echo KN\Helpers\Base::assets('libs/jquery/dist/jquery.min.js'); ?>"></script>
-		<script src="<?php echo KN\Helpers\Base::assets('libs/jquery-slimscroll/jquery.slimscroll.min.js'); ?>"></script>
-		<script src="<?php echo KN\Helpers\Base::assets('libs/apexcharts/dist/apexcharts.min.js'); ?>"></script>
-		<script src="<?php echo KN\Helpers\Base::assets('js/theme.min.js'); ?>"></script>
-
 		<script src="<?php echo KN\Helpers\Base::assets('libs/nprogress/nprogress.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/vpjax/vpjax.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/l10n/tr.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/kalipso.table.js'); ?>"></script>
-
-
 		<script>
 			function init() {
 

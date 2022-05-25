@@ -287,6 +287,7 @@ return [
         'settings_updated' => 'Ayarlar güncellendi.',
         'maintenance_mode' => 'Bakım Modu',
         'maintenance_mode_desc' => 'Maalesef bakımda olduğumuz için şu an hizmet veremiyoruz, daha sonra tekrar deneyebilirsiniz.',
+        'system' => 'Sistem',
     ],
     'app' => [
         

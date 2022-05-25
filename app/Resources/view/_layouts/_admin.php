@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'admin_header',
+	'header',
 	'admin_nav',
 	'_',
 	'admin_end'

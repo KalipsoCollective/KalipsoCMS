@@ -1,7 +1,5 @@
 /* KalipsoNext Style */
-@charset 'utf-8'; 
-
-:root {
+@charset 'utf-8'; :root {
     --transition: 0.2s ease-out;
 }
 
@@ -57,7 +55,6 @@ a {
     min-height: 100vh;
 }
 
-/*
 .navbar .navbar-nav .nav-item .nav-link {
     border-radius: 0.4rem;
 }
@@ -77,7 +74,6 @@ a {
 .navbar .vr {
     margin: 0.5rem;
 }
-*/
 
 .kn-toast-alert {
     position: fixed;
@@ -127,7 +123,7 @@ a {
     background: var(--bs-warning);
     color: #000;
 }
-/*
+
 @media (max-width: 1200px) {
     .navbar .navbar-nav .nav-item + .nav-item {
         margin-left: 0;
@@ -210,7 +206,6 @@ a {
         border-color: #fff;
     }
 }
-*/
 
 [data-kn-form] {
     position: relative;
@@ -243,4 +238,71 @@ a {
     opacity: 1;
     cursor: progress;
     visibility: visible;
+}
+
+nav.navbar-side {
+    width: 16rem;
+    height: 100vh;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+nav.navbar-side .container-fluid {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+nav.navbar-side .navbar-brand {
+    font-size: 1.2rem;
+    width: 100%;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+nav.navbar-side .navbar-brand .h6 {
+    font-size: 0.7rem;
+}
+
+nav.navbar-side .navbar-collapse {
+    width: 100%;
+}
+
+nav.navbar-side .navbar-nav {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+nav.navbar-side .navbar-nav .nav-item + .nav-item {
+    margin-left: 0;
+    margin-top: 0.2rem;
+}
+
+.navbar-side .nav-icon {
+    margin-right: 0.5rem;
+}
+
+.wrap-content {
+    margin-left: 16rem;
+    min-height: 100vh;
+}
+
+nav.navbar-side .navbar-nav .nav-item.nav-group {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: #444242;
+    font-weight: 800;
+    margin-top: 1rem;
 }

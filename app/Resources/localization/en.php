@@ -287,6 +287,7 @@ return [
         'settings_updated' => 'Settings updated.',
         'maintenance_mode' => 'Maintenance Mode',
         'maintenance_mode_desc' => 'Unfortunately, we are currently under maintenance, so we are unable to provide service, you can try again later.',
+        'system' => 'System',
     ],
     'app' => [
         
