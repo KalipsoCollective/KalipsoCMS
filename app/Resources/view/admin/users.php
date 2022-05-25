@@ -1,23 +1,21 @@
-		<div class="wrap">
-			<div class="container">
-				<div class="row">
-					<div class="col-12">
-						<div class="d-flex align-items-center">
-							<h1 class="h3 fw-bold"><?php echo \KN\Helpers\Base::lang('base.users'); ?></h1>
-							<?php
-							if ($this->authority('management/users/add')) {
-							?>
-								<button data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-success ms-auto">
-									<?php echo \KN\Helpers\Base::lang('base.add_new'); ?>
-								</button>
-							<?php
-							}	?>
-						</div>
-						<p><?php echo $description; ?></p>
+		<div class="container-fluid">
+			<div class="row">
+				<header class="col-12 dash-header">
+					<div class="d-flex align-items-center">
+						<h1><?php echo \KN\Helpers\Base::lang('base.users'); ?></h1>
+						<?php
+						if ($this->authority('management/users/add')) {
+						?>
+							<button data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-dark ms-auto">
+								<?php echo \KN\Helpers\Base::lang('base.add_new'); ?>
+							</button>
+						<?php
+						}	?>
 					</div>
-					<div class="col-12">
-						<div id="usersTable"></div>
-					</div>
+					<p><?php echo $description; ?></p>
+				</header>
+				<div class="col-12 dash-content">
+					<div class="bg-white p-2 rounded shadow-sm" id="usersTable"></div>
 				</div>
 			</div>
 		</div>
