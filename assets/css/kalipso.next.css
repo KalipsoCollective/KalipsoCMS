@@ -435,6 +435,7 @@ nav.navbar-side .navbar-nav .nav-item.nav-group {
 
 .dash-content {
     margin-top: -5rem;
+    min-height: 64vh;
 }
 
 .dash-icon {
