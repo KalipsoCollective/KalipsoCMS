@@ -302,6 +302,7 @@ return [
         'system' => 'Sistem',
         'contents' => 'İçerikler',
         'schemas' => 'Şemalar',
+        'schemas_message' => 'Şemalar, içerik yapılarınıza göre yeniden modelleyebileceğiniz esnek yapılardır.',
     ],
     'app' => [
         

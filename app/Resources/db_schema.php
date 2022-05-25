@@ -388,6 +388,57 @@ return [
 			]
 		],
 
+		/* Schemas Table */
+		'schemas' => [
+			'cols' => [
+				'id' => [
+					'type'          => 'int',
+					'auto_inc'      => true,
+					'attr'          => 'unsigned',
+					'type_values'   => 11,
+					'index'         => 'PRIMARY'
+				],
+				'name' => [
+					'type'          => 'json',
+				],
+				'description' => [
+					'type'          => 'json',
+				],
+				'icon' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+				],
+				'inputs' => [
+					'type'          => 'json',
+				],
+				'routes' => [
+					'type'          => 'json',
+				],
+				'created_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'index'         => 'INDEX'
+				],
+				'created_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'index'         => 'INDEX'
+				],
+				'updated_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'nullable'      => true,
+					'default'       => 'NULL'
+				],
+				'updated_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'nullable'      => true,
+					'default'       => 'NULL'
+				],
+			],
+		],
+
 	],
 	'table_values' => [
 		'charset'   => 'utf8mb4', // You can use 'utf8' if the structure is causing problems.
@@ -417,7 +468,7 @@ return [
 		'user_roles' => [
 			[
 				'name'                  => 'admin',
-				'routes'                => 'auth,auth/:action,auth/logout,management,management/users,management/users/list,management/users/add,management/users/:id,management/users/:id/update,management/users/:id/delete,management/roles,management/roles/list,management/roles/add,management/roles/:id,management/roles/:id/delete,management/roles/:id/update,management/sessions,management/sessions/list,management/logs,management/logs/list,management/logs/:ip/block,management/settings,management/settings/update',
+				'routes'                => 'auth,auth/:action,auth/logout,management,management/users,management/users/list,management/users/add,management/users/:id,management/users/:id/update,management/users/:id/delete,management/roles,management/roles/list,management/roles/add,management/roles/:id,management/roles/:id/delete,management/roles/:id/update,management/sessions,management/sessions/list,management/schemas,management/schemas/list,management/schemas/add,management/schemas/:id,management/schemas/:id/update,management/schemas/:id/delete,management/logs,management/logs/list,management/logs/:ip/block,management/settings,management/settings/update',
 				'created_at'            => time(),
 				'created_by'            => 1
 			]

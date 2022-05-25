@@ -49,8 +49,7 @@
                         <?php
                         } 
 
-                        if ($this->authority('/management/contents') OR
-                            $this->authority('/management/pages')) {
+                        if ($this->authority('/management/schemas')) {
                             echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.contents') . '</li>';
                         }
 
@@ -63,7 +62,7 @@
                             </li>
                         <?php
                         } 
-
+                        /*
                         if ($this->authority('/management/contents')) {
                         ?>
                             <li class="nav-item">
@@ -72,7 +71,7 @@
                                 </a>
                             </li>
                         <?php
-                        } 
+                        } */
 
                         if ($this->authority('/management/logs') OR
                             $this->authority('/management/settings')) {

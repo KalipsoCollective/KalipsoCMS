@@ -59,7 +59,16 @@ try {
             ['GET,POST', '/logs/list', 'AdminController@logList', ['Auth@with']],
             ['GET,POST', '/logs/:ip/block', 'AdminController@logIpBlock', ['Auth@with']],
 
+            // Schemas
+            ['GET,POST', '/schemas', 'ContentController@schemas', ['Auth@with']],
+            ['GET,POST', '/schemas/list', 'ContentController@schemaList', ['Auth@with']],
+            ['GET,POST', '/schemas/add', 'ContentController@schemaAdd', ['Auth@with']],
+            ['GET,POST', '/schemas/:id', 'ContentController@schemaDetail', ['Auth@with']],
+            ['GET,POST', '/schemas/:id/delete', 'ContentController@schemaDelete', ['Auth@with']],
+            ['GET,POST', '/schemas/:id/update', 'ContentController@schemaUpdate', ['Auth@with']],
+
             // Pages
+            /*
             ['GET,POST', '/pages', 'ContentController@pages', ['Auth@with']],
             ['GET,POST', '/pages/list', 'ContentController@pageList', ['Auth@with']],
             ['GET,POST', '/pages/add', 'ContentController@pageAdd', ['Auth@with']],
@@ -121,6 +130,7 @@ try {
             ['GET,POST', '/widgets/:id', 'WidgetController@widgetDetail', ['Auth@with']],
             ['GET,POST', '/widgets/:id/delete', 'WidgetController@widgetDelete', ['Auth@with']],
             ['GET,POST', '/widgets/:id/update', 'WidgetController@widgetUpdate', ['Auth@with']],
+            */
 
             // Settings
             ['GET,POST', '/settings', 'AdminController@settings', ['Auth@with']],

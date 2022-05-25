@@ -302,6 +302,7 @@ return [
         'system' => 'System',
         'contents' => 'Contents',
         'schemas' => 'Schemas',
+        'schemas_message' => 'Schemas are flexible structures that you can remodel based on your content structures.',
     ],
     'app' => [
         
