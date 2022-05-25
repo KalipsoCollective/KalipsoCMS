@@ -1,7 +1,8 @@
-			<footer class="mt-auto bg-white text-dark shadow p-4 m-2 rounded">
-				<div class="row justify-content-between">
+			<footer class="mt-auto bg-white text-dark shadow-sm rounded dash-footer">
+				<div class="row justify-content-between align-items-center">
 					<div class="col-12 col-md-6">
-						<?php echo \KN\Helpers\Base::lang('base.copyright') . ' © ' . date('Y') . ' | ' . \KN\Helpers\Base::lang('base.all_rights_reserved'); ?>
+						<?php echo \KN\Helpers\Base::lang('base.copyright') . ' © ' . date('Y') . ' | ' . \KN\Helpers\Base::lang('base.all_rights_reserved'); ?> 
+						<small class="badge bg-primary"><?php echo 'v' . KN_VERSION; ?></small>
 					</div>
 					<div class="col-12 col-md-6 d-flex">
 						<?php 
