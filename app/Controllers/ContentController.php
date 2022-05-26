@@ -27,18 +27,47 @@ final class ContentController extends Controller {
 
     }
 
-    public function schemas() {
+    public function contents() {
 
-        return [
-            'status' => true,
-            'statusCode' => 200,
-            'arguments' => [
-                'title' => Base::lang('base.schemas'),
-                'description' => Base::lang('base.schemas_message')
-            ],
-            'view' => ['admin.schemas', 'admin']
-        ];
+        $title = Base::lang('base.contents');
+        $description = Base::lang('base.contents_message');
 
+        if (isset($this->modules[$this->module]) !== false) {
+
+            $module = $this->modules[$this->module];
+            $moduleName = Base::lang($module['name']);
+            $title = $moduleName . ' | ' . $title;
+            $description = Base::lang($module['description']);
+            $icon = isset($module['icon']) !== false ? $module['icon'] : 'ti ti-folders';
+
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => [
+                    'title' => $title,
+                    'moduleName' => $moduleName,
+                    'icon' => $icon,
+                    'description' => $description,
+                    'modules' => $this->modules,
+                ],
+                'view' => ['admin.contents', 'admin']
+            ];
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
+                'redirect' => '/management',
+                'alerts' => [
+                    [
+                        'status' => 'error',
+                        'message' => Base::lang('error.module_not_found')
+                    ]
+                ],
+                'view' => null
+            ];
+        }
     }
 
 }

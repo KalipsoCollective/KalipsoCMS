@@ -55,18 +55,15 @@
 
                         if ($this->authority('/management/:module')) {
 
-                            KN\Helpers\Base::dump($modules);
-
                             foreach ($modules as $name => $details) {
-                                // code...
+                                ?>
+                                <li class="nav-item">
+                                    <a class="nav-link<?php echo $this->currentLink('/management/' . $name); ?>" href="<?php echo $this->url('/management/' . $name); ?>">
+                                        <i class="<?php echo $details['icon']; ?> nav-icon"></i> <?php echo KN\Helpers\Base::lang($details['name']); ?>
+                                    </a>
+                                </li>
+                                <?php
                             }
-                            ?>
-                            <li class="nav-item">
-                                <a class="nav-link<?php echo $this->currentLink('/management/' . $name); ?>" href="<?php echo $this->url('/management/' . $name); ?>">
-                                    <i class="<?php echo $details['icon']; ?> nav-icon"></i> <?php echo KN\Helpers\Base::lang($details['name']); ?>
-                                </a>
-                            </li>
-                        <?php
                         } 
                         /*
                         if ($this->authority('/management/contents')) {

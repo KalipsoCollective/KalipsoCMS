@@ -3,8 +3,8 @@
 return [
 
 	'services' => [
-		'name' => 'module.services',
-		'description' => 'module.services_description',
+		'name' => 'base.services',
+		'description' => 'base.services_message',
 		'icon' => 'ti ti-folders',
 		'table' => [
 			'id',
@@ -25,11 +25,29 @@ return [
 			]
 		],
 		'inputs' => [
-			'name',
-			'slug',
-			'ff' => 
+			'name' => [
+				'multilanguage' => true,
+				'label' => 'base.name',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+					'data-change' => ''
+				],
+				'data-onchange' => [
+
+				]
+			],
+			'slug' => [
+				'multilanguage' => true,
+				'label' => 'base.slug',
+				'type' => 'input',
+				'attributes' => ['required' => 'true'],
+				'auto_fill'
+			],
 			'description',
-			'ss'
+			'icon',
+			'content',
+			'widget'
 		]
 
 	]

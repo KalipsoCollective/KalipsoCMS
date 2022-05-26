@@ -32,6 +32,7 @@ return [
         'a_problem_occurred' => 'Bir sorun oluştu!',
         'endpoint_file_is_not_found' => 'Yetki kontrol noktası dosyası bulunamadı!',
         'ip_blocked' => 'IP adresiniz engellenmiştir!',
+        'module_not_found' => 'Modül bulunamadı!',
     ],
     'notification' => [
         'registration_email_title' => 'Hesabınız Oluşturuldu!',
@@ -73,6 +74,7 @@ return [
         'management_contents_detail' => 'Yönetim - İçerikler - Detay',
         'management_contents_update' => 'Yönetim - İçerikler - Düzenle',
         'management_contents_delete' => 'Yönetim - İçerikler - Sil',
+        'management_contents_slug' => 'Yönetim - İçerikler - Kısa Ad Sorgulama',
     ],
     'settings' => [
         'basic_settings' => 'Temel Ayarlar',
@@ -296,6 +298,8 @@ return [
         'system' => 'Sistem',
         'contents' => 'İçerikler',
         'contents_message' => 'İçerikler, içerik yapılarınıza göre yeniden modelleyebileceğiniz esnek yapılar sunar.',
+        'services' => 'Hizmetler',
+        'services_message' => 'Hizmetleri yönetebileceğiniz sayfadır.',
     ],
     'app' => [
         

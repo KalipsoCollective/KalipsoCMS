@@ -32,6 +32,7 @@ return [
         'a_problem_occurred' => 'A problem occurred!',
         'endpoint_file_is_not_found' => 'Authority endpoint file not found!',
         'ip_blocked' => 'Your IP address has been blocked!',
+        'module_not_found' => 'Module not found!',
     ],
     'notification' => [
         'registration_email_title' => 'Your Account Has Been Created!',
@@ -73,6 +74,7 @@ return [
         'management_contents_detail' => 'Management - Contents - Detail',
         'management_contents_update' => 'Management - Contents - Edit',
         'management_contents_delete' => 'Management - Contents - Delete',
+        'management_contents_slug' => 'Management - Contents - Slug Inquiry',
     ],
     'settings' => [
         'basic_settings' => 'Basic Settings',
@@ -296,6 +298,8 @@ return [
         'system' => 'System',
         'contents' => 'Contents',
         'contents_message' => 'Contents are flexible structures that you can remodel based on your content structures.',
+        'services' => 'Services',
+        'services_message' => 'This is the page where you can manage the services.',
     ],
     'app' => [
         

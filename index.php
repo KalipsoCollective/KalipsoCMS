@@ -34,6 +34,7 @@ try {
 
     $app->routeGroup(['GET,POST', '/management', 'AdminController@dashboard', ['Auth@with']], function () {
         return [
+
             // Users
             ['GET,POST', '/users', 'AdminController@users', ['Auth@with']],
             ['GET,POST', '/users/list', 'AdminController@userList', ['Auth@with']],
@@ -60,46 +61,15 @@ try {
             ['GET,POST', '/logs/:ip/block', 'AdminController@logIpBlock', ['Auth@with']],
 
             // Contents
-            ['GET,POST', '/contents/:module', 'ContentController@contents', ['Auth@with']],
-            ['GET,POST', '/contents/:module/list', 'ContentController@contentsList', ['Auth@with']],
-            ['GET,POST', '/contents/:module/add', 'ContentController@contentsAdd', ['Auth@with']],
-            ['GET,POST', '/contents/:module/:id', 'ContentController@contentsDetail', ['Auth@with']],
-            ['GET,POST', '/contents/:module/:id/delete', 'ContentController@contentsDelete', ['Auth@with']],
-            ['GET,POST', '/contents/:module/:id/update', 'ContentController@contentsUpdate', ['Auth@with']],
+            ['GET,POST', '/:module', 'ContentController@contents', ['Auth@with']],
+            ['GET,POST', '/:module/list', 'ContentController@contentsList', ['Auth@with']],
+            ['GET,POST', '/:module/add', 'ContentController@contentsAdd', ['Auth@with']],
+            ['GET,POST', '/:module/:id', 'ContentController@contentsDetail', ['Auth@with']],
+            ['GET,POST', '/:module/:id/delete', 'ContentController@contentsDelete', ['Auth@with']],
+            ['GET,POST', '/:module/:id/update', 'ContentController@contentsUpdate', ['Auth@with']],
+            ['GET,POST', '/:module/slug/:title', 'ContentController@contentsSlugInquiry', ['Auth@with']],
 
-            // Pages
             /*
-            ['GET,POST', '/pages', 'ContentController@pages', ['Auth@with']],
-            ['GET,POST', '/pages/list', 'ContentController@pageList', ['Auth@with']],
-            ['GET,POST', '/pages/add', 'ContentController@pageAdd', ['Auth@with']],
-            ['GET,POST', '/pages/:id', 'ContentController@pageDetail', ['Auth@with']],
-            ['GET,POST', '/pages/:id/delete', 'ContentController@pageDelete', ['Auth@with']],
-            ['GET,POST', '/pages/:id/update', 'ContentController@pageUpdate', ['Auth@with']],
-
-            // Contents
-            ['GET,POST', '/contents', 'ContentController@contents', ['Auth@with']],
-            ['GET,POST', '/contents/list', 'ContentController@contentList', ['Auth@with']],
-            ['GET,POST', '/contents/add', 'ContentController@contentAdd', ['Auth@with']],
-            ['GET,POST', '/contents/:id', 'ContentController@contentDetail', ['Auth@with']],
-            ['GET,POST', '/contents/:id/delete', 'ContentController@contentDelete', ['Auth@with']],
-            ['GET,POST', '/contents/:id/update', 'ContentController@contentUpdate', ['Auth@with']],
-
-            // Categories
-            ['GET,POST', '/categories', 'ContentController@categories', ['Auth@with']],
-            ['GET,POST', '/categories/list', 'ContentController@categoryList', ['Auth@with']],
-            ['GET,POST', '/categories/add', 'ContentController@categoryAdd', ['Auth@with']],
-            ['GET,POST', '/categories/:id', 'ContentController@categoryDetail', ['Auth@with']],
-            ['GET,POST', '/categories/:id/delete', 'ContentController@categoryDelete', ['Auth@with']],
-            ['GET,POST', '/categories/:id/update', 'ContentController@categoryUpdate', ['Auth@with']],
-
-            // Media
-            ['GET,POST', '/media', 'ContentController@media', ['Auth@with']],
-            ['GET,POST', '/media/list', 'ContentController@mediaList', ['Auth@with']],
-            ['GET,POST', '/media/add', 'ContentController@mediaAdd', ['Auth@with']],
-            ['GET,POST', '/media/:id', 'ContentController@mediaDetail', ['Auth@with']],
-            ['GET,POST', '/media/:id/delete', 'ContentController@mediaDelete', ['Auth@with']],
-            ['GET,POST', '/media/:id/update', 'ContentController@mediaUpdate', ['Auth@with']],
-
             // Contact
             ['GET,POST', '/forms', 'FormController@forms', ['Auth@with']],
             ['GET,POST', '/forms/list', 'FormController@formList', ['Auth@with']],

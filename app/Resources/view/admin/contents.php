@@ -2,9 +2,9 @@
 			<div class="row">
 				<header class="col-12 dash-header">
 					<div class="d-flex align-items-center">
-						<h1><i class="ti ti-chart-dots-3"></i> <?php echo \KN\Helpers\Base::lang('base.contents'); ?></h1>
+						<h1><i class="<?php echo isset($icon) !== false ? $icon : null; ?>"></i> <?php echo $moduleName; ?></h1>
 						<?php
-						if ($this->authority('management/contents/add')) {
+						if ($this->authority('management/:module/add')) {
 						?>
 							<button data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-dark ms-auto">
 								<?php echo \KN\Helpers\Base::lang('base.add_new'); ?>
@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		<?php
-		if ($this->authority('management/schemas/add')) {
+		if ($this->authority('management/:module/add')) {
 			$languages = \KN\Helpers\Base::config('app.available_languages');
 			?>
 			<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
