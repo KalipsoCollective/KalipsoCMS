@@ -59,13 +59,13 @@ try {
             ['GET,POST', '/logs/list', 'AdminController@logList', ['Auth@with']],
             ['GET,POST', '/logs/:ip/block', 'AdminController@logIpBlock', ['Auth@with']],
 
-            // Schemas
-            ['GET,POST', '/schemas', 'ContentController@schemas', ['Auth@with']],
-            ['GET,POST', '/schemas/list', 'ContentController@schemaList', ['Auth@with']],
-            ['GET,POST', '/schemas/add', 'ContentController@schemaAdd', ['Auth@with']],
-            ['GET,POST', '/schemas/:id', 'ContentController@schemaDetail', ['Auth@with']],
-            ['GET,POST', '/schemas/:id/delete', 'ContentController@schemaDelete', ['Auth@with']],
-            ['GET,POST', '/schemas/:id/update', 'ContentController@schemaUpdate', ['Auth@with']],
+            // Contents
+            ['GET,POST', '/contents/:module', 'ContentController@contents', ['Auth@with']],
+            ['GET,POST', '/contents/:module/list', 'ContentController@contentsList', ['Auth@with']],
+            ['GET,POST', '/contents/:module/add', 'ContentController@contentsAdd', ['Auth@with']],
+            ['GET,POST', '/contents/:module/:id', 'ContentController@contentsDetail', ['Auth@with']],
+            ['GET,POST', '/contents/:module/:id/delete', 'ContentController@contentsDelete', ['Auth@with']],
+            ['GET,POST', '/contents/:module/:id/update', 'ContentController@contentsUpdate', ['Auth@with']],
 
             // Pages
             /*

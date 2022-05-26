@@ -20,6 +20,16 @@ use KN\Model\Logs;
 
 final class AdminController extends Controller {
 
+	public $modules;
+
+	public function __construct($container) {
+
+		parent::__construct($container);
+		$this->modules = file_exists($file = Base::path('app/Resources/modules.php')) ? require $file : [];
+
+	} 
+
+
 	public function dashboard() {
 
 		$users = (new Users)->count('id', 'total')->notWhere('status', 'deleted')->cache(60)->get();
@@ -41,6 +51,7 @@ final class AdminController extends Controller {
 				'title' => Base::lang('base.dashboard') . ' | ' . Base::lang('base.management'),
 				'description' => Base::lang('base.dashboard_message'),
 				'count' => $count,
+				'modules' => $this->modules,
 			],
 			'view' => ['admin.dashboard', 'admin']
 		];
@@ -58,12 +69,86 @@ final class AdminController extends Controller {
 			'arguments' => [
 				'title' => Base::lang('base.users') . ' | ' . Base::lang('base.management'),
 				'description' => Base::lang('base.users_message'),
-				'userRoles' => $userRoles
+				'userRoles' => $userRoles,
+				'modules' => $this->modules,
 			],
 			'view' => ['admin.users', 'admin']
 		];
 
 	}
+
+
+	public function roles() {
+
+		$roles = require(Base::path('app/Resources/endpoints.php'));
+
+		return [
+			'status' => true,
+			'statusCode' => 200,
+			'arguments' => [
+				'title' => Base::lang('base.user_roles') . ' | ' . Base::lang('base.management'),
+				'description' => Base::lang('base.user_roles_message'),
+				'roles' => $roles,
+				'modules' => $this->modules,
+			],
+			'view' => ['admin.user_roles', 'admin']
+		];
+
+	}
+
+
+	public function sessions() {
+
+		return [
+			'status' => true,
+			'statusCode' => 200,
+			'arguments' => [
+				'title' => Base::lang('base.sessions') . ' | ' . Base::lang('base.management'),
+				'description' => Base::lang('base.sessions_message'),
+				'modules' => $this->modules,
+			],
+			'view' => ['admin.sessions', 'admin']
+		];
+
+	}
+
+
+	public function logs() {
+
+
+		return [
+			'status' => true,
+			'statusCode' => 200,
+			'arguments' => [
+				'title' => Base::lang('base.logs') . ' | ' . Base::lang('base.management'),
+				'description' => Base::lang('base.logs_message'),
+				'modules' => $this->modules,
+			],
+			'view' => ['admin.logs', 'admin']
+		];
+
+	}
+
+
+	public function settings() {
+
+		$parameters = $this->getSettingParameters();
+
+		return [
+			'status' => true,
+			'statusCode' => 200,
+			'arguments' => [
+				'title' => Base::lang('base.settings') . ' | ' . Base::lang('base.management'),
+				'description' => Base::lang('base.settings_message'),
+				'groups' => $parameters['groups'],
+				'languages' => $parameters['languages'],
+				'modules' => $this->modules,
+			],
+			'view' => ['admin.settings', 'admin']
+		];
+
+	}
+
 
 	public function userList() {
 
@@ -166,6 +251,7 @@ final class AdminController extends Controller {
 		];
 
 	}
+
 
 	public function userAdd() {
 
@@ -294,6 +380,7 @@ final class AdminController extends Controller {
 
 	}
 
+
 	public function userDelete() {
 
 		$id = (int)$this->get('request')->attributes['id'];
@@ -357,6 +444,7 @@ final class AdminController extends Controller {
 
 	}
 
+
 	public function userDetail() {
 
 		$id = (int)$this->get('request')->attributes['id'];
@@ -418,6 +506,7 @@ final class AdminController extends Controller {
 		];
 
 	}
+
 
 	public function userUpdate() {
 
@@ -558,22 +647,6 @@ final class AdminController extends Controller {
 
 	}
 
-	public function roles() {
-
-		$roles = require(Base::path('app/Resources/endpoints.php'));
-
-		return [
-			'status' => true,
-			'statusCode' => 200,
-			'arguments' => [
-				'title' => Base::lang('base.user_roles') . ' | ' . Base::lang('base.management'),
-				'description' => Base::lang('base.user_roles_message'),
-				'roles' => $roles
-			],
-			'view' => ['admin.user_roles', 'admin']
-		];
-
-	}
 
 	public function roleDetail() {
 
@@ -712,6 +785,7 @@ final class AdminController extends Controller {
 
 	}
 
+
 	public function roleAdd() {
 
 		extract(Base::input([
@@ -775,6 +849,7 @@ final class AdminController extends Controller {
 		];
 
 	}
+
 
 	public function roleDelete() {
 
@@ -1003,19 +1078,6 @@ final class AdminController extends Controller {
 
 	}
 
-	public function sessions() {
-
-		return [
-			'status' => true,
-			'statusCode' => 200,
-			'arguments' => [
-				'title' => Base::lang('base.sessions') . ' | ' . Base::lang('base.management'),
-				'description' => Base::lang('base.sessions_message')
-			],
-			'view' => ['admin.sessions', 'admin']
-		];
-
-	}
 
 	public function sessionList() {
 
@@ -1072,20 +1134,6 @@ final class AdminController extends Controller {
 
 	}
 
-	public function logs() {
-
-
-		return [
-			'status' => true,
-			'statusCode' => 200,
-			'arguments' => [
-				'title' => Base::lang('base.logs') . ' | ' . Base::lang('base.management'),
-				'description' => Base::lang('base.logs_message')
-			],
-			'view' => ['admin.logs', 'admin']
-		];
-
-	}
 
 	public function logList() {
 
@@ -1445,23 +1493,6 @@ final class AdminController extends Controller {
 
 	}
 
-	public function settings() {
-
-		$parameters = $this->getSettingParameters();
-
-		return [
-			'status' => true,
-			'statusCode' => 200,
-			'arguments' => [
-				'title' => Base::lang('base.settings') . ' | ' . Base::lang('base.management'),
-				'description' => Base::lang('base.settings_message'),
-				'groups' => $parameters['groups'],
-				'languages' => $parameters['languages']
-			],
-			'view' => ['admin.settings', 'admin']
-		];
-
-	}
 
 	public function settingsUpdate() {
 
@@ -1542,6 +1573,5 @@ final class AdminController extends Controller {
 		];
 
 	}
-
 
 }

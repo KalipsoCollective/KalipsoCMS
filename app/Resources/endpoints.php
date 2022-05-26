@@ -81,52 +81,28 @@ return [
 		'default' => false,
 		'name' => 'auth.management_sessions_list',
 	],
-	'management/schemas' => [
-		'default' => false,
-		'name' => 'auth.management_schemas',
-	],
-	'management/schemas/list' => [
-		'default' => false,
-		'name' => 'auth.management_schemas_list',
-	],
-	'management/schemas/add' => [
-		'default' => false,
-		'name' => 'auth.management_schemas_add',
-	],
-	'management/schemas/:id' => [
-		'default' => false,
-		'name' => 'auth.management_schemas_detail',
-	],
-	'management/schemas/:id/update' => [
-		'default' => false,
-		'name' => 'auth.management_schemas_update',
-	],
-	'management/schemas/:id/delete' => [
-		'default' => false,
-		'name' => 'auth.management_schemas_delete',
-	],
 
-	'management/contents' => [
+	'management/:module' => [
 		'default' => false,
 		'name' => 'auth.management_contents',
 	],
-	'management/contents/list' => [
+	'management/:module/list' => [
 		'default' => false,
 		'name' => 'auth.management_contents_list',
 	],
-	'management/contents/add' => [
+	'management/:module/add' => [
 		'default' => false,
 		'name' => 'auth.management_contents_add',
 	],
-	'management/contents/:id' => [
+	'management/:module/:id' => [
 		'default' => false,
 		'name' => 'auth.management_contents_detail',
 	],
-	'management/contents/:id/update' => [
+	'management/:module/:id/update' => [
 		'default' => false,
 		'name' => 'auth.management_contents_update',
 	],
-	'management/contents/:id/delete' => [
+	'management/:module/:id/delete' => [
 		'default' => false,
 		'name' => 'auth.management_contents_delete',
 	],

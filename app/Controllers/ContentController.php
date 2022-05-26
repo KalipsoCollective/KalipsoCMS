@@ -16,6 +16,17 @@ use KN\Core\Notification;
 
 final class ContentController extends Controller {
 
+    public $module;
+    public $modules;
+
+    public function __construct($container) {
+
+        parent::__construct($container);
+        $this->module = $this->get('request')->attributes['module'];
+        $this->modules = file_exists($file = Base::path('app/Resources/modules.php')) ? require $file : [];
+
+    }
+
     public function schemas() {
 
         return [

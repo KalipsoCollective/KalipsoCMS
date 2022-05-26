@@ -67,12 +67,6 @@ return [
         'management_logs_ip_block' => 'Management - Logs - IP Block',
         'management_settings' => 'Management - Settings',
         'management_settings_update' => 'Management - Settings - Edit',
-        'management_schemas' => 'Management - Schemas',
-        'management_schemas_list' => 'Management - Schemas - List',
-        'management_schemas_add' => 'Management - Schemas - Add',
-        'management_schemas_detail' => 'Management - Schemas - Detail',
-        'management_schemas_update' => 'Management - Schemas - Edit',
-        'management_schemas_delete' => 'Management - Schemas - Delete',
         'management_contents' => 'Management - Contents',
         'management_contents_list' => 'Management - Contents - List',
         'management_contents_add' => 'Management - Contents - Add',
@@ -301,8 +295,7 @@ return [
         'maintenance_mode_desc' => 'Unfortunately, we are currently under maintenance, so we are unable to provide service, you can try again later.',
         'system' => 'System',
         'contents' => 'Contents',
-        'schemas' => 'Schemas',
-        'schemas_message' => 'Schemas are flexible structures that you can remodel based on your content structures.',
+        'contents_message' => 'Contents are flexible structures that you can remodel based on your content structures.',
     ],
     'app' => [
         

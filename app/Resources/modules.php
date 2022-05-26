@@ -14,9 +14,15 @@ return [
 			'created_at',
 			'created_by'
 		],
-		'routes' = [
-			'en' => '/services/:slug',
-			'tr' => '/hizmetler/:slug'
+		'routes' => [
+			'listing' => [
+				'en' => '/services/:slug',
+				'tr' => '/hizmetler/:slug'
+			],
+			'detail' => [
+				'en' => '/services/:slug',
+				'tr' => '/hizmetler/:slug'
+			]
 		],
 		'inputs' => [
 			'name',
