@@ -519,7 +519,7 @@ return [
 		'user_roles' => [
 			[
 				'name'                  => 'admin',
-				'routes'                => 'auth,auth/:action,auth/logout,management,management/users,management/users/list,management/users/add,management/users/:id,management/users/:id/update,management/users/:id/delete,management/roles,management/roles/list,management/roles/add,management/roles/:id,management/roles/:id/delete,management/roles/:id/update,management/sessions,management/sessions/list,management/:module,management/:module/list,management/:module/add,management/:module/:id,management/:module/:id/update,management/:module/:id/delete,management/logs,management/logs/list,management/logs/:ip/block,management/settings,management/settings/update',
+				'routes'                => 'auth,auth/:action,auth/logout,management,management/users,management/users/list,management/users/add,management/users/:id,management/users/:id/update,management/users/:id/delete,management/roles,management/roles/list,management/roles/add,management/roles/:id,management/roles/:id/delete,management/roles/:id/update,management/sessions,management/sessions/list,management/:module,management/:module/list,management/:module/add,management/:module/:id,management/:module/:id/update,management/:module/:id/delete,management/:module/slug/:title,management/logs,management/logs/list,management/logs/:ip/block,management/settings,management/settings/update',
 				'created_at'            => time(),
 				'created_by'            => 1
 			]

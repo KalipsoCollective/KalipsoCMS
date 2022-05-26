@@ -439,9 +439,7 @@ final class Factory
                                         $route = $details;
                                         $routePath = $path;
                                         $notFound = false;
-                                        $detectedRoutes[$path] = [
-                                            'route' => $route,
-                                        ];
+                                        $detectedRoutes[$path] = $details;
                                     }
                                     
                                 } else {
@@ -454,7 +452,6 @@ final class Factory
 
                 if (count($detectedRoutes) > 1) {
 
-                    echo '<pre>';
                     $uri = $this->request->uri;
                     $similarity = [];
                     foreach ($detectedRoutes as $pKey => $pDetail) {
