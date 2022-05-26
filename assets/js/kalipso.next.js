@@ -112,7 +112,7 @@ function kalipsoInit(firstLoad = false) {
 							keep = false;
 						} else {
 							let text = e.target.innerHTML;
-							e.target.innerHTML = e.target.getAttribute('data-kn-again');
+							e.target.innerHTML = sanitizeHTML(e.target.getAttribute('data-kn-again'));
 							e.target.setAttribute('data-kn-again-check', true);
 							setTimeout(() => {
 								e.target.innerHTML = text;
@@ -146,6 +146,12 @@ function kalipsoInit(firstLoad = false) {
 	}
 	
 }
+
+const sanitizeHTML = function (str) {
+	var temp = document.createElement('div');
+	temp.textContent = str;
+	return temp.innerHTML;
+};
 
 function alertRemove() {
 	const alerts = document.querySelectorAll('.kn-alert');
