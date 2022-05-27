@@ -25,31 +25,153 @@ return [
 			]
 		],
 		'inputs' => [
-			'name' => [
+			'title' => [
 				'multilanguage' => true,
-				'label' => 'base.name',
+				'label' => 'base.title',
 				'type' => 'input',
 				'attributes' => [
 					'required' => 'true',
-					'data-change' => ''
+					'data-kn-change' => 'slug-check',
 				],
-				'data-onchange' => [
-
-				]
 			],
 			'slug' => [
 				'multilanguage' => true,
 				'label' => 'base.slug',
 				'type' => 'input',
 				'attributes' => ['required' => 'true'],
-				'auto_fill'
 			],
-			'description',
-			'icon',
-			'content',
-			'widget'
+			'description' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'input',
+				'attributes' => ['required' => 'true'],
+			],
+			'content' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'editor',
+				'attributes' => ['required' => 'true'],
+			],
+			'header_image' => [
+				'label' => 'base.header_image',
+				'type' => 'file',
+				'size' => [
+					'original' => [1920, 400]
+				],
+				'attributes' => [
+					'accept' => 'image/*',
+				],
+			],
+			'icon' => [
+				'label' => 'base.icon',
+				'type' => 'input',
+				'attributes' => ['required' => 'true'],
+			],
+			'widget' => [
+				'countries' => [
+					'label' => 'base.countries',
+					'type' => 'select',
+					'source' => ['getModuleDatas', ['countries']],
+					'use_for_view' => 'title',
+					'attributes' => ['required' => 'true'],
+				]
+			],
 		]
 
-	]
+	],
+	'other-services' => [
+		'name' => 'base.other_services',
+		'description' => 'base.other_services_message',
+		'icon' => 'ti ti-folder',
+		'table' => [
+			'id',
+			'name',
+			'updated_at',
+			'updated_by',
+			'created_at',
+			'created_by'
+		],
+		'routes' => [
+			'listing' => false,
+			'detail' => false
+		],
+		'inputs' => [
+			'title' => [
+				'multilanguage' => true,
+				'label' => 'base.title',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+				],
+			],
+			'content' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'textarea',
+				'attributes' => ['required' => 'true'],
+			],
+			'icon' => [
+				'label' => 'base.icon',
+				'type' => 'input',
+				'attributes' => ['required' => 'true'],
+			],
+		]
+	],
+	'countries' => [
+		'name' => 'base.countries',
+		'description' => 'base.countries_message',
+		'icon' => 'ti ti-globe',
+		'table' => [
+			'id',
+			'name',
+			'updated_at',
+			'updated_by',
+			'created_at',
+			'created_by'
+		],
+		'routes' => [
+			'listing' => false,
+			'detail' => false
+		],
+		'inputs' => [
+			'title' => [
+				'multilanguage' => true,
+				'label' => 'base.title',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+				],
+			],
+			'content' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'editor',
+				'attributes' => ['required' => 'true'],
+			],
+			'flag' => [
+				'label' => 'base.flag',
+				'type' => 'file',
+				'size' => [
+					'original' => [200, 200]
+				],
+				'attributes' => [
+					'accept' => 'image/*',
+					'required' => 'true',
+				],
+			],
+			'campus_image' => [
+				'label' => 'base.image',
+				'type' => 'file',
+				'size' => [
+					'original' => [300, 300]
+				],
+				'attributes' => [
+					'accept' => 'image/*',
+					'required' => 'true',
+				],
+			],
+		]
+
+	],
 
 ];

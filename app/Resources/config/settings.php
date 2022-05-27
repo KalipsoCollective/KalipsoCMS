@@ -20,7 +20,7 @@ return [
 	'mail_queue' => true,
 	'view_cache' => false,
 	'db_cache' => true,
-	'route_cache' => false,
-	'last_updated_at' => 1653561242,
+	'route_cache' => true,
+	'last_updated_at' => 1653646320,
 	'last_updated_by' => 1,
 ];

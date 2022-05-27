@@ -455,13 +455,6 @@ return [
 					'type'          => 'varchar',
 					'type_values'   => 80,
 				],
-				'icon' => [
-					'type'          => 'varchar',
-					'type_values'   => 80,
-				],
-				'routes' => [
-					'type'          => 'json',
-				],
 				'input' => [
 					'type'          => 'json',
 				],

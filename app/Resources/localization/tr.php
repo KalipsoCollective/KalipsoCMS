@@ -300,6 +300,11 @@ return [
         'contents_message' => 'İçerikler, içerik yapılarınıza göre yeniden modelleyebileceğiniz esnek yapılar sunar.',
         'services' => 'Hizmetler',
         'services_message' => 'Hizmetleri yönetebileceğiniz sayfadır.',
+        'other_services' => 'Diğer Hizmetler',
+        'other_services_message' => 'Diğer hizmetleri buradan ekleyebilirsiniz.',
+        'countries' => 'Ülkeler',
+        'countries_message' => 'Ülkeleri buradan düzenleyebilirsiniz.',
+        'all' => 'Tümü',
     ],
     'app' => [
         
