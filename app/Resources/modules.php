@@ -115,6 +115,7 @@ return [
 			],
 			'icon' => [
 				'label' => 'base.icon',
+				'col' => 'col-12',
 				'type' => 'input',
 				'attributes' => ['required' => 'true'],
 			],

@@ -108,14 +108,27 @@ final class ContentController extends Controller {
 
                         $options .= '<option value="'.$widgetData->id.'">' . $text . '</option>';
                     }
+
+                    $attributes = '';
+                    if (isset($widget['attributes']) !== false) {
+                        foreach ($widget['attributes'] as $attribute => $val) {
+                            $attributes .= $attribute . '="'.$val.'" ';
+                        }
+                    }
+
+                    $requiredBadge = '';
+                    if (isset($widget['attributes']['required']) !== false AND $widget['attributes']['required']) {
+                        $requiredBadge = ' <sup class="text-danger">*</sup>';
+                    }
+
                     $moduleForm .= '
                     <div class="col-12 col-md-6">
                         <div class="form-floating">
-                            <select class="form-select" required name="' . $key . '" id="content_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
+                            <select class="form-select" '.$attributes.'name="' . $key . '" id="content_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
                                 <option value="0">' . Base::lang('base.all') . '</option>
                                 '.$options.'
                             </select>
-                            <label for="content_' . $key . '">' . Base::lang($widget['label']) . '</label>
+                            <label for="content_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
                         </div>
                     </div>';
 
@@ -166,6 +179,11 @@ final class ContentController extends Controller {
                         $col = $input['col'];
                     }
 
+                    $requiredBadge = '';
+                    if (isset($input['attributes']['required']) !== false AND $input['attributes']['required']) {
+                        $requiredBadge = ' <sup class="text-danger">*</sup>';
+                    }
+
                     switch ($input['type']) {
                         case 'input':
 
@@ -173,7 +191,7 @@ final class ContentController extends Controller {
                             <div class="'.$col.'">
                                 <div class="form-floating">
                                     <input class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
-                                    <label for="content_' . $name . $lang . '">' . Base::lang($input['label']) . '</label>
+                                    <label for="content_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
                             break;
@@ -183,7 +201,7 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="">
-                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . Base::lang($input['label']) . '</label>
+                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                     <input class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" type="file">
                                 </div>
                             </div>';
@@ -203,7 +221,7 @@ final class ContentController extends Controller {
                                     <select class="form-select" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($widget['label']) . '">
                                         '.$options.'
                                     </select>
-                                    <label for="content_' . $name . $lang . '">' . Base::lang($widget['label']) . '</label>
+                                    <label for="content_' . $name . $lang . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
                             break;
@@ -213,7 +231,7 @@ final class ContentController extends Controller {
                             <div class="'.$col.'">
                                 <div class="form-floating">
                                     <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 200px"></textarea>
-                                    <label for="content_' . $name . $lang . '">' . Base::lang($input['label']) . '</label>
+                                    <label for="content_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
                             break;
