@@ -70,6 +70,9 @@ function editorInit(el, domID = null) {
 
 	let defaultOptions = {
 		modules: {
+			imageResize: {
+				displaySize: false
+			},
 			toolbar: {
 				container: [
 					['bold', 'italic', 'underline', 'strike'], 
@@ -93,8 +96,7 @@ function editorInit(el, domID = null) {
 							formData.append('image', file);
 							NProgress.start();
 							const res = await kalipsoFetch('/management/content/' + moduleName + '/upload-file', 'POST', formData);
-							responseFormatter(res);
-							console.log(res);
+							responseFormatter(res, this.quill);
 							NProgress.done();
 						};
 					},
@@ -288,6 +290,8 @@ function responseFormatter(response, dom = null) {
 		modal.show();
 	}
 
+	
+
 	if (response.reload !== undefined) {
 		const timeOut = response.reload_timeout !== undefined ? response.reload_timeout : 1;
 		setTimeout(() => {
@@ -345,6 +349,16 @@ function responseFormatter(response, dom = null) {
 				}
 			}
 		}
+	}
+
+	if (dom && response.editor_upload !== undefined) {
+
+		for (var i = 0; i < response.editor_upload.length; i++) {
+
+			let range = dom.getSelection();
+			dom.insertEmbed(range.index, 'image', response.editor_upload[i]);
+		}
+		
 	}
 }
 

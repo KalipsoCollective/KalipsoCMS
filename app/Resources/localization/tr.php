@@ -315,6 +315,7 @@ return [
         'file_successfully_uploaded' => 'Dosya başarıyla yüklendi!',
         'file_upload_problem' => 'Dosya yüklenirken bir sorun oluştu!',
         'file_not_found' => 'Dosya bulunamadı!',
+        'header_image' => 'Başlık Görseli',
     ],
     'app' => [
         

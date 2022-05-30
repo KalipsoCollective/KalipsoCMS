@@ -7,7 +7,6 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/bootstrap/bootstrap.min.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/kalipso.table.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/nprogress/nprogress.css'); ?>">
-		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/quill/quill.core.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/quill/quill.snow.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/kalipso.libs.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/kalipso.next.css'); ?>">

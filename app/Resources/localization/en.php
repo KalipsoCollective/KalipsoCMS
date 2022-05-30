@@ -315,6 +315,7 @@ return [
         'file_successfully_uploaded' => 'File uploaded successfully!',
         'file_upload_problem' => 'There was a problem uploading the file!',
         'file_not_found' => 'File not found!',
+        'header_image' => 'Header Image',
     ],
     'app' => [
         

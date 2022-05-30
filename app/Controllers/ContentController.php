@@ -12,6 +12,7 @@ namespace KN\Controllers;
 use KN\Core\Controller;
 use KN\Helpers\Base;
 use KN\Model\Contents;
+use KN\Model\Files;
 use KN\Core\Notification;
 use \Verot\Upload\Upload;
 
@@ -343,22 +344,24 @@ final class ContentController extends Controller {
                                 'status' => 'success',
                                 'message' => Base::lang('base.file_successfully_uploaded')
                             ];
+                            $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
+                            (new Files)->insert([
+                                'module' => $this->module,
+                                'name' => $handle->file_dst_name_body,
+                                'files' => json_encode([
+                                    'original' => $url
+                                ])
+                            ]);
 
-                            $arguments['editor_upload'][] = [
-                                'file_dst_path' => str_replace($path, '', $handle->file_dst_path),
-                                'file_dst_name_body' => str_replace($path, '', $handle->file_dst_name_body),
-                                'file_dst_name_ext' => str_replace($path, '', $handle->file_dst_name_ext),
-                                'file_dst_name' => str_replace($path, '', $handle->file_dst_name),
-                                'file_dst_pathname' => str_replace($path, '', $handle->file_dst_pathname),
-                            ];
-
+                            $arguments['editor_upload'][] = $this->get()->url('upload/' . $url);
                             $handle->clean();
 
                         } else {
                             echo 'error : ' . $handle->error;
                             $alerts[] = [
                                 'status' => 'error',
-                                'message' => Base::lang('base.file_upload_problem')
+                                'message' => Base::lang('base.file_upload_problem') 
+                                . (isset($handle->error) !== false ? '(' . $handle->error . ')' : '')
                             ];
                         }
                     }

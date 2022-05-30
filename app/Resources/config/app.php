@@ -17,7 +17,7 @@ return [
 	'available_languages' => ['en', 'tr'],
 	'editor_upload_max_width' => 1920,
 	'editor_upload_max_size' => 5242880, // 5 MB
-	'editor_upload_png_quality' => 0, // without lossless = 0 or (1 - 9)
+	'editor_upload_png_quality' => 8, // without lossless = 0 or (1 - 9)
 	'editor_upload_webp_quality' => 85, // without lossless = 0 or (1 - 100)
 	'editor_upload_jpeg_quality' => 85, // without lossless = 0 or (1 - 100)
 ];
