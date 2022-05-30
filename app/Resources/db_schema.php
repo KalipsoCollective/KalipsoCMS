@@ -495,12 +495,12 @@ return [
 				],
 				'module' => [
 					'type'          => 'varchar',
-					'type_values'   => 80,
+					'type_values'   => 230,
 					'index' 		=> 'INDEX'
 				],
 				'name' => [
 					'type'          => 'varchar',
-					'type_values'   => 80,
+					'type_values'   => 255,
 					'index' 		=> 'INDEX'
 				],
 				'files' => [

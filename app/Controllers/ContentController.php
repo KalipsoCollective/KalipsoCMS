@@ -320,10 +320,12 @@ final class ContentController extends Controller {
                 mkdir($path);
 
             foreach ($files as $name => $file) {
+
                 foreach ($file as $f) {
+                    
                     $handle = new Upload($f, Base::lang('lang.iso_code'));
                     if ($handle->uploaded) {
-                        $handle->file_new_name_body   = Base::slugGenerator($handle->file_src_name_body);
+                        $handle->file_new_name_body   = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
                         $handle->file_max_size = Base::config('app.editor_upload_max_size');
                         $handle->allowed = array('image/*');
                         $handle->image_convert = 'webp';

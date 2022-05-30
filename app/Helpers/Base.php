@@ -1277,6 +1277,11 @@ class Base {
 
     }
 
+
+    /**
+     * UUID generator.
+     * @return string
+     */
     public static function generateUUID() {
         return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
@@ -1299,4 +1304,27 @@ class Base {
         );
     }
 
+
+    /**
+     * String shortener.
+     * @param string text           long text
+     * @param integer length        string length 
+     * @param boolean withDots      export with 3 dots
+     * @return string
+     */
+    public static function stringShortener($text, $length=20, $withDots=true) {
+
+        if (strlen($text) > $length) {
+            if ($withDots) {
+                $withDots = '...';
+                $length = $length - 3;
+            } else $withDots = '';
+
+            if (function_exists("mb_substr")) $text = trim(mb_substr($text, 0, $length, "UTF-8")).$withDots;
+            else $text = trim(substr($text, 0, $length)).$withDots;
+        }
+
+        return $text;
+
+    }
 }
