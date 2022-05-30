@@ -62,12 +62,12 @@ try {
 
             // Contents
             ['GET,POST', '/:module', 'ContentController@contents', ['Auth@with']],
-            ['GET,POST', '/:module/list', 'ContentController@contentsList', ['Auth@with']],
-            ['GET,POST', '/:module/add', 'ContentController@contentsAdd', ['Auth@with']],
-            ['GET,POST', '/:module/:id', 'ContentController@contentsDetail', ['Auth@with']],
-            ['GET,POST', '/:module/:id/delete', 'ContentController@contentsDelete', ['Auth@with']],
-            ['GET,POST', '/:module/:id/update', 'ContentController@contentsUpdate', ['Auth@with']],
-            ['GET,POST', '/:module/slug/:title', 'ContentController@contentsSlugInquiry', ['Auth@with']],
+            ['GET,POST', '/:module/list', 'ContentController@contentList', ['Auth@with']],
+            ['GET,POST', '/:module/add', 'ContentController@contentAdd', ['Auth@with']],
+            ['GET,POST', '/:module/:id', 'ContentController@contentDetail', ['Auth@with']],
+            ['GET,POST', '/:module/:id/delete', 'ContentController@contentDelete', ['Auth@with']],
+            ['GET,POST', '/:module/:id/update', 'ContentController@contentUpdate', ['Auth@with']],
+            ['GET,POST', '/:module/slug/:title', 'ContentController@contentSlugInquiry', ['Auth@with']],
 
             ['POST', '/content/:module/upload-file', 'ContentController@uploadAFile', ['Auth@with']],
 
@@ -78,14 +78,6 @@ try {
             ['GET,POST', '/forms/:id', 'FormController@formDetail', ['Auth@with']],
             ['GET,POST', '/forms/:id/delete', 'FormController@formDelete', ['Auth@with']],
             ['GET,POST', '/forms/:id/update', 'FormController@formUpdate', ['Auth@with']],
-
-            // Services
-            ['GET,POST', '/services', 'ServiceController@services', ['Auth@with']],
-            ['GET,POST', '/services/list', 'ServiceController@serviceList', ['Auth@with']],
-            ['GET,POST', '/services/add', 'ServiceController@serviceAdd', ['Auth@with']],
-            ['GET,POST', '/services/:id', 'ServiceController@serviceDetail', ['Auth@with']],
-            ['GET,POST', '/services/:id/delete', 'ServiceController@serviceDelete', ['Auth@with']],
-            ['GET,POST', '/services/:id/update', 'ServiceController@serviceUpdate', ['Auth@with']],
 
             // Menus
             ['GET,POST', '/menus', 'MenuController@menus', ['Auth@with']],

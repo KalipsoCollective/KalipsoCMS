@@ -150,9 +150,16 @@ function kalipsoInit(firstLoad = false) {
 			// Form Reset, Init
 			const dom = e.target;
 			dom.classList.add('sending');
+			// form elements
 			dom.querySelectorAll('[name]').forEach((el) => {
 				el.classList.remove('is-valid');
 				el.classList.remove('is-invalid');
+			})
+			// editor
+			dom.querySelectorAll('[data-name]').forEach((el) => {
+				el.classList.remove('border');
+				el.classList.remove('border-1');
+				el.classList.remove('border-danger');
 			})
 
 			// Append Datas

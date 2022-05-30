@@ -285,22 +285,22 @@ final class ContentController extends Controller {
                     $handle = new Upload($f, Base::lang('lang.iso_code'));
                     if ($handle->uploaded) {
                         $handle->file_new_name_body   = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
-                        $handle->file_max_size = Base::config('app.editor_upload_max_size');
+                        $handle->file_max_size = Base::config('app.upload_max_size');
                         $handle->allowed = array('image/*');
                         $handle->image_convert = 'webp';
-                        if ($quality = Base::config('app.editor_upload_webp_quality')) {
+                        if ($quality = Base::config('app.upload_webp_quality')) {
                             $handle->webp_quality = $quality;
                         }
-                        if ($quality = Base::config('app.editor_upload_png_quality')) {
+                        if ($quality = Base::config('app.upload_png_quality')) {
                             $handle->webp_quality = $quality;
                         }
-                        if ($quality = Base::config('app.editor_upload_jpeg_quality')) {
+                        if ($quality = Base::config('app.upload_jpeg_quality')) {
                             $handle->webp_quality = $quality;
                         }
 
-                        if (Base::config('app.editor_upload_max_width')) {
+                        if (Base::config('app.upload_max_width')) {
                             $handle->image_resize         = true;
-                            $handle->image_x              = Base::config('app.editor_upload_max_width');
+                            $handle->image_x              = Base::config('app.upload_max_width');
                             $handle->image_ratio_y        = true;
                         }
                         
@@ -340,6 +340,329 @@ final class ContentController extends Controller {
                 'status' => 'warning',
                 'message' => Base::lang('base.file_not_found')
             ];
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
+    }
+
+    public function contentAdd() {
+
+        $alerts = [];
+        $arguments = [];
+
+        $inputAreas = [];
+        $files = [];
+        $requiredAreas = [
+            'areas' => [], 
+            'files' => []
+        ];
+        if (isset($this->modules[$this->module]) !== false) {
+
+            $module = $this->modules[$this->module];
+
+            foreach ($module['inputs'] as $name => $detail) {
+
+                if ($name === 'widgets') {
+
+                    foreach ($detail as $name => $widgetDetail) {
+                        
+                        $inputAreas[$name] = 'int';
+                        if (isset($detail['attributes']['required']) !== false AND $detail['attributes']['required'] === 'true') {
+                            $requiredAreas['areas'][$name] = true;
+                        }
+
+                    }
+
+                } else {
+
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+
+                        $inputAreas[$name] = 'nulled_text';
+
+                    } elseif ($detail['type'] === 'number') {
+
+                        $inputAreas[$name] = 'int';
+
+                    } elseif ($detail['type'] === 'editor') {
+
+                        $inputAreas[$name] = 'nulled_html';
+
+                    } elseif ($detail['type'] === 'file') {
+
+                        $files[$name] = [
+                            'size' => $detail['size'],
+                            'attributes' => isset($detail['attributes']) !== false ? $detail['attributes'] : []
+                        ];
+
+                    }
+
+                    if (isset($detail['attributes']['required']) !== false AND $detail['attributes']['required'] === 'true') {
+                        $requiredAreas[($detail['type'] === 'file' ? 'files' : 'areas')][$name] = true;
+                    }
+                }
+            }
+
+            extract(Base::input($inputAreas, $this->get('request')->params));
+
+            $insert = [];
+            foreach ($inputAreas as $inputName => $inputType) {
+                
+                if (is_array($$inputName)) { // multilingual
+                    foreach ($$inputName as $lang => $inputVar) {
+                        if (
+                            isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)
+                        ) {
+                            $insert[$inputName][$lang] = $inputVar;
+                        } else {
+                            if ($inputType === 'nulled_html') {
+                                $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '[' . $lang . ']"]'] = [
+                                    'class' => ['border', 'border-1', 'border-danger'],
+                                ];
+                            } else {
+                                $arguments['manipulation']['#contentAdd [name="' . $inputName . '[' . $lang . ']"]'] = [
+                                    'class' => ['is-invalid'],
+                                ];
+                            }
+                            
+                            
+                        }
+                    }
+                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)) {
+                    $insert[$inputName] = $$inputName;
+                } else {
+                    if ($inputType === 'nulled_html') {
+                        $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '"]'] = [
+                            'class' => ['border', 'border-1', 'border-danger'],
+                        ];
+                    } else {
+                        $arguments['manipulation']['#contentAdd [name="' . $inputName . '"]'] = [
+                            'class' => ['is-invalid'],
+                        ];
+                    }
+                    
+                }
+
+            }
+
+            if (isset($arguments['manipulation']) === false) {
+
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'warning',
+                    'message' => Base::lang('base.form_cannot_empty')
+                ];
+            }
+
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => $arguments,
+                'alerts' => $alerts,
+                'view' => null
+            ];
+            /*
+            Base::dump($insert);
+            Base::dump($arguments);
+            exit;*/
+
+
+
+            /*
+            foreach ($file as $f) {
+
+                $handle = new Upload($f, Base::lang('lang.iso_code'));
+                if ($handle->uploaded) {
+                    $handle->file_new_name_body   = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
+                    $handle->file_max_size = Base::config('app.upload_max_size');
+                    $handle->allowed = array('image/*');
+                    $handle->image_convert = 'webp';
+                    if ($quality = Base::config('app.upload_webp_quality')) {
+                        $handle->webp_quality = $quality;
+                    }
+                    if ($quality = Base::config('app.upload_png_quality')) {
+                        $handle->webp_quality = $quality;
+                    }
+                    if ($quality = Base::config('app.upload_jpeg_quality')) {
+                        $handle->webp_quality = $quality;
+                    }
+
+                    if (Base::config('app.upload_max_width')) {
+                        $handle->image_resize         = true;
+                        $handle->image_x              = Base::config('app.upload_max_width');
+                        $handle->image_ratio_y        = true;
+                    }
+                    
+                    $handle->process($path);
+                    if ($handle->processed) {
+                       
+                        $alerts[] = [
+                            'status' => 'success',
+                            'message' => Base::lang('base.file_successfully_uploaded')
+                        ];
+                        $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
+                        (new Files)->insert([
+                            'module' => $this->module,
+                            'name' => $handle->file_dst_name_body,
+                            'files' => json_encode([
+                                'original' => $url
+                            ])
+                        ]);
+
+                        $arguments['editor_upload'][] = $this->get()->url('upload/' . $url);
+                        $handle->clean();
+
+                    } else {
+                        echo 'error : ' . $handle->error;
+                        $alerts[] = [
+                            'status' => 'error',
+                            'message' => Base::lang('base.file_upload_problem') 
+                            . (isset($handle->error) !== false ? '(' . $handle->error . ')' : '')
+                        ];
+                    }
+                }
+            }*/
+
+            Base::dump($this->get('request')->files);
+            Base::dump($requiredAreas);
+            Base::dump($inputAreas, true);
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
+                'redirect' => '/management',
+                'alerts' => [
+                    [
+                        'status' => 'error',
+                        'message' => Base::lang('error.module_not_found')
+                    ]
+                ],
+                'view' => null
+            ];
+        }
+
+        extract(Base::input([
+            'email' => 'nulled_text',
+            'u_name' => 'nulled_text',
+            'f_name' => 'nulled_text',
+            'l_name' => 'nulled_text',
+            'role_id' => 'nulled_int',
+            'password' => 'nulled_password'
+        ], $this->get('request')->params));
+
+        
+
+        $model = new Users();
+        
+        if ($email AND $u_name AND $role_id AND $password) {
+
+            $userNameCheck = $model->count('id', 'total')->where('u_name', $u_name)->get();
+            if ((int)$userNameCheck->total === 0) {
+
+                $userEmailCheck = $model->count('id', 'total')->where('email', $email)->get();
+                if ((int)$userEmailCheck->total === 0) {
+
+                    $insert = [
+                        'email' => $email,
+                        'u_name' => $u_name,
+                        'f_name' => $f_name,
+                        'l_name' => $l_name,
+                        'role_id' => $role_id,
+                        'password' => $password,
+                        'token' => Base::tokenGenerator(80),
+                        'status' => 'active'
+                    ];
+
+                    $insert = $model->insert($insert);
+
+                    if ($insert) {
+
+                        $alerts[] = [
+                            'status' => 'success',
+                            'message' => Base::lang('base.user_successfully_added')
+                        ];
+                        $arguments['form_reset'] = true;
+                        $arguments['modal_close'] = '#addModal';
+                        $arguments['table_reset'] = 'usersTable';
+
+                    } else {
+
+                        $alerts[] = [
+                            'status' => 'error',
+                            'message' => Base::lang('base.user_add_problem')
+                        ];
+                    }
+
+                } else {
+
+                    $alerts[] = [
+                        'status' => 'warning',
+                        'message' => Base::lang('base.email_is_already_used')
+                    ];
+                    $arguments['manipulation'] = [
+                        '#userAdd [name="email"]' => [
+                            'class' => ['is-invalid'],
+                        ]
+                    ];
+
+                }
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'warning',
+                    'message' => Base::lang('base.username_is_already_used')
+                ];
+                $arguments['manipulation'] = [
+                    '#userAdd [name="u_name"]' => [
+                        'class' => ['is-invalid'],
+                    ]
+                ];
+            }
+
+        } else {
+
+            $alerts[] = [
+                'status' => 'warning',
+                'message' => Base::lang('base.form_cannot_empty')
+            ];
+
+            $arguments['manipulation'] = [];
+
+            if ($email) {
+                $arguments['manipulation']['#userAdd [name="email"]'] = [
+                    'class' => ['is-invalid'],
+                ];
+            }
+
+            if ($u_name) {
+                $arguments['manipulation']['#userAdd [name="u_name"]'] = [
+                    'class' => ['is-invalid'],
+                ];
+            }
+
+            if ($role_id) {
+                $arguments['manipulation']['#userAdd [name="role_id"]'] = [
+                    'class' => ['is-invalid'],
+                ];
+            }
+
+            if ($password) {
+                $arguments['manipulation']['#userAdd [name="password"]'] = [
+                    'class' => ['is-invalid'],
+                ];
+            }
+
         }
 
         return [
