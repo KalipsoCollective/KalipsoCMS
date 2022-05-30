@@ -260,47 +260,6 @@ final class ContentController extends Controller {
 
 
         return $moduleForm;
-        /*
-            <form class="row g-2" data-kn-form id="schemaAdd" method="post" action="<?php echo $this->url('management/' . $module . '/add'); ?>">
-                <div class="form-loader">
-                    <div class="spinner-border text-light" role="status">
-                        <span class="visually-hidden"><?php echo \KN\Helpers\Base::lang('base.loading'); ?></span>
-                    </div>
-                </div>
-                <div class="col-12 form-info">
-                </div>
-                <div class="col-12">
-                    <div class="d-flex align-items-start">
-                        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</button>
-                            <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</button>
-                            <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
-                            <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
-                        </div>
-                        <div class="tab-content" id="v-pills-tabContent">
-                            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">...</div>
-                            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">...</div>
-                            <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
-                            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="form-floating">
-                        <select class="form-select" id="roleRoutes" required multiple style="height: 300px" name="routes[]" aria-label="<?php echo \KN\Helpers\Base::lang('base.routes'); ?>">
-                            <?php
-                            /*
-                            foreach ($roles as $route => $detail) {
-                                echo '
-                                <option value="' . $route . '"' . ($detail['default'] ? ' selected' : '') . '>
-                                    ' . \KN\Helpers\Base::lang($detail['name']) . '
-                                </option>';
-                            }*//* ?>
-                        </select>
-                        <label for="roleRoutes"><?php echo \KN\Helpers\Base::lang('base.routes'); ?></label>
-                    </div>
-                </div>
-            </form> */
 
     }
 
@@ -322,7 +281,7 @@ final class ContentController extends Controller {
             foreach ($files as $name => $file) {
 
                 foreach ($file as $f) {
-                    
+
                     $handle = new Upload($f, Base::lang('lang.iso_code'));
                     if ($handle->uploaded) {
                         $handle->file_new_name_body   = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
