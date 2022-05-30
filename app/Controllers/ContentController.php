@@ -316,7 +316,7 @@ final class ContentController extends Controller {
                 foreach ($file as $f) {
                     $handle = new Upload($f, Base::lang('lang.iso_code'));
                     if ($handle->uploaded) {
-                        $handle->file_new_name_body   = 'image_resized';
+                        $handle->file_new_name_body   = Base::slugGenerator($handle->file_src_name_body);
                         $handle->file_max_size = Base::config('app.editor_upload_max_size');
                         $handle->allowed = array('image/*');
                         $handle->image_convert = 'webp';
@@ -343,12 +343,13 @@ final class ContentController extends Controller {
                                 'status' => 'success',
                                 'message' => Base::lang('base.file_successfully_uploaded')
                             ];
+
                             $arguments['editor_upload'][] = [
-                                'file_dst_path' => $handle->file_dst_path,
-                                'file_dst_name_body' => $handle->file_dst_name_body,
-                                'file_dst_name_ext' => $handle->file_dst_name_ext,
-                                'file_dst_name' => $handle->file_dst_name,
-                                'file_dst_pathname' => $handle->file_dst_pathname,
+                                'file_dst_path' => str_replace($path, '', $handle->file_dst_path),
+                                'file_dst_name_body' => str_replace($path, '', $handle->file_dst_name_body),
+                                'file_dst_name_ext' => str_replace($path, '', $handle->file_dst_name_ext),
+                                'file_dst_name' => str_replace($path, '', $handle->file_dst_name),
+                                'file_dst_pathname' => str_replace($path, '', $handle->file_dst_pathname),
                             ];
 
                             $handle->clean();

@@ -483,6 +483,54 @@ return [
 			],
 		],
 
+		/* Files Table */
+		'files' => [
+			'cols' => [
+				'id' => [
+					'type'          => 'int',
+					'auto_inc'      => true,
+					'attr'          => 'unsigned',
+					'type_values'   => 11,
+					'index'         => 'PRIMARY'
+				],
+				'module' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'index' 		=> 'INDEX'
+				],
+				'name' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'index' 		=> 'INDEX'
+				],
+				'files' => [
+					'type'          => 'json',
+				],
+				'created_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'index'         => 'INDEX'
+				],
+				'created_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'index'         => 'INDEX'
+				],
+				'updated_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'nullable'      => true,
+					'default'       => 'NULL'
+				],
+				'updated_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'nullable'      => true,
+					'default'       => 'NULL'
+				],
+			],
+		],
+
 	],
 	'table_values' => [
 		'charset'   => 'utf8mb4', // You can use 'utf8' if the structure is causing problems.
@@ -512,7 +560,7 @@ return [
 		'user_roles' => [
 			[
 				'name'                  => 'admin',
-				'routes'                => 'auth,auth/:action,auth/logout,management,management/users,management/users/list,management/users/add,management/users/:id,management/users/:id/update,management/users/:id/delete,management/roles,management/roles/list,management/roles/add,management/roles/:id,management/roles/:id/delete,management/roles/:id/update,management/sessions,management/sessions/list,management/:module,management/:module/list,management/:module/add,management/:module/:id,management/:module/:id/update,management/:module/:id/delete,management/:module/slug/:title,management/logs,management/logs/list,management/logs/:ip/block,management/settings,management/settings/update',
+				'routes'                => 'auth,auth/:action,auth/logout,management,management/users,management/users/list,management/users/add,management/users/:id,management/users/:id/update,management/users/:id/delete,management/roles,management/roles/list,management/roles/add,management/roles/:id,management/roles/:id/delete,management/roles/:id/update,management/sessions,management/sessions/list,management/:module,management/:module/list,management/:module/add,management/:module/:id,management/:module/:id/update,management/:module/:id/delete,management/:module/slug/:title,management/content/:module/upload-file,management/logs,management/logs/list,management/logs/:ip/block,management/settings,management/settings/update',
 				'created_at'            => time(),
 				'created_by'            => 1
 			]
