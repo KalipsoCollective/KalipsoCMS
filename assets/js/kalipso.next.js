@@ -157,6 +157,16 @@ function kalipsoInit(firstLoad = false) {
 
 			// Append Datas
 			const data = new FormData(dom);
+			const editor = dom.querySelectorAll('[data-kn-toggle="editor"]');
+			if (editor.length) {
+
+				for (var i = 0; i < editor.length; i++) {
+					let name = editor[i].getAttribute('data-name');
+					let value = editor[i].querySelector('.ql-editor').innerHTML;
+					data.append(name, value);
+				}
+
+			}
 
 			// Fetch
 			const response = await kalipsoFetch(dom.getAttribute('action'), dom.getAttribute('method'), data);
@@ -356,7 +366,8 @@ function responseFormatter(response, dom = null) {
 		for (var i = 0; i < response.editor_upload.length; i++) {
 
 			let range = dom.getSelection();
-			dom.insertEmbed(range.index, 'image', response.editor_upload[i]);
+
+			dom.insertEmbed(range.index ?? 0, 'image', response.editor_upload[i]);
 		}
 		
 	}

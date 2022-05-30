@@ -90,6 +90,7 @@ final class ContentController extends Controller {
 
         $moduleForm = '';
         $languages = Base::config('app.available_languages');
+        $multilanguage = false;
         foreach ($module as $name => $input) {
 
             if ($name === 'widget') { // Relational content
@@ -161,6 +162,10 @@ final class ContentController extends Controller {
                         <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="content_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="content_'.$name.'-tab">';
                     }
 
+                    if (isset($input['col']) !== false) {
+                        $col = $input['col'];
+                    }
+
                     switch ($input['type']) {
                         case 'input':
 
@@ -178,7 +183,7 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="">
-                                    <label for="content_' . $name . $lang . '" class="form-label">' . Base::lang($input['label']) . '</label>
+                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . Base::lang($input['label']) . '</label>
                                     <input class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" type="file">
                                 </div>
                             </div>';
@@ -230,6 +235,7 @@ final class ContentController extends Controller {
                 }
 
                 if (isset($input['multilanguage']) !== false AND $input['multilanguage']) {
+                    $multilanguage = true;
                     $moduleForm .= '
                                 </div>
                             </div>  
@@ -241,7 +247,7 @@ final class ContentController extends Controller {
         }
 
         $moduleForm = '
-        <form class="row g-2" data-kn-form id="contentAdd" method="post" action="'.$this->get()->url('management/' . $this->module . '/add').'">
+        <form class="row g-2" data-kn-form id="contentAdd"'.($multilanguage ? ' novalidate' : '').' method="post" action="'.$this->get()->url('management/' . $this->module . '/add').'">
             <div class="form-loader">
                 <div class="spinner-border text-light" role="status">
                     <span class="visually-hidden">'.Base::lang('base.loading').'</span>

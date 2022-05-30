@@ -55,6 +55,7 @@ return [
 			'header_image' => [
 				'label' => 'base.header_image',
 				'type' => 'file',
+				'col' => 'col-12',
 				'size' => [
 					'original' => [1920, 400]
 				],
