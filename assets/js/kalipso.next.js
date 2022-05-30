@@ -124,14 +124,18 @@ function editorInit(el, domID = null) {
 	};
 
 	const options = {...defaultOptions, ...elementOptions};
+	let editor = undefined;
+	if (el.classList.contains('editor')) {
+		editor = new Quill(el, options);
+	}
 
-	if (domID !== null) {
-		if (window.domEditor === undefined)
+	if (domID !== null && editor !== undefined) {
+		if (window.domEditor === undefined) {
 			window.domEditor = [];
+		}
 
-		window.domEditor[domID] = new Quill(el, options);
-	} 
-	else new Quill(el, options);
+		window.domEditor[domID] = editor;
+	}
 }
 
 function kalipsoInit(firstLoad = false) {

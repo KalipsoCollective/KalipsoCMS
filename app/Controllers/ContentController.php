@@ -357,6 +357,7 @@ final class ContentController extends Controller {
         $alerts = [];
         $arguments = [];
 
+        $rollBack = [];
         $inputAreas = [];
         $files = [];
         $requiredAreas = [
@@ -471,8 +472,6 @@ final class ContentController extends Controller {
 
                     if (! is_dir($path .= '/' . $this->module))
                         mkdir($path);
-
-                    $rollBack = [];
 
                     foreach ($files as $fileName => $fileDetails) {
 

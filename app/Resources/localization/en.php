@@ -317,8 +317,8 @@ return [
         'file_not_found' => 'File not found!',
         'file_not_uploaded' => 'The file could not be loaded!',
         'header_image' => 'Header Image',
-        'content_add_problem' => 'There was a problem adding the content.',
-        'content_successfully_deleted' => 'Content deleted successfully.',
+        'content_successfully_added' => 'Content has been successfully added.',
+        'content_add_problem' => 'There was a problem adding content.',
     ],
     'app' => [
         
