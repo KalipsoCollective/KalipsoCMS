@@ -324,11 +324,11 @@ final class ContentController extends Controller {
                             $handle->clean();
 
                         } else {
-                            echo 'error : ' . $handle->error;
+                            
                             $alerts[] = [
                                 'status' => 'error',
                                 'message' => Base::lang('base.file_upload_problem') 
-                                . (isset($handle->error) !== false ? '(' . $handle->error . ')' : '')
+                                . (isset($handle->error) !== false ? ' (' . $handle->error . ')' : '')
                             ];
                         }
                     }
@@ -367,6 +367,7 @@ final class ContentController extends Controller {
 
             $module = $this->modules[$this->module];
 
+            // Input area check
             foreach ($module['inputs'] as $name => $detail) {
 
                 if ($name === 'widgets') {
@@ -396,10 +397,7 @@ final class ContentController extends Controller {
 
                     } elseif ($detail['type'] === 'file') {
 
-                        $files[$name] = [
-                            'size' => $detail['size'],
-                            'attributes' => isset($detail['attributes']) !== false ? $detail['attributes'] : []
-                        ];
+                        $files[$name] = $detail;
 
                     }
 
@@ -412,31 +410,43 @@ final class ContentController extends Controller {
             extract(Base::input($inputAreas, $this->get('request')->params));
 
             $insert = [];
+            // Filter all inputs
             foreach ($inputAreas as $inputName => $inputType) {
                 
                 if (is_array($$inputName)) { // multilingual
+
                     foreach ($$inputName as $lang => $inputVar) {
+
                         if (
                             isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)
                         ) {
+
                             $insert[$inputName][$lang] = $inputVar;
+
                         } else {
+
                             if ($inputType === 'nulled_html') {
+
                                 $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '[' . $lang . ']"]'] = [
                                     'class' => ['border', 'border-1', 'border-danger'],
                                 ];
+
                             } else {
+
                                 $arguments['manipulation']['#contentAdd [name="' . $inputName . '[' . $lang . ']"]'] = [
                                     'class' => ['is-invalid'],
                                 ];
+
                             }
-                            
-                            
                         }
                     }
+
                 } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)) {
+
                     $insert[$inputName] = $$inputName;
+
                 } else {
+
                     if ($inputType === 'nulled_html') {
                         $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '"]'] = [
                             'class' => ['border', 'border-1', 'border-danger'],
@@ -453,6 +463,190 @@ final class ContentController extends Controller {
 
             if (isset($arguments['manipulation']) === false) {
 
+                // Files
+                if (count($files)) {
+
+                    if (! is_dir($path = Base::path('upload')))
+                        mkdir($path);
+
+                    if (! is_dir($path .= '/' . $this->module))
+                        mkdir($path);
+
+                    $rollBack = [];
+
+                    foreach ($files as $fileName => $fileDetails) {
+
+                        $requiredFile = false;
+                        $multipleFile = false;
+
+                        if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
+                            $requiredFile = true;
+                        }
+
+                        if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
+                            $multipleFile = true;
+                        }
+
+                        if (isset($this->get('request')->files[$fileName]) !== false) {
+
+                            foreach ($this->get('request')->files[$fileName] as $fileKey => $fileUp) {
+
+                                $maxSize = Base::config('app.upload_max_size');
+                                if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
+                                    $maxSize = $fileDetails['external_parameters']['max_size'];
+                                }
+
+                                $acceptMime = Base::config('app.upload_accept');
+                                if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
+                                    $acceptMime = $fileDetails['attributes']['accept'];
+                                }
+
+                                $convertFile = Base::config('app.upload_convert');
+                                if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
+                                    $convertFile = $fileDetails['external_parameters']['convert'];
+                                }
+
+                                $fileDimension = ['original' => [0, 0]];
+                                if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
+                                    $fileDimension = $fileDetails['external_parameters']['size'];
+                                }
+
+                                $handle = new Upload($fileUp, Base::lang('lang.iso_code'));
+                                if ($handle->uploaded) {
+
+                                    $insertData = [];
+                                    $errorOnUpload = false;
+
+                                    $originalFileName = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 190, false);
+
+                                    foreach ($fileDimension as $dimensionTag => $dimensionVar) {
+
+                                        $newFileName = $originalFileName . '_' . $dimensionTag;
+                                        $handle->file_new_name_body   = $newFileName;
+
+                                        if ($maxSize) $handle->file_max_size = $maxSize;
+                                        if ($acceptMime) $handle->allowed = $acceptMime;
+                                        if ($convertFile) $handle->image_convert = $convertFile;
+
+                                        if ($quality = Base::config('app.upload_webp_quality')) {
+                                            $handle->webp_quality = $quality;
+                                        }
+
+                                        if ($quality = Base::config('app.upload_png_quality')) {
+                                            $handle->webp_quality = $quality;
+                                        }
+
+                                        if ($quality = Base::config('app.upload_jpeg_quality')) {
+                                            $handle->webp_quality = $quality;
+                                        }
+
+                                        $handle->image_resize         = true;
+                                        $handle->image_ratio          = true;
+                                        if ($dimensionVar[0]) $handle->image_x      = $dimensionVar[0];
+                                        if ($dimensionVar[1]) $handle->image_y      = $dimensionVar[1];
+                                        
+                                        $handle->process($path);
+                                        if ($handle->processed) {
+                                           
+                                            $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
+                                            $insertData[$dimensionTag] = $url;
+
+                                        } else {
+                                            
+                                            $errorOnUpload = $handle->error;
+                                            break;
+                                            
+                                        }
+                                    }
+
+                                    $handle->clean();
+                                    if ($errorOnUpload === false) {
+
+                                        $alerts[] = [
+                                            'status' => 'success',
+                                            'message' => Base::lang('base.file_successfully_uploaded') . ' (' . $originalFileName . ')'
+                                        ];
+
+                                        $id = (new Files)->insert([
+                                            'module' => $this->module,
+                                            'name' => $originalFileName,
+                                            'files' => json_encode($insertData)
+                                        ]);
+
+                                        $rollBack[] = $id;
+                                        if ($multipleFile) $insert[$fileName][$fileKey] = $id;
+                                        else $insert[$fileName] = $id;
+
+                                    } else {
+                                        $alerts[] = [
+                                            'status' => 'error',
+                                            'message' => Base::lang('base.file_upload_problem') 
+                                            . (isset($handle->error) !== false ? ' (' . Base::lang($fileDetails['label']) . ' -> ' . $errorOnUpload . ')' : '')
+                                        ];
+                                        $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                            'class' => ['is-invalid'],
+                                        ];
+                                    }
+
+                                } else {
+
+                                    $alerts[] = [
+                                        'status' => 'warning',
+                                        'message' => Base::lang('base.file_not_uploaded') . ' (' . Base::lang($fileDetails['label']) . ')'
+                                    ];
+                                    $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                        'class' => ['is-invalid'],
+                                    ];
+
+                                }
+
+                            }
+
+                        } elseif ($requiredFile) {
+
+                            $alerts[] = [
+                                'status' => 'warning',
+                                'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
+                            ];
+                            $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                'class' => ['is-invalid'],
+                            ];
+
+                        } else {
+
+                            $insert[$fileName] = null;
+                        }
+                    }
+                }
+
+                if (! count($files) OR isset($arguments['manipulation']) === false) {
+
+                    $model = new Contents;
+                    $insert = $model->insert([
+                        'module' => $this->module,
+                        'input' => json_encode($insert),
+                    ]);
+
+                    if ($insert) {
+
+                        $alerts[] = [
+                            'status' => 'success',
+                            'message' => Base::lang('base.content_successfully_added')
+                        ];
+                        $arguments['form_reset'] = true;
+                        $arguments['modal_close'] = '#addModal';
+                        $arguments['table_reset'] = 'contentsTable';
+                        $rollBack = [];
+
+                    } else {
+
+                        $alerts[] = [
+                            'status' => 'error',
+                            'message' => Base::lang('base.content_add_problem')
+                        ];
+                    }
+
+                }
 
             } else {
 
@@ -462,207 +656,19 @@ final class ContentController extends Controller {
                 ];
             }
 
-            return [
-                'status' => true,
-                'statusCode' => 200,
-                'arguments' => $arguments,
-                'alerts' => $alerts,
-                'view' => null
-            ];
-            /*
-            Base::dump($insert);
-            Base::dump($arguments);
-            exit;*/
-
-
-
-            /*
-            foreach ($file as $f) {
-
-                $handle = new Upload($f, Base::lang('lang.iso_code'));
-                if ($handle->uploaded) {
-                    $handle->file_new_name_body   = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
-                    $handle->file_max_size = Base::config('app.upload_max_size');
-                    $handle->allowed = array('image/*');
-                    $handle->image_convert = 'webp';
-                    if ($quality = Base::config('app.upload_webp_quality')) {
-                        $handle->webp_quality = $quality;
-                    }
-                    if ($quality = Base::config('app.upload_png_quality')) {
-                        $handle->webp_quality = $quality;
-                    }
-                    if ($quality = Base::config('app.upload_jpeg_quality')) {
-                        $handle->webp_quality = $quality;
-                    }
-
-                    if (Base::config('app.upload_max_width')) {
-                        $handle->image_resize         = true;
-                        $handle->image_x              = Base::config('app.upload_max_width');
-                        $handle->image_ratio_y        = true;
-                    }
-                    
-                    $handle->process($path);
-                    if ($handle->processed) {
-                       
-                        $alerts[] = [
-                            'status' => 'success',
-                            'message' => Base::lang('base.file_successfully_uploaded')
-                        ];
-                        $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
-                        (new Files)->insert([
-                            'module' => $this->module,
-                            'name' => $handle->file_dst_name_body,
-                            'files' => json_encode([
-                                'original' => $url
-                            ])
-                        ]);
-
-                        $arguments['editor_upload'][] = $this->get()->url('upload/' . $url);
-                        $handle->clean();
-
-                    } else {
-                        echo 'error : ' . $handle->error;
-                        $alerts[] = [
-                            'status' => 'error',
-                            'message' => Base::lang('base.file_upload_problem') 
-                            . (isset($handle->error) !== false ? '(' . $handle->error . ')' : '')
-                        ];
-                    }
-                }
-            }*/
-
-            Base::dump($this->get('request')->files);
-            Base::dump($requiredAreas);
-            Base::dump($inputAreas, true);
-
-        } else {
-
-            return [
-                'status' => false,
-                'statusCode' => 404,
-                'redirect' => '/management',
-                'alerts' => [
-                    [
-                        'status' => 'error',
-                        'message' => Base::lang('error.module_not_found')
-                    ]
-                ],
-                'view' => null
-            ];
-        }
-
-        extract(Base::input([
-            'email' => 'nulled_text',
-            'u_name' => 'nulled_text',
-            'f_name' => 'nulled_text',
-            'l_name' => 'nulled_text',
-            'role_id' => 'nulled_int',
-            'password' => 'nulled_password'
-        ], $this->get('request')->params));
-
-        
-
-        $model = new Users();
-        
-        if ($email AND $u_name AND $role_id AND $password) {
-
-            $userNameCheck = $model->count('id', 'total')->where('u_name', $u_name)->get();
-            if ((int)$userNameCheck->total === 0) {
-
-                $userEmailCheck = $model->count('id', 'total')->where('email', $email)->get();
-                if ((int)$userEmailCheck->total === 0) {
-
-                    $insert = [
-                        'email' => $email,
-                        'u_name' => $u_name,
-                        'f_name' => $f_name,
-                        'l_name' => $l_name,
-                        'role_id' => $role_id,
-                        'password' => $password,
-                        'token' => Base::tokenGenerator(80),
-                        'status' => 'active'
-                    ];
-
-                    $insert = $model->insert($insert);
-
-                    if ($insert) {
-
-                        $alerts[] = [
-                            'status' => 'success',
-                            'message' => Base::lang('base.user_successfully_added')
-                        ];
-                        $arguments['form_reset'] = true;
-                        $arguments['modal_close'] = '#addModal';
-                        $arguments['table_reset'] = 'usersTable';
-
-                    } else {
-
-                        $alerts[] = [
-                            'status' => 'error',
-                            'message' => Base::lang('base.user_add_problem')
-                        ];
-                    }
-
-                } else {
-
-                    $alerts[] = [
-                        'status' => 'warning',
-                        'message' => Base::lang('base.email_is_already_used')
-                    ];
-                    $arguments['manipulation'] = [
-                        '#userAdd [name="email"]' => [
-                            'class' => ['is-invalid'],
-                        ]
-                    ];
-
-                }
-
-            } else {
-
-                $alerts[] = [
-                    'status' => 'warning',
-                    'message' => Base::lang('base.username_is_already_used')
-                ];
-                $arguments['manipulation'] = [
-                    '#userAdd [name="u_name"]' => [
-                        'class' => ['is-invalid'],
-                    ]
-                ];
-            }
-
         } else {
 
             $alerts[] = [
-                'status' => 'warning',
-                'message' => Base::lang('base.form_cannot_empty')
+                'status' => 'error',
+                'message' => Base::lang('error.module_not_found')
             ];
+        }
 
-            $arguments['manipulation'] = [];
-
-            if ($email) {
-                $arguments['manipulation']['#userAdd [name="email"]'] = [
-                    'class' => ['is-invalid'],
-                ];
+        if (count($rollBack)) {
+            $controller = new FileController($this->get());
+            foreach ($rollBack as $fileId) {
+                $controller->removeFileWithId($fileId);
             }
-
-            if ($u_name) {
-                $arguments['manipulation']['#userAdd [name="u_name"]'] = [
-                    'class' => ['is-invalid'],
-                ];
-            }
-
-            if ($role_id) {
-                $arguments['manipulation']['#userAdd [name="role_id"]'] = [
-                    'class' => ['is-invalid'],
-                ];
-            }
-
-            if ($password) {
-                $arguments['manipulation']['#userAdd [name="password"]'] = [
-                    'class' => ['is-invalid'],
-                ];
-            }
-
         }
 
         return [

@@ -15,6 +15,8 @@ return [
 	'charset'	=> 'utf-8',
 	'title_format' => '[TITLE] — [APP]',
 	'available_languages' => ['en', 'tr'],
+	'upload_accept' => 'image/*',
+	'upload_convert' => 'webp', // jpg, png, webp, jpeg, gif, bmp
 	'upload_max_width' => 1920,
 	'upload_max_size' => 5242880, // 5 MB
 	'upload_png_quality' => 8, // without lossless = 0 or (1 - 9)

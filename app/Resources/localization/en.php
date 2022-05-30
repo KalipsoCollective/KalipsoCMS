@@ -315,7 +315,10 @@ return [
         'file_successfully_uploaded' => 'File uploaded successfully!',
         'file_upload_problem' => 'There was a problem uploading the file!',
         'file_not_found' => 'File not found!',
+        'file_not_uploaded' => 'The file could not be loaded!',
         'header_image' => 'Header Image',
+        'content_add_problem' => 'There was a problem adding the content.',
+        'content_successfully_deleted' => 'Content deleted successfully.',
     ],
     'app' => [
         

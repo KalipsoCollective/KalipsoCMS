@@ -315,7 +315,10 @@ return [
         'file_successfully_uploaded' => 'Dosya başarıyla yüklendi!',
         'file_upload_problem' => 'Dosya yüklenirken bir sorun oluştu!',
         'file_not_found' => 'Dosya bulunamadı!',
+        'file_not_uploaded' => 'Dosya yüklenemedi!',
         'header_image' => 'Başlık Görseli',
+        'content_successfully_added' => 'İçerik başarıyla eklendi.',
+        'content_add_problem' => 'İçerik eklenirken bir sorun oluştu.',
     ],
     'app' => [
         

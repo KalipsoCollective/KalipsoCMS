@@ -56,12 +56,14 @@ return [
 				'label' => 'base.header_image',
 				'type' => 'file',
 				'col' => 'col-12',
-				'size' => [
-					'original' => [1920, 400]
-				],
 				'attributes' => [
 					'accept' => 'image/*',
 				],
+				'external_parameters' => [
+					'size' => [
+						'original' => [1920, 400]
+					],
+				]
 			],
 			'icon' => [
 				'label' => 'base.icon',
@@ -152,24 +154,30 @@ return [
 			'flag' => [
 				'label' => 'base.flag',
 				'type' => 'file',
-				'size' => [
-					'original' => [200, 200]
-				],
 				'attributes' => [
 					'accept' => 'image/*',
 					'required' => 'true',
 				],
+				'external_parameters' => [
+					'size' => [
+						'original' => [200, 200]
+					],
+				]
 			],
 			'campus_image' => [
 				'label' => 'base.image',
 				'type' => 'file',
-				'size' => [
-					'original' => [300, 300]
-				],
 				'attributes' => [
 					'accept' => 'image/*',
 					'required' => 'true',
 				],
+				'external_parameters' => [
+					'size' => [
+						'original' => [300, 300]
+					],
+					// 'max_size' => 1024, // 1KB
+					// 'convert' => 'png',
+				]
 			],
 		]
 

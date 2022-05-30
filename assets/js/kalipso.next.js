@@ -295,6 +295,12 @@ function responseFormatter(response, dom = null) {
 
 	if (dom && response.form_reset !== undefined && response.form_reset) {
 		dom.reset();
+		const editor = dom.querySelectorAll('[data-kn-toggle="editor"]');
+		if (editor.length) {
+			for (var i = 0; i < editor.length; i++) {
+				editor[i].querySelector('.ql-editor').innerHTML = '';
+			}
+		}
 	}
 
 	if (response.modal_close !== undefined && document.querySelector(response.modal_close)) {
