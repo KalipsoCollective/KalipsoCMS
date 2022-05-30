@@ -75,6 +75,7 @@ return [
         'management_contents_update' => 'Yönetim - İçerikler - Düzenle',
         'management_contents_delete' => 'Yönetim - İçerikler - Sil',
         'management_contents_slug' => 'Yönetim - İçerikler - Kısa Ad Sorgulama',
+        'management_content_upload_file' => 'Yönetim - İçerikler - Editör Dosya Yükleme',
     ],
     'settings' => [
         'basic_settings' => 'Temel Ayarlar',
@@ -305,6 +306,15 @@ return [
         'countries' => 'Ülkeler',
         'countries_message' => 'Ülkeleri buradan düzenleyebilirsiniz.',
         'all' => 'Tümü',
+        'description' => 'Açıklama',
+        'title' => 'Başlık',
+        'icon' => 'Simge',
+        'slug' => 'Kısa Ad',
+        'flag' => 'Bayrak',
+        'image' => 'Görsel',
+        'file_successfully_uploaded' => 'Dosya başarıyla yüklendi!',
+        'file_upload_problem' => 'Dosya yüklenirken bir sorun oluştu!',
+        'file_not_found' => 'Dosya bulunamadı!',
     ],
     'app' => [
         

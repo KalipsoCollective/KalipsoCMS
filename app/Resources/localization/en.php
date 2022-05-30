@@ -75,6 +75,7 @@ return [
         'management_contents_update' => 'Management - Contents - Edit',
         'management_contents_delete' => 'Management - Contents - Delete',
         'management_contents_slug' => 'Management - Contents - Slug Inquiry',
+        'management_content_upload_file' => 'Management - Contents - Editor File Upload',
     ],
     'settings' => [
         'basic_settings' => 'Basic Settings',
@@ -305,6 +306,15 @@ return [
         'countries' => 'Contries',
         'countries_message' => 'You can edit countries here.',
         'all' => 'All',
+        'description' => 'Description',
+        'title' => 'Title',
+        'icon' => 'Icon',
+        'slug' => 'Slug',
+        'flag' => 'Flag',
+        'image' => 'Image',
+        'file_successfully_uploaded' => 'File uploaded successfully!',
+        'file_upload_problem' => 'There was a problem uploading the file!',
+        'file_not_found' => 'File not found!',
     ],
     'app' => [
         

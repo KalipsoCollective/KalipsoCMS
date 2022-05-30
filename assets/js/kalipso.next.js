@@ -43,9 +43,9 @@ async function kalipsoFetch(url = null, method = 'POST', data = {}) {
 	.catch((error) => {
 		if (typeof error.message === 'string') {
 			try {
-		        return JSON.parse(error.message);
+				return JSON.parse(error.message);
 			} catch (e) {
-		        return {
+				return {
 					alerts: '<div class=\"kn-toast-alert\"><div class=\"kn-alert kn-alert-danger\">Server Response Problem!</div></div>'
 				};
 			}
@@ -53,6 +53,83 @@ async function kalipsoFetch(url = null, method = 'POST', data = {}) {
 			return error;
 		}
 	});
+}
+
+function editorInit(el, domID = null) {
+
+	if (domID) {
+		domID = btoa(domID);
+		const domHash = domID;
+	}
+
+	let elementOptions = {};
+
+	if (typeof el.dataset !== 'undefined' && typeof el.dataset.options !== 'undefined') {
+		elementOptions = {...JSON.parse(el.dataset.options), ...elementOptions};
+	}
+
+	let defaultOptions = {
+		modules: {
+			toolbar: {
+				container: [
+					['bold', 'italic', 'underline', 'strike'], 
+					['blockquote', 'code-block'],
+					[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+					['link', 'image'],
+					['clean']	
+				],
+				handlers: {	
+					image: async function(value) {
+						const input = document.createElement('input');	
+						input.setAttribute('type', 'file');	
+						input.setAttribute('accept', 'image/*');	
+						input.click();
+						
+						const moduleName = this.quill.container.dataset.module ?? 'general';
+
+						input.onchange = async () => {	
+							let file = input.files[0];	
+							let formData = new FormData();	
+							formData.append('image', file);
+							NProgress.start();
+							const res = await kalipsoFetch('/management/content/' + moduleName + '/upload-file', 'POST', formData);
+							responseFormatter(res);
+							console.log(res);
+							NProgress.done();
+						};
+					},
+					link: function(value) {
+						if (value) {
+							let range = this.quill.getSelection();
+							if (range == null || range.length == 0) {
+								alert("Not selected.");
+								return;
+							}
+							let preview = this.quill.getText(range);
+							if (/^\S+@\S+\.\S+$/.test(preview) && preview.indexOf('mailto:') !== 0) {
+								preview = 'mailto:' + preview;
+							}
+							let tooltip = this.quill.theme.tooltip;
+							tooltip.edit('link', 'http://');
+						} else {
+							this.quill.format('link', false);
+						}
+					}
+				}
+			},
+		},
+		theme: 'snow'
+	};
+
+	const options = {...defaultOptions, ...elementOptions};
+
+	if (domID !== null) {
+		if (window.domEditor === undefined)
+			window.domEditor = [];
+
+		window.domEditor[domID] = new Quill(el, options);
+	} 
+	else new Quill(el, options);
 }
 
 function kalipsoInit(firstLoad = false) {
@@ -93,8 +170,16 @@ function kalipsoInit(firstLoad = false) {
 		});
 	}
 
-	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+	var editorToggle = document.querySelectorAll('[data-kn-toggle="editor"]');
+
+	if (typeof Quill !== 'undefined' && editorToggle) {
+		[].forEach.call(editorToggle, function(el) {
+			editorInit(el, el.getAttribute('data-name'));
+		});
+	}
 	
 	if (firstLoad) {
 

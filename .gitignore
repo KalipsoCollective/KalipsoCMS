@@ -1,6 +1,7 @@
 /node_modules
 app/Storage
 /vendor
+/upload
 .env
 .env.backup
 npm-debug.log

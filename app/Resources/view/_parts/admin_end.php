@@ -34,6 +34,7 @@
 			</footer>
 		</div>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/bootstrap/bootstrap.bundle.min.js'); ?>"></script>
+		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/quill.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/nprogress/nprogress.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/vpjax/vpjax.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/l10n/tr.js'); ?>"></script>
@@ -434,6 +435,7 @@
 				for(const [key, value] of Object.entries(tableVariables)) {
 					window[key] = new KalipsoTable(value);
 				}
+				var editor = new Quill('.editor');
 
 			}
 		</script>

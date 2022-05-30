@@ -26,6 +26,10 @@
     background: var(--bs-primary);
 }
 
+#nprogress :is(.bar, .spinner) {
+    z-index: 1099 !important;
+}
+
 @keyframes alertOpacityOut {
     0% {
         opacity: 1;
@@ -501,6 +505,14 @@ nav.navbar-side .navbar-nav .nav-item.nav-group {
     font-size: 0.8rem;
     margin: 0.5rem;
     padding: 0.5rem;
+}
+
+.editor .ql-editor {
+    min-height: 150px;
+}
+
+.ql-container {
+    font-family: 'Manrope', sans-serif;
 }
 
 @media (max-width: 1200px) {

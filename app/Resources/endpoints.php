@@ -110,6 +110,12 @@ return [
 		'default' => false,
 		'name' => 'auth.management_contents_slug',
 	],
+	'management/content/:module/upload-file' => [
+		'default' => false,
+		'name' => 'auth.management_content_upload_file',
+	],
+
+	
 
 
 	'management/logs' => [

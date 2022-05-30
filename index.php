@@ -69,6 +69,8 @@ try {
             ['GET,POST', '/:module/:id/update', 'ContentController@contentsUpdate', ['Auth@with']],
             ['GET,POST', '/:module/slug/:title', 'ContentController@contentsSlugInquiry', ['Auth@with']],
 
+            ['POST', '/content/:module/upload-file', 'ContentController@uploadAFile', ['Auth@with']],
+
             /*
             // Contact
             ['GET,POST', '/forms', 'FormController@forms', ['Auth@with']],
