@@ -769,4 +769,53 @@ final class ContentController extends Controller {
 
     }
 
+    public function contentDetail() {
+
+        $id = (int)$this->get('request')->attributes['id'];
+
+
+        $alerts = [];
+        $arguments = [];
+
+        if (isset($this->modules[$this->module]) !== false) {
+
+            $model = new Contents();
+            $getContent = $model->select('id, module, input')->where('id', $id)->where('module', $this->module)->get();
+            if (! empty($getContent)) {
+
+                $form = $this->prepareModuleForm($this->modules[$this->module]['inputs'], $getContent);
+                $arguments['modal_open'] = ['#editModal'];
+                $arguments['trigger_editor'] = ['#editModal'];
+                $arguments['manipulation'] = [
+                    '#editModal .modal-body' => [
+                        'html'  => $form
+                    ]
+                ];
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'warning',
+                    'message' => Base::lang('base.record_not_found')
+                ];
+            }
+
+        } else {
+
+            $alerts[] = [
+                'status' => 'error',
+                'message' => Base::lang('error.module_not_found')
+            ];
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
+    }
+
 }

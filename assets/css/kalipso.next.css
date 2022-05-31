@@ -543,3 +543,9 @@ img.table-image {
         display: block;
     }
 }
+
+@media (min-width: 1200px) {
+    .modal-xxl {
+        max-width: 1600px;
+    }
+}
