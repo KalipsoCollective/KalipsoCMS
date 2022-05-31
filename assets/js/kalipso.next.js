@@ -208,7 +208,7 @@ function kalipsoInit(firstLoad = false) {
 
 		document.addEventListener("click", async function(e) {
 			// Async. Action Buttons
-			if (e.target.nodeName.toUpperCase() === 'BUTTON') {
+			if (e.target.nodeName.toUpperCase() === 'BUTTON' || e.target.nodeName.toUpperCase() === 'A') {
 				if (e.target.getAttribute('data-kn-action')) {
 					
 					e.preventDefault();
@@ -227,26 +227,55 @@ function kalipsoInit(firstLoad = false) {
 								e.target.removeAttribute('data-kn-again-check');
 							}, 3000);
 						}
+
 					} else {
 						keep = false;
 					}
 
 					if (! keep) {
-						
-						NProgress.start();
-						response = await kalipsoFetch(
-							e.target.getAttribute('data-kn-action'), 
-							e.target.getAttribute('data-kn-again-method'), 
-							e.target.getAttribute('data-kn-again-options')
-						);
 
-						if (response !== undefined) {
-							responseFormatter(response);
+						let action = e.target.getAttribute('data-kn-action');
+						try {
+
+							const url = new URL(action); // check valid url
+
+							NProgress.start();
+							response = await kalipsoFetch(
+								e.target.getAttribute('data-kn-action'), 
+								e.target.getAttribute('data-kn-again-method'), 
+								e.target.getAttribute('data-kn-again-options')
+							);
+
+							if (response !== undefined) {
+								responseFormatter(response);
+							}
+							setTimeout(() => {
+								NProgress.done();
+							}, 500);
+
+						} catch (error) {
+							
+							if (action === 'manipulation') {
+
+								if (e.target.getAttribute('data-kn-manipulation')) {
+
+									const manipulation = JSON.parse(e.target.getAttribute('data-kn-manipulation'));
+
+									for (const [selector, data] of Object.entries(manipulation)) {
+			
+										if (document.querySelector(selector)) {
+
+											/**
+											 * DOM manipulation for removing element. 
+											 */
+											if (data.remove_element !== undefined && data.remove_element) {
+												document.querySelector(selector).remove();
+											}
+										}
+									}
+								}
+							}
 						}
-						setTimeout(() => {
-							NProgress.done();
-						}, 500);
-
 					}
 				}
 			}
@@ -310,6 +339,19 @@ function responseFormatter(response, dom = null) {
 	if (response.modal_close !== undefined && document.querySelector(response.modal_close)) {
 		const modal = bootstrap.Modal.getOrCreateInstance(document.querySelector(response.modal_close));
 		modal.hide();
+	}
+
+	if (response.trigger_editor !== undefined && document.querySelector(response.trigger_editor)) {
+		const editorArea = document.querySelector(response.trigger_editor);
+
+		const editorPlaces = editorArea.querySelectorAll('[data-kn-toggle="editor"]');
+		console.log(editorPlaces);
+		if (typeof Quill !== 'undefined' && editorPlaces) {
+
+			[].forEach.call(editorPlaces, function(el) {
+				editorInit(el);
+			});
+		}
 	}
 
 	if (response.modal_open !== undefined && document.querySelector(response.modal_open)) {

@@ -89,17 +89,28 @@ final class ContentController extends Controller {
 
     public function prepareModuleForm($module, $fill = null) {
 
+        if (! is_null($fill)) {
+            $fillDatas = json_decode($fill->input);
+            $id = $fill->id;
+        }
+
         $moduleForm = '';
         $languages = Base::config('app.available_languages');
         $multilanguage = false;
         foreach ($module as $name => $input) {
 
             if ($name === 'widget') { // Relational content
+
                 foreach ($input as $key => $widget) {
                     // from db or array
                     $data = call_user_func([$this, $widget['source'][0]], ...$widget['source'][1]);
 
                     $options = '';
+
+                    $allSelected = '';
+                    if (isset($fillDatas->{$key}) !== false AND $fillDatas->{$key} == 0) {
+                        $allSelected = ' selected';
+                    }
                     foreach ($data as $widgetData) {
 
                         $widgetInputs = json_decode($widgetData->input);
@@ -107,13 +118,22 @@ final class ContentController extends Controller {
                             ? $widgetInputs->{$widget['use_for_view']}->{Base::lang('lang.code')} 
                             : $widgetInputs->{$widget['use_for_view']};
 
-                        $options .= '<option value="'.$widgetData->id.'">' . $text . '</option>';
+                        $selected = '';
+                        if (isset($fillDatas->{$key}) !== false AND $fillDatas->{$key} == $widgetData->id) {
+                            $selected = ' selected';
+                        }
+
+                        $options .= '<option value="'.$widgetData->id.'"' . $selected . '>' . $text . '</option>';
                     }
 
                     $attributes = '';
+                    $requiredWidget = false;
                     if (isset($widget['attributes']) !== false) {
                         foreach ($widget['attributes'] as $attribute => $val) {
                             $attributes .= $attribute . '="'.$val.'" ';
+                            if ($attribute === 'required') {
+                                $requiredWidget = true;
+                            }
                         }
                     }
 
@@ -126,7 +146,8 @@ final class ContentController extends Controller {
                     <div class="col-12 col-md-6">
                         <div class="form-floating">
                             <select class="form-select" '.$attributes.'name="' . $key . '" id="content_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
-                                <option value="0">' . Base::lang('base.all') . '</option>
+                                '.(! $requiredWidget ? '<option value=""></option>' : '').'
+                                <option value="0"'.$allSelected.'>' . Base::lang('base.all') . '</option>
                                 '.$options.'
                             </select>
                             <label for="content_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
@@ -134,6 +155,7 @@ final class ContentController extends Controller {
                     </div>';
 
                 }
+
             } else {
 
                 $nameSubfix = [null];
@@ -174,6 +196,17 @@ final class ContentController extends Controller {
                         $col = 'col';
                         $moduleForm .= '
                         <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="content_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="content_'.$name.'-tab">';
+
+                        $currentVal = null;
+                        if (isset($fillDatas->{$name}->{$lang}) !== false) {
+                            $currentVal = $fillDatas->{$name}->{$lang};
+                        }
+
+                    } else {
+                        $currentVal = null;
+                        if (isset($fillDatas->{$name}) !== false) {
+                            $currentVal = $fillDatas->{$name};
+                        }
                     }
 
                     if (isset($input['col']) !== false) {
@@ -188,6 +221,10 @@ final class ContentController extends Controller {
                     switch ($input['type']) {
                         case 'input':
 
+                            if (! is_null($currentVal)) {
+                                $attributes .= 'value="'.$currentVal.'" ';
+                            }
+
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
@@ -199,10 +236,44 @@ final class ContentController extends Controller {
 
                         case 'file':
 
+                            $externalBadge = '';
+                            if (! is_null($currentVal)) {
+
+                                $getFile = (new Files)->select('id, name, files')->where('id', $currentVal)->get();
+                                
+                                if (! empty($getFile)) {
+                                    $getFile->files = json_decode($getFile->files);
+                                    $url = Base::base('upload/' . $getFile->files->original);
+                                    $externalBadge = ' 
+                                    <span class="ms-2" data-target="current_file_buttons_' . $inputName . '">
+                                        <a class="small text-muted" href="' . $url . '" 
+                                            target="_blank"
+                                            data-target="current_file_view_' . $inputName . '"
+                                            >
+                                            ' . Base::lang('base.view') . '
+                                        </a> &middot; 
+                                        <a class="small text-danger" href="javascript:;" 
+                                            data-target="current_file_delete_' . $inputName . '"
+                                            data-kn-again="'.Base::lang('base.are_you_sure').'" 
+                                            data-kn-action="manipulation"
+                                            data-kn-manipulation=\'' . json_encode(
+                                                [
+                                                    '[data-target="current_file_buttons_' . $inputName . '"]' => [
+                                                        'remove_element' => true
+                                                    ]
+                                                ]) . '\'
+                                            >
+                                            ' . Base::lang('base.delete') . '
+                                        </a>
+                                        <input type="hidden" name="current_file_' . $inputName . '" value="' . $getFile->id . '" />
+                                    </span>';
+                                }
+                            }
+
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="">
-                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . Base::lang($input['label']) . $requiredBadge . '</label>
+                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . Base::lang($input['label']) . $requiredBadge . $externalBadge . '</label>
                                     <input class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" type="file">
                                 </div>
                             </div>';
@@ -212,7 +283,11 @@ final class ContentController extends Controller {
                             $options = '';
                             if (isset($input['data']) !== false) {
                                 foreach ($input['data'] as $val => $text) {
-                                    $options .= '<option value="'.$val.'">' . $text . '</option>';
+                                    $selected = '';
+                                    if (! is_null($currentVal) AND $currentVal == $val) {
+                                        $selected .= ' selected';
+                                    }
+                                    $options .= '<option value="'.$val.'"' . $selected . '>' . $text . '</option>';
                                 }
                             }
 
@@ -231,7 +306,7 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
-                                    <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 200px"></textarea>
+                                    <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 200px">' . $currentVal . '</textarea>
                                     <label for="content_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
@@ -240,8 +315,7 @@ final class ContentController extends Controller {
                         case 'editor':
                             $moduleForm .= '
                             <div class="'.$col.'">
-                                <div data-kn-toggle="editor" class="editor" data-options=\'' . json_encode(['placeholder'=>Base::lang($input['label'])])  . '\' data-name="' . $inputName . '" data-module="' . $this->module . '">
-                                </div>
+                                <div data-kn-toggle="editor" class="editor" data-options=\'' . json_encode(['placeholder'=>Base::lang($input['label'])])  . '\' data-name="' . $inputName . '" data-module="' . $this->module . '">' . $currentVal . '</div>
                             </div>';
                             break;
                     }
@@ -266,7 +340,7 @@ final class ContentController extends Controller {
         }
 
         $moduleForm = '
-        <form class="row g-2" data-kn-form id="contentAdd"'.($multilanguage ? ' novalidate' : '').' method="post" action="'.$this->get()->url('management/' . $this->module . '/add').'">
+        <form class="row g-2" data-kn-form id="' . (isset($id) !== false ? 'contentEdit' : 'contentAdd') . '"'.($multilanguage ? ' novalidate' : '').' method="post" action="'.$this->get()->url('management/' . $this->module . '/' . (isset($id) !== false ? $id . '/edit' : 'add')).'">
             <div class="form-loader">
                 <div class="spinner-border text-light" role="status">
                     <span class="visually-hidden">'.Base::lang('base.loading').'</span>
@@ -785,7 +859,7 @@ final class ContentController extends Controller {
 
                 $form = $this->prepareModuleForm($this->modules[$this->module]['inputs'], $getContent);
                 $arguments['modal_open'] = ['#editModal'];
-                $arguments['trigger_editor'] = ['#editModal'];
+                $arguments['trigger_editor'] = '#editModal';
                 $arguments['manipulation'] = [
                     '#editModal .modal-body' => [
                         'html'  => $form
