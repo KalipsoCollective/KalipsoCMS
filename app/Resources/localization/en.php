@@ -320,6 +320,7 @@ return [
         'header_image' => 'Header Image',
         'content_successfully_added' => 'Content has been successfully added.',
         'content_add_problem' => 'There was a problem adding content.',
+        'modules' => 'Modules',
     ],
     'app' => [
         

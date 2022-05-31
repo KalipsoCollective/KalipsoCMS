@@ -320,6 +320,7 @@ return [
         'header_image' => 'Başlık Görseli',
         'content_successfully_added' => 'İçerik başarıyla eklendi.',
         'content_add_problem' => 'İçerik eklenirken bir sorun oluştu.',
+        'modules' => 'Modüller',
     ],
     'app' => [
         

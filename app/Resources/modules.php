@@ -215,9 +215,6 @@ return [
                     return $return;
                 }
             ],
-            'email' => [],
-            'birth_date' => [],
-            'role' => [],
             'created' => [],
             'updated' => [],
 		],

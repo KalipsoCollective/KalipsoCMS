@@ -50,7 +50,7 @@
                         } 
 
                         if ($this->authority('/management/:module')) {
-                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.contents') . '</li>';
+                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.modules') . '</li>';
                         }
 
                         if ($this->authority('/management/:module')) {
