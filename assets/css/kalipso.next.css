@@ -515,6 +515,16 @@ nav.navbar-side .navbar-nav .nav-item.nav-group {
     font-family: 'Manrope', sans-serif;
 }
 
+img.table-image {
+    width: 6rem;
+    height: 3rem;
+    object-fit: cover;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 @media (max-width: 1200px) {
     nav.navbar-side {
         left: -16rem;

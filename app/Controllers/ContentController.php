@@ -10,11 +10,12 @@ declare(strict_types=1);
 namespace KN\Controllers;
 
 use KN\Core\Controller;
-use KN\Helpers\Base;
 use KN\Model\Contents;
 use KN\Model\Files;
-use KN\Core\Notification;
+use KN\Helpers\Base;
+use KN\Helpers\KalipsoTable;
 use \Verot\Upload\Upload;
+
 
 final class ContentController extends Controller {
 
@@ -367,6 +368,76 @@ final class ContentController extends Controller {
             'alerts' => $alerts,
             'view' => null
         ];
+
+    }
+
+    public function contentList() {
+
+        $container = $this->get();
+        $moduleName = $this->module;
+        if (isset($this->modules[$moduleName]) !== false) {
+
+            $module = $this->modules[$moduleName];
+
+            $tables = $module['table'];
+            $tables['action'] = [
+                'exclude' => true,
+                'formatter' => function($row) use ($container, $moduleName) {
+
+                    $buttons = '';
+                    if ($container->authority('management/:module/:id')) {
+                        $buttons .= '
+                        <button type="button" class="btn btn-light" 
+                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id ).'">
+                            ' . Base::lang('base.view') . '
+                        </button>';
+                    }
+
+                    if ($container->authority('management/:module/:id/delete')) {
+                        $buttons .= '
+                        <button type="button" class="btn btn-danger" 
+                            data-kn-again="'.Base::lang('base.are_you_sure').'" 
+                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id . '/delete').'">
+                            ' . Base::lang('base.delete') . '
+                        </button>';
+                    }
+
+
+
+                    return '
+                    <div class="btn-group btn-group-sm" role="group" aria-label="'.Base::lang('base.action').'">
+                        '.$buttons.'
+                    </div>';
+                }
+            ];
+            $tableOp = (new KalipsoTable())
+                ->db((new Contents)->pdo)
+                ->from($module['from'])
+                ->process($tables)
+                ->output();
+
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => $tableOp,
+                'view' => null
+            ];
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
+                'redirect' => '/management',
+                'alerts' => [
+                    [
+                        'status' => 'error',
+                        'message' => Base::lang('error.module_not_found')
+                    ]
+                ],
+                'view' => null
+            ];
+        }
 
     }
 

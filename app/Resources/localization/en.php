@@ -298,6 +298,7 @@ return [
         'maintenance_mode_desc' => 'Unfortunately, we are currently under maintenance, so we are unable to provide service, you can try again later.',
         'system' => 'System',
         'contents' => 'Contents',
+        'content' => 'Content',
         'contents_message' => 'Contents are flexible structures that you can remodel based on your content structures.',
         'services' => 'Services',
         'services_message' => 'This is the page where you can manage the services.',

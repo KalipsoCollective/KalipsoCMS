@@ -15,7 +15,11 @@
 					<p><?php echo $description; ?></p>
 				</header>
 				<div class="col-12 dash-content">
-					<div class="bg-white p-2 mb-2 rounded shadow-sm" id="schemasTable"></div>
+					<div class="bg-white p-2 mb-2 rounded shadow-sm" 
+						id="contentsTable" 
+						data-source="<?php echo $this->url('/management/'.$module.'/list') ?>"
+						data-columns='<?php echo json_encode($moduleDatas['columns']); ?>'
+					></div>
 				</div>
 			</div>
 		</div>

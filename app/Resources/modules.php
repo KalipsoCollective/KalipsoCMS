@@ -1,5 +1,7 @@
 <?php
 
+use KN\Helpers\Base;
+
 return [
 
 	'services' => [
@@ -7,6 +9,14 @@ return [
 		'description' => 'base.services_message',
 		'icon' => 'ti ti-folders',
 		'table' => [
+			'id',
+			'name',
+			'updated_at',
+			'updated_by',
+			'created_at',
+			'created_by'
+		],
+		'columns' => [
 			'id',
 			'name',
 			'updated_at',
@@ -86,13 +96,46 @@ return [
 		'name' => 'base.other_services',
 		'description' => 'base.other_services_message',
 		'icon' => 'ti ti-folder',
+
 		'table' => [
-			'id',
-			'name',
-			'updated_at',
-			'updated_by',
-			'created_at',
-			'created_by'
+            'id' => [
+                'primary' => true,
+            ],
+            'u_name' => [],
+            'name' => [
+                'exclude' => true,
+                'formatter' => function($row) {
+
+                    $name = trim($row->f_name . ' ' . $row->l_name);
+                    return $name == '' ? '-' : $name;
+                }
+            ],
+            'email' => [],
+            'birth_date' => [],
+            'role' => [],
+            'created' => [],
+            'updated' => [],
+            'status' => [
+                'formatter' => function ($row) {
+
+                    switch ($row->status) {
+                        case 'deleted':
+                            $status = 'text-danger';
+                            break;
+
+                        case 'passive':
+                            $status = 'text-warning';
+                            break;
+                            
+                        default:
+                            $status = 'text-success';
+                            break;
+                    }
+
+                    return '<span class="' . $status . '">' . Base::lang('base.' . $row->status) . '</span>';
+
+                }
+            ]
 		],
 		'routes' => [
 			'listing' => false,
@@ -125,13 +168,124 @@ return [
 		'name' => 'base.countries',
 		'description' => 'base.countries_message',
 		'icon' => 'ti ti-globe',
+		'from' => '(SELECT 
+                        x.id, 
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content, 
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.flag\')), 0) AS flag,
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.campus_image\')), 0) AS campus_image,
+                        (SELECT files FROM files WHERE id = flag) AS flag_src,
+                        (SELECT files FROM files WHERE id = campus_image) AS image_src,
+                        FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+                        IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+                    FROM `contents` x WHERE x.module = "countries") AS raw',
 		'table' => [
-			'id',
-			'name',
-			'updated_at',
-			'updated_by',
-			'created_at',
-			'created_by'
+			'id' => [
+                'primary' => true,
+            ],
+            'title' => [],
+            'content' => [
+                'formatter' => function($row) {
+
+                    $content = Base::stringShortener(trim(strip_tags(htmlspecialchars_decode($row->content))), 100);
+                    return $content == '' ? '-' : $content;
+                }
+            ],
+            'flag_src' => [
+                'formatter' => function($row) {
+                	$return = '';
+                	if ($row->flag_src AND $src = @json_decode($row->flag_src)) {
+                		$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
+                		$return = '<img class="table-image" src="' . $src . '" />';
+                	} else {
+                		$return = '-';
+                	}
+                    return $return;
+                }
+            ],
+            'image_src' => [
+                'formatter' => function($row) {
+                	$return = '';
+                	if ($row->image_src AND $src = @json_decode($row->image_src)) {
+                		$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
+                		$return = '<img class="table-image" src="' . $src . '" />';
+                	} else {
+                		$return = '-';
+                	}
+                    return $return;
+                }
+            ],
+            'email' => [],
+            'birth_date' => [],
+            'role' => [],
+            'created' => [],
+            'updated' => [],
+		],
+		'columns' => [
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.title'),
+				"key" => "title"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.content'),
+				"key" => "content"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.flag'),
+				"key" => "flag_src"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.image'),
+				"key" => "image_src"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
 		],
 		'routes' => [
 			'listing' => false,

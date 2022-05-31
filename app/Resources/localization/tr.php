@@ -298,6 +298,7 @@ return [
         'maintenance_mode_desc' => 'Maalesef bakımda olduğumuz için şu an hizmet veremiyoruz, daha sonra tekrar deneyebilirsiniz.',
         'system' => 'Sistem',
         'contents' => 'İçerikler',
+        'content' => 'İçerik',
         'contents_message' => 'İçerikler, içerik yapılarınıza göre yeniden modelleyebileceğiniz esnek yapılar sunar.',
         'services' => 'Hizmetler',
         'services_message' => 'Hizmetleri yönetebileceğiniz sayfadır.',
