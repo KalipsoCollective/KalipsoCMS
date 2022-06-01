@@ -89,9 +89,11 @@ final class ContentController extends Controller {
 
     public function prepareModuleForm($module, $fill = null) {
 
+        $idPrefix = 'content_add';
         if (! is_null($fill)) {
             $fillDatas = json_decode($fill->input);
             $id = $fill->id;
+            $idPrefix = 'content_edit';
         }
 
         $moduleForm = '';
@@ -145,12 +147,12 @@ final class ContentController extends Controller {
                     $moduleForm .= '
                     <div class="col-12 col-md-6">
                         <div class="form-floating">
-                            <select class="form-select" '.$attributes.'name="' . $key . '" id="content_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
+                            <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
                                 '.(! $requiredWidget ? '<option value=""></option>' : '').'
                                 <option value="0"'.$allSelected.'>' . Base::lang('base.all') . '</option>
                                 '.$options.'
                             </select>
-                            <label for="content_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
+                            <label for="' . $idPrefix . '_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
                         </div>
                     </div>';
 
@@ -160,15 +162,16 @@ final class ContentController extends Controller {
 
                 $nameSubfix = [null];
                 if (isset($input['multilanguage']) !== false AND $input['multilanguage']) {
+
                     $nameSubfix = $languages;
                     $moduleForm .= '
                     <div class="col-12 bg-light p-1 rounded shadow shadow-sm border border-1 border-gray">
                         <div class="row g-4 align-items-center">
                             <div class="col-4 col-md-2">
-                                <div class="nav nav-pills flex-column" id="content_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
+                                <div class="nav nav-pills flex-column" id="' . $idPrefix . '_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
                                 foreach ($languages as $i => $lang) {
                                     $moduleForm .= '
-                                    <button class="nav-link'.($i===0 ? ' active' : '').'" id="content_'.$name.'-tab" data-bs-toggle="pill" data-bs-target="#content_'.$name.'-'.$lang.'" type="button" role="tab" aria-controls="content_'.$name.'-'.$lang.'" aria-selected="'.($i===0 ? 'true' : 'false').'">
+                                    <button class="nav-link'.($i===0 ? ' active' : '').'" id="' . $idPrefix . '_'.$name.'-tab" data-bs-toggle="pill" data-bs-target="#' . $idPrefix . '_'.$name.'-'.$lang.'" type="button" role="tab" aria-controls="' . $idPrefix . '_'.$name.'-'.$lang.'" aria-selected="'.($i===0 ? 'true' : 'false').'">
                                         '.Base::lang('langs.'.$lang).'
                                     </button>';
                                 }
@@ -176,34 +179,34 @@ final class ContentController extends Controller {
                                 </div>
                             </div>
                             <div class="col-8 col-md-10 ps-0">
-                                <div class="tab-content" id="content_'.$name.'-tablist">';
+                                <div class="tab-content" id="' . $idPrefix . '_'.$name.'-tablist">';
                                 
-                }
-
-                $attributes = '';
-                if (isset($input['attributes']) !== false) {
-                    foreach ($input['attributes'] as $attribute => $val) {
-                        $attributes .= $attribute . '="'.$val.'" ';
-                    }
                 }
 
                 foreach ($nameSubfix as $i => $lang) {
                     
+                    $attributes = '';
+                    if (isset($input['attributes']) !== false) {
+                        foreach ($input['attributes'] as $attribute => $val) {
+                            $attributes .= $attribute . '="'.$val.'" ';
+                        }
+                    }
+                
+                    $currentVal = null;
                     $col = 'col-12 col-md-6';
                     $inputName = is_null($lang) ? $name : $name.'['.$lang.']';
                     // multilingual
                     if (! is_null($lang)) {
                         $col = 'col';
                         $moduleForm .= '
-                        <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="content_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="content_'.$name.'-tab">';
+                        <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="' . $idPrefix . '_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="' . $idPrefix . '_'.$name.'-tab">';
 
-                        $currentVal = null;
                         if (isset($fillDatas->{$name}->{$lang}) !== false) {
                             $currentVal = $fillDatas->{$name}->{$lang};
                         }
 
                     } else {
-                        $currentVal = null;
+                        
                         if (isset($fillDatas->{$name}) !== false) {
                             $currentVal = $fillDatas->{$name};
                         }
@@ -223,13 +226,15 @@ final class ContentController extends Controller {
 
                             if (! is_null($currentVal)) {
                                 $attributes .= 'value="'.$currentVal.'" ';
+                                // Base::dump($currentVal);
+                                // Base::dump($lang);
                             }
 
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
-                                    <input class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
-                                    <label for="content_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
+                                    <input class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
+                                    <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
                             break;
@@ -274,7 +279,7 @@ final class ContentController extends Controller {
                             <div class="'.$col.'">
                                 <div class="">
                                     <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . Base::lang($input['label']) . $requiredBadge . $externalBadge . '</label>
-                                    <input class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" type="file">
+                                    <input class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" type="file">
                                 </div>
                             </div>';
                             break;
@@ -294,10 +299,10 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
-                                    <select class="form-select" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($widget['label']) . '">
+                                    <select class="form-select" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($widget['label']) . '">
                                         '.$options.'
                                     </select>
-                                    <label for="content_' . $name . $lang . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
+                                    <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
                             break;
@@ -306,8 +311,8 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
-                                    <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="content_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 200px">' . $currentVal . '</textarea>
-                                    <label for="content_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
+                                    <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 200px">' . $currentVal . '</textarea>
+                                    <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
                             break;
@@ -315,7 +320,7 @@ final class ContentController extends Controller {
                         case 'editor':
                             $moduleForm .= '
                             <div class="'.$col.'">
-                                <div data-kn-toggle="editor" class="editor" data-options=\'' . json_encode(['placeholder'=>Base::lang($input['label'])])  . '\' data-name="' . $inputName . '" data-module="' . $this->module . '">' . $currentVal . '</div>
+                                <div data-kn-toggle="editor" class="editor" data-options=\'' . json_encode(['placeholder'=>Base::lang($input['label'])])  . '\' data-name="' . $inputName . '" data-module="' . $this->module . '">' . htmlspecialchars_decode((string) $currentVal) . '</div>
                             </div>';
                             break;
                     }
@@ -859,7 +864,7 @@ final class ContentController extends Controller {
 
                 $form = $this->prepareModuleForm($this->modules[$this->module]['inputs'], $getContent);
                 $arguments['modal_open'] = ['#editModal'];
-                $arguments['trigger_editor'] = '#editModal';
+                $arguments['init'] = true;
                 $arguments['manipulation'] = [
                     '#editModal .modal-body' => [
                         'html'  => $form

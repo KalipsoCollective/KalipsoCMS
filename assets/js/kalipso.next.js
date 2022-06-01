@@ -346,17 +346,9 @@ function responseFormatter(response, dom = null) {
 		modal.show();
 	}
 
-	if (response.trigger_editor !== undefined && document.querySelector(response.trigger_editor)) {
+	if (response.init !== undefined && response.init) {
 		setTimeout(() => {
-			const editorArea = document.querySelector(response.trigger_editor);
-			const editorPlaces = editorArea.querySelectorAll('[data-kn-toggle="editor"]');
-			console.log(editorPlaces);
-			if (typeof Quill !== 'undefined' && editorPlaces) {
-
-				[].forEach.call(editorPlaces, function(el) {
-					editorInit(el);
-				});
-			}
+			kalipsoInit();
 		}, 100);
 	}
 
