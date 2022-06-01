@@ -191,7 +191,7 @@ final class ContentController extends Controller {
                             $attributes .= $attribute . '="'.$val.'" ';
                         }
                     }
-                
+
                     $currentVal = null;
                     $col = 'col-12 col-md-6';
                     $inputName = is_null($lang) ? $name : $name.'['.$lang.']';
@@ -226,8 +226,6 @@ final class ContentController extends Controller {
 
                             if (! is_null($currentVal)) {
                                 $attributes .= 'value="'.$currentVal.'" ';
-                                // Base::dump($currentVal);
-                                // Base::dump($lang);
                             }
 
                             $moduleForm .= '
@@ -345,7 +343,7 @@ final class ContentController extends Controller {
         }
 
         $moduleForm = '
-        <form class="row g-2" data-kn-form id="' . (isset($id) !== false ? 'contentEdit' : 'contentAdd') . '"'.($multilanguage ? ' novalidate' : '').' method="post" action="'.$this->get()->url('management/' . $this->module . '/' . (isset($id) !== false ? $id . '/edit' : 'add')).'">
+        <form class="row g-2" data-kn-form id="' . (isset($id) !== false ? 'contentEdit' : 'contentAdd') . '"'.($multilanguage ? ' novalidate' : '').' method="post" action="'.$this->get()->url('management/' . $this->module . '/' . (isset($id) !== false ? $id . '/update' : 'add')).'">
             <div class="form-loader">
                 <div class="spinner-border text-light" role="status">
                     <span class="visually-hidden">'.Base::lang('base.loading').'</span>
@@ -885,6 +883,334 @@ final class ContentController extends Controller {
                 'status' => 'error',
                 'message' => Base::lang('error.module_not_found')
             ];
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
+    }
+
+    public function contentUpdate() {
+
+        $alerts = [];
+        $arguments = [];
+
+        $id = (int)$this->get('request')->attributes['id'];
+
+        $rollBack = [];
+        $inputAreas = [];
+        $files = [];
+        $requiredAreas = [
+            'areas' => [], 
+            'files' => []
+        ];
+        if (isset($this->modules[$this->module]) !== false) {
+
+            $module = $this->modules[$this->module];
+
+            // Input area check
+            foreach ($module['inputs'] as $name => $detail) {
+
+                if ($name === 'widgets') {
+
+                    foreach ($detail as $name => $widgetDetail) {
+                        
+                        $inputAreas[$name] = 'int';
+                        if (isset($detail['attributes']['required']) !== false AND $detail['attributes']['required'] === 'true') {
+                            $requiredAreas['areas'][$name] = true;
+                        }
+
+                    }
+
+                } else {
+
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+
+                        $inputAreas[$name] = 'nulled_text';
+
+                    } elseif ($detail['type'] === 'number') {
+
+                        $inputAreas[$name] = 'int';
+
+                    } elseif ($detail['type'] === 'editor') {
+
+                        $inputAreas[$name] = 'nulled_html';
+
+                    } elseif ($detail['type'] === 'file') {
+
+                        $files[$name] = $detail;
+
+                    }
+
+                    if (isset($detail['attributes']['required']) !== false AND $detail['attributes']['required'] === 'true') {
+                        $requiredAreas[($detail['type'] === 'file' ? 'files' : 'areas')][$name] = true;
+                    }
+                }
+            }
+
+            extract(Base::input($inputAreas, $this->get('request')->params));
+
+            $update = [];
+            // Filter all inputs
+            foreach ($inputAreas as $inputName => $inputType) {
+                
+                if (is_array($$inputName)) { // multilingual
+
+                    foreach ($$inputName as $lang => $inputVar) {
+
+                        if (
+                            isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)
+                        ) {
+
+                            $update[$inputName][$lang] = $inputVar;
+
+                        } else {
+
+                            if ($inputType === 'nulled_html') {
+
+                                $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '[' . $lang . ']"]'] = [
+                                    'class' => ['border', 'border-1', 'border-danger'],
+                                ];
+
+                            } else {
+
+                                $arguments['manipulation']['#contentAdd [name="' . $inputName . '[' . $lang . ']"]'] = [
+                                    'class' => ['is-invalid'],
+                                ];
+
+                            }
+                        }
+                    }
+
+                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)) {
+
+                    $update[$inputName] = $$inputName;
+
+                } else {
+
+                    if ($inputType === 'nulled_html') {
+                        $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '"]'] = [
+                            'class' => ['border', 'border-1', 'border-danger'],
+                        ];
+                    } else {
+                        $arguments['manipulation']['#contentAdd [name="' . $inputName . '"]'] = [
+                            'class' => ['is-invalid'],
+                        ];
+                    }
+                    
+                }
+
+            }
+
+            if (isset($arguments['manipulation']) === false) {
+
+                // Files
+                if (count($files)) {
+
+                    if (! is_dir($path = Base::path('upload')))
+                        mkdir($path);
+
+                    if (! is_dir($path .= '/' . $this->module))
+                        mkdir($path);
+
+                    foreach ($files as $fileName => $fileDetails) {
+
+                        $requiredFile = false;
+                        $multipleFile = false;
+
+                        if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
+                            $requiredFile = true;
+                        }
+
+                        if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
+                            $multipleFile = true;
+                        }
+
+                        if (isset($this->get('request')->files[$fileName]) !== false) {
+
+                            foreach ($this->get('request')->files[$fileName] as $fileKey => $fileUp) {
+
+                                $maxSize = Base::config('app.upload_max_size');
+                                if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
+                                    $maxSize = $fileDetails['external_parameters']['max_size'];
+                                }
+
+                                $acceptMime = Base::config('app.upload_accept');
+                                if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
+                                    $acceptMime = $fileDetails['attributes']['accept'];
+                                }
+
+                                $convertFile = Base::config('app.upload_convert');
+                                if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
+                                    $convertFile = $fileDetails['external_parameters']['convert'];
+                                }
+
+                                $fileDimension = ['original' => [0, 0]];
+                                if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
+                                    $fileDimension = $fileDetails['external_parameters']['size'];
+                                }
+
+                                $handle = new Upload($fileUp, Base::lang('lang.iso_code'));
+                                if ($handle->uploaded) {
+
+                                    $updateData = [];
+                                    $errorOnUpload = false;
+
+                                    $originalFileName = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 190, false);
+
+                                    foreach ($fileDimension as $dimensionTag => $dimensionVar) {
+
+                                        $newFileName = $originalFileName . '_' . $dimensionTag;
+                                        $handle->file_new_name_body   = $newFileName;
+
+                                        if ($maxSize) $handle->file_max_size = $maxSize;
+                                        if ($acceptMime) $handle->allowed = $acceptMime;
+                                        if ($convertFile) $handle->image_convert = $convertFile;
+
+                                        if ($quality = Base::config('app.upload_webp_quality')) {
+                                            $handle->webp_quality = $quality;
+                                        }
+
+                                        if ($quality = Base::config('app.upload_png_quality')) {
+                                            $handle->webp_quality = $quality;
+                                        }
+
+                                        if ($quality = Base::config('app.upload_jpeg_quality')) {
+                                            $handle->webp_quality = $quality;
+                                        }
+
+                                        $handle->image_resize         = true;
+                                        // $handle->image_ratio = true;
+                                        if ($dimensionVar[0]) $handle->image_x      = $dimensionVar[0];
+                                        if ($dimensionVar[1]) $handle->image_y      = $dimensionVar[1];
+                                        
+                                        $handle->process($path);
+                                        if ($handle->processed) {
+                                           
+                                            $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
+                                            $updateData[$dimensionTag] = $url;
+
+                                        } else {
+                                            
+                                            $errorOnUpload = $handle->error;
+                                            break;
+                                            
+                                        }
+                                    }
+
+                                    $handle->clean();
+                                    if ($errorOnUpload === false) {
+
+                                        $alerts[] = [
+                                            'status' => 'success',
+                                            'message' => Base::lang('base.file_successfully_uploaded') . ' (' . $originalFileName . ')'
+                                        ];
+
+                                        $id = (new Files)->insert([
+                                            'module' => $this->module,
+                                            'name' => $originalFileName,
+                                            'files' => json_encode($updateData)
+                                        ]);
+
+                                        $rollBack[] = $id;
+                                        if ($multipleFile) $update[$fileName][$fileKey] = $id;
+                                        else $update[$fileName] = $id;
+
+                                    } else {
+                                        $alerts[] = [
+                                            'status' => 'error',
+                                            'message' => Base::lang('base.file_upload_problem') 
+                                            . (isset($handle->error) !== false ? ' (' . Base::lang($fileDetails['label']) . ' -> ' . $errorOnUpload . ')' : '')
+                                        ];
+                                        $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                            'class' => ['is-invalid'],
+                                        ];
+                                    }
+
+                                } else {
+
+                                    $alerts[] = [
+                                        'status' => 'warning',
+                                        'message' => Base::lang('base.file_not_uploaded') . ' (' . Base::lang($fileDetails['label']) . ')'
+                                    ];
+                                    $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                        'class' => ['is-invalid'],
+                                    ];
+
+                                }
+
+                            }
+
+                        } elseif ($requiredFile) {
+
+                            $alerts[] = [
+                                'status' => 'warning',
+                                'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
+                            ];
+                            $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                'class' => ['is-invalid'],
+                            ];
+
+                        } else {
+
+                            $update[$fileName] = null;
+                        }
+                    }
+                }
+
+                if (! count($files) OR isset($arguments['manipulation']) === false) {
+
+                    $model = new Contents;
+                    $update = $model->where('id', $id)->update([
+                        'input' => json_encode($insert),
+                    ]);
+
+                    if ($update) {
+
+                        $alerts[] = [
+                            'status' => 'success',
+                            'message' => Base::lang('base.content_successfully_updated')
+                        ];
+                        $arguments['modal_close'] = '#editModal';
+                        $arguments['table_reset'] = 'contentsTable';
+                        $rollBack = [];
+
+                    } else {
+
+                        $alerts[] = [
+                            'status' => 'error',
+                            'message' => Base::lang('base.content_update_problem')
+                        ];
+                    }
+
+                }
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'warning',
+                    'message' => Base::lang('base.form_cannot_empty')
+                ];
+            }
+
+        } else {
+
+            $alerts[] = [
+                'status' => 'error',
+                'message' => Base::lang('error.module_not_found')
+            ];
+        }
+
+        if (count($rollBack)) {
+            $controller = new FileController($this->get());
+            foreach ($rollBack as $fileId) {
+                $controller->removeFileWithId($fileId);
+            }
         }
 
         return [
