@@ -703,7 +703,7 @@ final class ContentController extends Controller {
                                         }
 
                                         $handle->image_resize         = true;
-                                        $handle->image_ratio          = true;
+                                        // $handle->image_ratio = true;
                                         if ($dimensionVar[0]) $handle->image_x      = $dimensionVar[0];
                                         if ($dimensionVar[1]) $handle->image_y      = $dimensionVar[1];
                                         

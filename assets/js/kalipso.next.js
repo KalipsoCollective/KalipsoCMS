@@ -341,25 +341,24 @@ function responseFormatter(response, dom = null) {
 		modal.hide();
 	}
 
-	if (response.trigger_editor !== undefined && document.querySelector(response.trigger_editor)) {
-		const editorArea = document.querySelector(response.trigger_editor);
-
-		const editorPlaces = editorArea.querySelectorAll('[data-kn-toggle="editor"]');
-		console.log(editorPlaces);
-		if (typeof Quill !== 'undefined' && editorPlaces) {
-
-			[].forEach.call(editorPlaces, function(el) {
-				editorInit(el);
-			});
-		}
-	}
-
 	if (response.modal_open !== undefined && document.querySelector(response.modal_open)) {
 		const modal = bootstrap.Modal.getOrCreateInstance(document.querySelector(response.modal_open));
 		modal.show();
 	}
 
-	
+	if (response.trigger_editor !== undefined && document.querySelector(response.trigger_editor)) {
+		setTimeout(() => {
+			const editorArea = document.querySelector(response.trigger_editor);
+			const editorPlaces = editorArea.querySelectorAll('[data-kn-toggle="editor"]');
+			console.log(editorPlaces);
+			if (typeof Quill !== 'undefined' && editorPlaces) {
+
+				[].forEach.call(editorPlaces, function(el) {
+					editorInit(el);
+				});
+			}
+		}, 100);
+	}
 
 	if (response.reload !== undefined) {
 		const timeOut = response.reload_timeout !== undefined ? response.reload_timeout : 1;
