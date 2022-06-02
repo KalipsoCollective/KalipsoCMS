@@ -321,6 +321,8 @@ return [
         'content_successfully_added' => 'Content has been successfully added.',
         'content_add_problem' => 'There was a problem adding content.',
         'modules' => 'Modules',
+        'content_successfully_updated' => 'Content successfully edited.',
+        'content_update_problem' => 'There was a problem editing the content.',
     ],
     'app' => [
         

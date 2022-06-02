@@ -321,6 +321,8 @@ return [
         'content_successfully_added' => 'İçerik başarıyla eklendi.',
         'content_add_problem' => 'İçerik eklenirken bir sorun oluştu.',
         'modules' => 'Modüller',
+        'content_successfully_updated' => 'İçerik başarıyla düzenlendi.',
+        'content_update_problem' => 'İçerik düzenlenirken bir sorun oluştu.',
     ],
     'app' => [
         

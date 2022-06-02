@@ -944,6 +944,9 @@ final class ContentController extends Controller {
                     } elseif ($detail['type'] === 'file') {
 
                         $files[$name] = $detail;
+                        extract(Base::input([
+                            'current_file_' . $name => 'int'
+                        ], $this->get('request')->params));
 
                     }
 
@@ -1111,15 +1114,15 @@ final class ContentController extends Controller {
                                             'message' => Base::lang('base.file_successfully_uploaded') . ' (' . $originalFileName . ')'
                                         ];
 
-                                        $id = (new Files)->insert([
+                                        $fileId = (new Files)->insert([
                                             'module' => $this->module,
                                             'name' => $originalFileName,
                                             'files' => json_encode($updateData)
                                         ]);
 
-                                        $rollBack[] = $id;
-                                        if ($multipleFile) $update[$fileName][$fileKey] = $id;
-                                        else $update[$fileName] = $id;
+                                        $rollBack[] = $fileId;
+                                        if ($multipleFile) $update[$fileName][$fileKey] = $fileId;
+                                        else $update[$fileName] = $fileId;
 
                                     } else {
                                         $alerts[] = [
@@ -1127,7 +1130,7 @@ final class ContentController extends Controller {
                                             'message' => Base::lang('base.file_upload_problem') 
                                             . (isset($handle->error) !== false ? ' (' . Base::lang($fileDetails['label']) . ' -> ' . $errorOnUpload . ')' : '')
                                         ];
-                                        $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                        $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
                                             'class' => ['is-invalid'],
                                         ];
                                     }
@@ -1138,7 +1141,7 @@ final class ContentController extends Controller {
                                         'status' => 'warning',
                                         'message' => Base::lang('base.file_not_uploaded') . ' (' . Base::lang($fileDetails['label']) . ')'
                                     ];
-                                    $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                    $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
                                         'class' => ['is-invalid'],
                                     ];
 
@@ -1146,28 +1149,51 @@ final class ContentController extends Controller {
 
                             }
 
-                        } elseif ($requiredFile) {
+                        } elseif ($requiredFile AND !${'current_file_'.$fileName}) {
 
                             $alerts[] = [
                                 'status' => 'warning',
                                 'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
                             ];
-                            $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                            $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
                                 'class' => ['is-invalid'],
                             ];
 
                         } else {
 
-                            $update[$fileName] = null;
+                            $update[$fileName] = ${'current_file_'.$fileName} ? ${'current_file_'.$fileName} : null;
                         }
                     }
+                }
+
+                // reassign old ID.
+                if (isset($arguments['manipulation']) !== false AND count($arguments['manipulation']) AND isset($requiredAreas['files']) !== false) {
+
+                    
+                    foreach ($requiredAreas['files'] as $fileNameKey => $val) {
+
+                        foreach ($arguments['manipulation'] as $manipulationSelector => $manipulationDetails) {
+                            
+                            if (strpos($manipulationSelector, $fileNameKey) !== false) {
+
+                                if (isset(${'current_file_'.$fileNameKey}) !== false AND ${'current_file_'.$fileNameKey}) {
+                                    unset($arguments['manipulation'][$manipulationSelector]);
+                                    $update[$fileNameKey] = ${'current_file_'.$fileNameKey};
+                                }
+                            }
+                        }
+                    }
+
+                    if (! count($arguments['manipulation']))
+                        unset($arguments['manipulation']);
+
                 }
 
                 if (! count($files) OR isset($arguments['manipulation']) === false) {
 
                     $model = new Contents;
                     $update = $model->where('id', $id)->update([
-                        'input' => json_encode($insert),
+                        'input' => json_encode($update),
                     ]);
 
                     if ($update) {
