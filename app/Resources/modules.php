@@ -25,6 +25,13 @@ return [
                 'primary' => true,
             ],
             'title' => [],
+            'description' => [
+                'formatter' => function($row) {
+
+                    $description = Base::stringShortener($row->description, 100);
+                    return $description == '' ? '-' : $description;
+                }
+            ],
             'content' => [
                 'formatter' => function($row) {
 
@@ -35,6 +42,18 @@ return [
             'icon' => [
                 'formatter' => function($row) {
                     return '<i class="' . $row->icon . '"></i>';
+                }
+            ],
+            'header_image_src' => [
+                'formatter' => function($row) {
+                	$return = '';
+                	if ($row->header_image_src AND $src = @json_decode($row->header_image_src)) {
+                		$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
+                		$return = '<img class="table-image" src="' . $src . '" />';
+                	} else {
+                		$return = '-';
+                	}
+                    return $return;
                 }
             ],
             'created' => [],
@@ -66,6 +85,15 @@ return [
 					"maxlength" => 50
 				],
 				"orderable" => true,
+				"title" => Base::lang('base.description'),
+				"key" => "description"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
 				"title" => Base::lang('base.content'),
 				"key" => "content"
 			],
@@ -74,6 +102,12 @@ return [
 				"orderable" => false,
 				"title" => Base::lang('base.icon'),
 				"key" => "icon"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.header_image'),
+				"key" => "header_image_src"
 			],
 			[
 				"searchable" => [

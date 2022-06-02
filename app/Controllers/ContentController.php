@@ -539,7 +539,7 @@ final class ContentController extends Controller {
             // Input area check
             foreach ($module['inputs'] as $name => $detail) {
 
-                if ($name === 'widgets') {
+                if ($name === 'widget') {
 
                     foreach ($detail as $name => $widgetDetail) {
                         
