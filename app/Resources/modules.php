@@ -8,21 +8,97 @@ return [
 		'name' => 'base.services',
 		'description' => 'base.services_message',
 		'icon' => 'ti ti-folders',
+		'from' => '(SELECT 
+                        x.id, 
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS slug,
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.description.'.Base::lang('lang.code').'\')), "-") AS description,
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content, 
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.icon\')), 0) AS icon,
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.header_image\')), 0) AS header_image,
+                        (SELECT files FROM files WHERE id = header_image) AS header_image_src,
+                        FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+                        IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+                    FROM `contents` x WHERE x.module = "services") AS raw',
 		'table' => [
-			'id',
-			'name',
-			'updated_at',
-			'updated_by',
-			'created_at',
-			'created_by'
+			'id' => [
+                'primary' => true,
+            ],
+            'title' => [],
+            'content' => [
+                'formatter' => function($row) {
+
+                    $content = Base::stringShortener(trim(strip_tags(htmlspecialchars_decode($row->content))), 100);
+                    return $content == '' ? '-' : $content;
+                }
+            ],
+            'icon' => [
+                'formatter' => function($row) {
+                    return '<i class="' . $row->icon . '"></i>';
+                }
+            ],
+            'created' => [],
+            'updated' => [],
 		],
 		'columns' => [
-			'id',
-			'name',
-			'updated_at',
-			'updated_by',
-			'created_at',
-			'created_by'
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.title'),
+				"key" => "title"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.content'),
+				"key" => "content"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.icon'),
+				"key" => "icon"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
 		],
 		'routes' => [
 			'listing' => [
@@ -65,7 +141,7 @@ return [
 			'header_image' => [
 				'label' => 'base.header_image',
 				'type' => 'file',
-				'col' => 'col-12',
+				'col' => 'col-12 col-md-4',
 				'attributes' => [
 					'accept' => 'image/*',
 				],
@@ -79,12 +155,14 @@ return [
 				'label' => 'base.icon',
 				'type' => 'input',
 				'attributes' => ['required' => 'true'],
+				'col' => 'col-12 col-md-4',
 			],
 			'widget' => [
 				'countries' => [
 					'label' => 'base.countries',
 					'type' => 'select',
 					'source' => ['getModuleDatas', ['countries']],
+					'col' => 'col-12 col-md-4',
 					'use_for_view' => 'title',
 					'attributes' => ['required' => 'true'],
 				]
@@ -96,46 +174,93 @@ return [
 		'name' => 'base.other_services',
 		'description' => 'base.other_services_message',
 		'icon' => 'ti ti-folder',
-
+		'from' => '(SELECT 
+                        x.id, 
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content, 
+                        IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.icon\')), 0) AS icon,
+                        FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+                        IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+                    FROM `contents` x WHERE x.module = "other-services") AS raw',
 		'table' => [
-            'id' => [
+			'id' => [
                 'primary' => true,
             ],
-            'u_name' => [],
-            'name' => [
-                'exclude' => true,
+            'title' => [],
+            'content' => [
                 'formatter' => function($row) {
 
-                    $name = trim($row->f_name . ' ' . $row->l_name);
-                    return $name == '' ? '-' : $name;
+                    $content = Base::stringShortener(trim(strip_tags(htmlspecialchars_decode($row->content))), 100);
+                    return $content == '' ? '-' : $content;
                 }
             ],
-            'email' => [],
-            'birth_date' => [],
-            'role' => [],
+            'icon' => [
+                'formatter' => function($row) {
+                    return '<i class="' . $row->icon . '"></i>';
+                }
+            ],
             'created' => [],
             'updated' => [],
-            'status' => [
-                'formatter' => function ($row) {
-
-                    switch ($row->status) {
-                        case 'deleted':
-                            $status = 'text-danger';
-                            break;
-
-                        case 'passive':
-                            $status = 'text-warning';
-                            break;
-                            
-                        default:
-                            $status = 'text-success';
-                            break;
-                    }
-
-                    return '<span class="' . $status . '">' . Base::lang('base.' . $row->status) . '</span>';
-
-                }
-            ]
+		],
+		'columns' => [
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.title'),
+				"key" => "title"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.content'),
+				"key" => "content"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.icon'),
+				"key" => "icon"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
 		],
 		'routes' => [
 			'listing' => false,
@@ -153,14 +278,16 @@ return [
 			'content' => [
 				'multilanguage' => true,
 				'label' => 'base.description',
-				'type' => 'textarea',
+				'type' => 'editor',
 				'attributes' => ['required' => 'true'],
 			],
 			'icon' => [
 				'label' => 'base.icon',
-				'col' => 'col-12',
 				'type' => 'input',
-				'attributes' => ['required' => 'true'],
+				'col' => 'col-12 d-flex align-items-center justify-content-center',
+				'attributes' => [
+					'required' => 'true',
+				]
 			],
 		]
 	],
@@ -334,5 +461,4 @@ return [
 		]
 
 	],
-
 ];

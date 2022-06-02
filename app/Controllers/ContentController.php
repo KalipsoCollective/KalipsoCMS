@@ -144,8 +144,10 @@ final class ContentController extends Controller {
                         $requiredBadge = ' <sup class="text-danger">*</sup>';
                     }
 
+                    $col = isset($widget['col']) !== false ? $widget['col'] : 'col-12 col-md-6';
+
                     $moduleForm .= '
-                    <div class="col-12 col-md-6">
+                    <div class="' . $col . '">
                         <div class="form-floating">
                             <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
                                 '.(! $requiredWidget ? '<option value=""></option>' : '').'
