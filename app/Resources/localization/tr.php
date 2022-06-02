@@ -323,6 +323,8 @@ return [
         'modules' => 'Modüller',
         'content_successfully_updated' => 'İçerik başarıyla düzenlendi.',
         'content_update_problem' => 'İçerik düzenlenirken bir sorun oluştu.',
+        'content_successfully_deleted' => 'İçerik başarıyla silindi.',
+        'content_delete_problem' => 'İçerik silinirken bir sorun oluştu.',
     ],
     'app' => [
         

@@ -323,6 +323,8 @@ return [
         'modules' => 'Modules',
         'content_successfully_updated' => 'Content successfully edited.',
         'content_update_problem' => 'There was a problem editing the content.',
+        'content_successfully_deleted' => 'Content successfully deleted.',
+        'content_delete_problem' => 'There was a problem updating the content.',
     ],
     'app' => [
         

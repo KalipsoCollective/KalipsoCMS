@@ -1249,4 +1249,60 @@ final class ContentController extends Controller {
 
     }
 
+    public function contentDelete() {
+
+        $alerts = [];
+        $arguments = [];
+
+        $id = (int)$this->get('request')->attributes['id'];
+        if (isset($this->modules[$this->module]) !== false) {
+
+            $model = new Contents();
+            $getContent = $model->select('id')->where('id', $id)->where('module', $this->module)->get();
+            if (! empty($getContent)) {
+
+                $delete = $model->where('id', $id)->delete();
+
+                if ($delete) {
+
+                    $alerts[] = [
+                        'status' => 'success',
+                        'message' => Base::lang('base.content_successfully_deleted')
+                    ];
+                    $arguments['table_reset'] = 'contentsTable';
+
+                } else {
+
+                    $alerts[] = [
+                        'status' => 'error',
+                        'message' => Base::lang('base.content_delete_problem')
+                    ];
+                }
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'warning',
+                    'message' => Base::lang('base.record_not_found')
+                ];
+            }
+
+        } else {
+
+            $alerts[] = [
+                'status' => 'error',
+                'message' => Base::lang('error.module_not_found')
+            ];
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
+    }
+
 }
