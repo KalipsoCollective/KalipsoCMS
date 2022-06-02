@@ -492,6 +492,11 @@ nav.navbar-side .navbar-nav .nav-item.nav-group {
     min-height: 66vh;
 }
 
+.dash-content>div {
+    min-height: 10vh;
+}
+
+
 .dash-icon {
     font-size: 1.5rem;
     padding: 0.2rem 0.6rem;
