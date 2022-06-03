@@ -142,6 +142,10 @@ return [
 			'detail' => [
 				'en' => ['GET,POST', '/services/:slug', 'ContentController@contentDetailPage', []],
 				'tr' => ['GET,POST', '/hizmetler/:slug', 'ContentController@contentDetailPage', []]
+			],
+			'view' => [
+				'listing' => 'contents.service_list',
+				'detail' => 'contents.service_detail',
 			]
 		],
 		'inputs' => [

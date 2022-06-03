@@ -1309,13 +1309,11 @@ final class ContentController extends Controller {
 
     public function contentListPage() {
 
-        Base::dump($this->get()->endpoint);
         // Detect route
         foreach ($this->modules as $moduleKey => $moduleDetail) {
                     
-            // listing route
             if (isset($moduleDetail['routes']['listing'][$this->get()->lang]) !== false) {
-                
+                $details = $moduleDetail['routes']['listing'][$this->get()->lang];
             }
         }
 
@@ -1334,26 +1332,86 @@ final class ContentController extends Controller {
 
     public function contentDetailPage() {
 
-        Base::dump($this->get()->endpoint);
         // Detect route
+        $detected = false;
         foreach ($this->modules as $moduleKey => $moduleDetail) {
                     
-            // listing route
-            if (isset($moduleDetail['routes']['listing'][$this->get()->lang]) !== false) {
-                
+            if (
+                isset($moduleDetail['routes']['detail'][$this->get()->lang]) !== false AND
+                isset($this->get('request')->attributes) !== false AND
+                count($attributes = $this->get('request')->attributes)
+            ) {
+                $details = $moduleDetail['routes']['detail'][$this->get()->lang];
+                $route = trim($details[1], '/');
+
+                if ($route === $this->get()->endpoint) {
+
+                    $this->module = $moduleKey;
+                    $selectColumns = [];
+                    foreach ($moduleDetail['inputs'] as $selectCol => $colAttributes) {
+                        
+                        $multilanguage = false;
+                        if (isset($colAttributes['multilanguage']) !== false AND $colAttributes['multilanguage']) {
+                            $multilanguage = true;
+                        }
+                        $selectColumns[] = '
+                        JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' . $selectCol;
+                        if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
+                            $selectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
+                        }
+
+                    }
+
+                    Base::dump($selectColumns);
+
+                    $model = new Contents;
+                    $contentDetails = $model->select('module, input, created_at, updated_at')
+                        ->where('module', $this->module);
+
+                    foreach ($attributes as $column => $columnVal) {
+
+                        $multilanguage = false;
+                        if (isset($moduleDetail['inputs'][$column]['multilanguage']) !== false AND $moduleDetail['inputs'][$column]['multilanguage']) {
+                            $multilanguage = true;
+                        }
+                        $contentDetails
+                            ->where('JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$column.($multilanguage ? '.'.Base::lang('lang.code') : '').'\'))', $columnVal);
+                    }
+
+                    $contentDetails = $contentDetails->get();
+
+                    if (!empty($contentDetails)) {
+                        $detected = true;
+                    }
+                    break;
+                }
             }
         }
 
-        return [
-            'status' => true,
-            'statusCode' => 200,
-            'arguments' => [
-                'title' => Base::lang('base.welcome'),
-                'output' => Base::lang('base.welcome_message')
-            ],
-            'view' => 'index'
-        ];
+        if ($detected) {
 
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => [
+                    'title' => Base::lang('base.welcome'),
+                    'output' => Base::lang('base.welcome_message')
+                ],
+                'view' => 'index'
+            ];
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
+                'arguments' => [
+                    'error' => 404,
+                    'output' => Base::lang('error.page_not_found')
+                ],
+                'view' => ['error', 'error']
+            ];
+        }
     }
 
 }
