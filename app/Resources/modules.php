@@ -134,14 +134,14 @@ return [
 				"key" => "action"
 			]
 		],
-		'routes' => [
+		'routes' => [ // method - route - controller@method - middlewares as array (like route definition in index.php)
 			'listing' => [
-				'en' => '/services/:slug',
-				'tr' => '/hizmetler/:slug'
+				'en' => ['GET,POST', '/services', 'ContentController@contentListPage', []],
+				'tr' => ['GET,POST', '/hizmetler', 'ContentController@contentListPage', []]
 			],
 			'detail' => [
-				'en' => '/services/:slug',
-				'tr' => '/hizmetler/:slug'
+				'en' => ['GET,POST', '/services/:slug', 'ContentController@contentDetailPage', []],
+				'tr' => ['GET,POST', '/hizmetler/:slug', 'ContentController@contentDetailPage', []]
 			]
 		],
 		'inputs' => [
@@ -493,6 +493,5 @@ return [
 				]
 			],
 		]
-
 	],
 ];
