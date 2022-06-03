@@ -1350,7 +1350,7 @@ final class ContentController extends Controller {
                     $selectColumns = [];
                     foreach ($moduleDetail['inputs'] as $selectCol => $colAttributes) {
 
-                        if ($selectCol === 'widget' AND ) {
+                        if ($selectCol === 'widget'/* AND */) {
 
                             /* From here */
                             foreach ($colAttributes as $key => $value) {
