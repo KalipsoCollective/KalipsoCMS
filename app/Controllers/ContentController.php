@@ -1307,4 +1307,53 @@ final class ContentController extends Controller {
 
     }
 
+    public function contentListPage() {
+
+        Base::dump($this->get()->endpoint);
+        // Detect route
+        foreach ($this->modules as $moduleKey => $moduleDetail) {
+                    
+            // listing route
+            if (isset($moduleDetail['routes']['listing'][$this->get()->lang]) !== false) {
+                
+            }
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => [
+                'title' => Base::lang('base.welcome'),
+                'output' => Base::lang('base.welcome_message')
+            ],
+            'view' => 'index'
+        ];
+
+    }
+
+
+    public function contentDetailPage() {
+
+        Base::dump($this->get()->endpoint);
+        // Detect route
+        foreach ($this->modules as $moduleKey => $moduleDetail) {
+                    
+            // listing route
+            if (isset($moduleDetail['routes']['listing'][$this->get()->lang]) !== false) {
+                
+            }
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => [
+                'title' => Base::lang('base.welcome'),
+                'output' => Base::lang('base.welcome_message')
+            ],
+            'view' => 'index'
+        ];
+
+    }
+
 }
