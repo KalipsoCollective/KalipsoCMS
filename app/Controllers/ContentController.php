@@ -1349,15 +1349,27 @@ final class ContentController extends Controller {
                     $this->module = $moduleKey;
                     $selectColumns = [];
                     foreach ($moduleDetail['inputs'] as $selectCol => $colAttributes) {
-                        
-                        $multilanguage = false;
-                        if (isset($colAttributes['multilanguage']) !== false AND $colAttributes['multilanguage']) {
-                            $multilanguage = true;
-                        }
-                        $selectColumns[] = '
-                        JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' . $selectCol;
-                        if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
-                            $selectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
+
+                        if ($selectCol === 'widget' AND ) {
+
+                            /* From here */
+                            foreach ($colAttributes as $key => $value) {
+                                // code...
+                            }
+                            $selectColumns[] = '(SELECT input FROM contents WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
+
+                        } else {
+
+                            $multilanguage = false;
+                            if (isset($colAttributes['multilanguage']) !== false AND $colAttributes['multilanguage']) {
+                                $multilanguage = true;
+                            }
+                            $selectColumns[] = '
+                            JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' . $selectCol;
+                            if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
+                                $selectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
+                            }
+
                         }
 
                     }
