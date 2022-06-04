@@ -1355,10 +1355,19 @@ final class ContentController extends Controller {
                         if ($selectCol === 'widget'/* AND */) {
 
                             /* From here */
-                            foreach ($colAttributes as $key => $value) {
-                                // code...
+                            foreach ($colAttributes as $moduleName => $moduleDetails) {
+
+                                if ($selectCol !== null) {
+                                    $whereExternal = $moduleName ? 'WHERE id = JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$moduleName.'\')) AND ' : 'WHERE ';
+                                    $selectColumns[] = 
+                                    '(SELECT JSON_ARRAYAGG(input) FROM contents '.$whereExternal.' module = "'.$moduleDetails['source'][1][0].'") AS ' . $moduleName . '_widget';
+                                } else {
+                                    $selectColumns[] = '(NULL) AS ' . $moduleName . '_widget';
+                                }
                             }
-                            $selectColumns[] = '(SELECT input FROM contents WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
+
+                            Base::dump($selectColumns);
+                            
 
                         } else {
 
@@ -1366,8 +1375,8 @@ final class ContentController extends Controller {
                             if (isset($colAttributes['multilanguage']) !== false AND $colAttributes['multilanguage']) {
                                 $multilanguage = true;
                             }
-                            $selectColumns[] = '
-                            JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' . $selectCol;
+                            $selectColumns[] = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' 
+                            . $selectCol;
                             if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
                                 $selectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
                             }
@@ -1376,10 +1385,10 @@ final class ContentController extends Controller {
 
                     }
 
-                    Base::dump($selectColumns);
+                    $selectColumns = implode(', ', $selectColumns);
 
                     $model = new Contents;
-                    $contentDetails = $model->select('module, input, created_at, updated_at')
+                    $contentDetails = $model->select($selectColumns)
                         ->where('module', $this->module);
 
                     foreach ($attributes as $column => $columnVal) {
@@ -1403,6 +1412,9 @@ final class ContentController extends Controller {
         }
 
         if ($detected) {
+
+            Base::dump($contentDetails);
+            exit;
 
             return [
                 'status' => true,
