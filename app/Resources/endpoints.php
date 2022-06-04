@@ -106,8 +106,8 @@ return [
 		'default' => false,
 		'name' => 'auth.management_contents_delete',
 	],
-	'management/:module/slug/:title' => [
-		'default' => false,
+	'management/:module/slug' => [
+		'default' => true,
 		'name' => 'auth.management_contents_slug',
 	],
 	'management/content/:module/upload-file' => [

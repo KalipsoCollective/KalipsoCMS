@@ -138,7 +138,7 @@ function editorInit(el, domID = null) {
 	}
 }
 
-function kalipsoInit(firstLoad = false) {
+function kalipsoInit(firstLoad = false, initSelector = null) {
 
 	// Stored alert remove action
 	alertRemove();
@@ -196,7 +196,7 @@ function kalipsoInit(firstLoad = false) {
 	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
-	var editorToggle = document.querySelectorAll('[data-kn-toggle="editor"]');
+	var editorToggle = document.querySelectorAll((initSelector ? initSelector + ' ' : '') + '[data-kn-toggle="editor"]');
 
 	if (typeof Quill !== 'undefined' && editorToggle) {
 		[].forEach.call(editorToggle, function(el) {
@@ -280,6 +280,62 @@ function kalipsoInit(firstLoad = false) {
 				}
 			}
 		});
+
+		document.addEventListener("change", async function(e) {
+			// Async. Action Buttons
+			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
+				if (e.target.getAttribute('data-kn-change')) {
+					
+					e.preventDefault();
+
+					let keep = true;
+					if (e.target.getAttribute('data-kn-again')) {
+
+						if (e.target.getAttribute('data-kn-again-check')) {
+							keep = false;
+						} else {
+							let text = e.target.innerHTML;
+							e.target.innerHTML = sanitizeHTML(e.target.getAttribute('data-kn-again'));
+							e.target.setAttribute('data-kn-again-check', true);
+							setTimeout(() => {
+								e.target.innerHTML = text;
+								e.target.removeAttribute('data-kn-again-check');
+							}, 3000);
+						}
+
+					} else {
+						keep = false;
+					}
+
+					let options = new FormData;
+					if (e.target.getAttribute('data-kn-change').indexOf('/slug') !== -1) {
+						options.append('slug', e.target.value);
+						options.append('lang', e.target.getAttribute('data-kn-lang'));
+						options.append('id', e.target.getAttribute('data-kn-id'));
+					} else {
+						keep = true;
+					}
+
+					if (! keep) {
+
+						let url = e.target.getAttribute('data-kn-change');
+						NProgress.start();
+						response = await kalipsoFetch(
+							e.target.getAttribute('data-kn-change'),
+							'POST',
+							options
+						);
+
+						if (response !== undefined) {
+							responseFormatter(response);
+						}
+						setTimeout(() => {
+							NProgress.done();
+						}, 500);
+					}
+				}
+			}
+		});
 	}
 	
 }
@@ -348,7 +404,7 @@ function responseFormatter(response, dom = null) {
 
 	if (response.init !== undefined && response.init) {
 		setTimeout(() => {
-			kalipsoInit();
+			kalipsoInit(false, response.init);
 		}, 100);
 	}
 
@@ -374,12 +430,14 @@ function responseFormatter(response, dom = null) {
 		for (const [selector, data] of Object.entries(response.manipulation)) {
 			
 			if (dom.querySelector(selector)) {
+
 				/**
 				 * DOM manipulation for attributes. 
 				 */
 				if (data.attribute !== undefined && data.attribute) {
 					for ([prop, value] of Object.entries(data.attribute)) {
-						dom.querySelector(selector).setAttribute(prop, value);
+						if (prop === 'value') dom.querySelector(selector).value = value
+						else dom.querySelector(selector).setAttribute(prop, value);
 					}
 				}
 

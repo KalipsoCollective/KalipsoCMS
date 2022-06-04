@@ -229,6 +229,8 @@ final class ContentController extends Controller {
                             if (! is_null($currentVal)) {
                                 $attributes .= 'value="'.$currentVal.'" ';
                             }
+                            $attributes .= 'data-kn-lang="'.$lang.'" ';
+                            if (isset($id) !== false) $attributes .= 'data-kn-id="'.$id.'" ';
 
                             $moduleForm .= '
                             <div class="'.$col.'">
@@ -864,7 +866,7 @@ final class ContentController extends Controller {
 
                 $form = $this->prepareModuleForm($this->modules[$this->module]['inputs'], $getContent);
                 $arguments['modal_open'] = ['#editModal'];
-                $arguments['init'] = true;
+                $arguments['init'] = '#editModal';
                 $arguments['manipulation'] = [
                     '#editModal .modal-body' => [
                         'html'  => $form
@@ -918,7 +920,7 @@ final class ContentController extends Controller {
             // Input area check
             foreach ($module['inputs'] as $name => $detail) {
 
-                if ($name === 'widgets') {
+                if ($name === 'widget') {
 
                     foreach ($detail as $name => $widgetDetail) {
                         
@@ -1424,6 +1426,84 @@ final class ContentController extends Controller {
                 'view' => ['error', 'error']
             ];
         }
+    }
+
+    public function contentSlugInquiry() {
+
+        extract(Base::input([
+            'id'    => 'int',
+            'slug'  => 'slug',
+            'lang'  => 'nulled_text',
+        ], $this->get('request')->params));
+
+        
+        $alerts = [];
+        $arguments = [];
+
+        if (isset($this->modules[$this->module]) !== false) {
+
+            if (! is_null($slug)) {
+
+                $multilanguage = $lang ? $lang : false;
+                $whereQuery = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.slug'.($lang ? '.'.$lang : '').'\'))';
+
+                $model = new Contents();
+
+                $checkNum = 1;
+                while (1) {
+                    
+                    $slugCheck = $slug . ($checkNum > 1 ? '-' . $checkNum : '');
+
+                    $recordCheck = $model->select('id')
+                        ->where('module', $this->module)
+                        ->where($whereQuery, $slugCheck);
+
+                    if ($id > 0) {
+                        $recordCheck->notWhere('id', $id);
+                    }
+
+                    $recordCheck = $recordCheck->get();
+
+                    if (empty($recordCheck)) {
+                        break;
+                    }
+                    $checkNum++;
+
+                }
+
+                $arguments['manipulation'] = [
+                    '#content'.($id ? 'Edit' : 'Add').' #content_'.($id ? 'edit' : 'add').'_slug' . $lang => [
+                        'attribute'  => [
+                            'value' => $slugCheck
+                        ]
+                    ]
+                ];
+                
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'error',
+                    'message' => Base::lang('error.missing_or_incorrect_parameter')
+                ];
+            }
+
+        } else {
+
+            $alerts[] = [
+                'status' => 'error',
+                'message' => Base::lang('error.module_not_found')
+            ];
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
     }
 
 }

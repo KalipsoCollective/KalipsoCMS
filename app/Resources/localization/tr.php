@@ -33,6 +33,7 @@ return [
         'endpoint_file_is_not_found' => 'Yetki kontrol noktası dosyası bulunamadı!',
         'ip_blocked' => 'IP adresiniz engellenmiştir!',
         'module_not_found' => 'Modül bulunamadı!',
+        'missing_or_incorrect_parameter' => 'Eksik ya da hatalı parametre!',
     ],
     'notification' => [
         'registration_email_title' => 'Hesabınız Oluşturuldu!',

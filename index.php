@@ -67,7 +67,8 @@ try {
             ['GET,POST', '/:module/:id', 'ContentController@contentDetail', ['Auth@with']],
             ['GET,POST', '/:module/:id/delete', 'ContentController@contentDelete', ['Auth@with']],
             ['GET,POST', '/:module/:id/update', 'ContentController@contentUpdate', ['Auth@with']],
-            ['GET,POST', '/:module/slug/:title', 'ContentController@contentSlugInquiry', ['Auth@with']],
+            ['GET,POST', '/:module/slug', 'ContentController@contentSlugInquiry', ['Auth@with']],
+            ['GET,POST', '/:module/slug/:id', 'ContentController@contentSlugInquiry', ['Auth@with']],
 
             ['POST', '/content/:module/upload-file', 'ContentController@uploadAFile', ['Auth@with']],
 

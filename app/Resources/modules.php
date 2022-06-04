@@ -155,14 +155,17 @@ return [
 				'type' => 'input',
 				'attributes' => [
 					'required' => 'true',
-					'data-kn-change' => 'slug-check',
+					'data-kn-change' => Base::base('/management/services/slug')
 				],
 			],
 			'slug' => [
 				'multilanguage' => true,
 				'label' => 'base.slug',
 				'type' => 'input',
-				'attributes' => ['required' => 'true'],
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-change' => Base::base('/management/services/slug')
+				],
 			],
 			'description' => [
 				'multilanguage' => true,

@@ -33,6 +33,7 @@ return [
         'endpoint_file_is_not_found' => 'Authority endpoint file not found!',
         'ip_blocked' => 'Your IP address has been blocked!',
         'module_not_found' => 'Module not found!',
+        'missing_or_incorrect_parameter' => 'Missing or incorrect parameter',
     ],
     'notification' => [
         'registration_email_title' => 'Your Account Has Been Created!',
