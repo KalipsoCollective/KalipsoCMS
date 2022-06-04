@@ -709,10 +709,15 @@ final class ContentController extends Controller {
                                             $handle->webp_quality = $quality;
                                         }
 
-                                        $handle->image_resize         = true;
-                                        // $handle->image_ratio = true;
-                                        if ($dimensionVar[0]) $handle->image_x      = $dimensionVar[0];
-                                        if ($dimensionVar[1]) $handle->image_y      = $dimensionVar[1];
+                                        $handle->image_resize           = true;
+                                        $handle->image_ratio            = true;
+                                        $handle->image_ratio_crop       = true;
+
+                                        if ($dimensionVar[0]) 
+                                            $handle->image_x      = $dimensionVar[0];
+
+                                        if ($dimensionVar[1]) 
+                                            $handle->image_y      = $dimensionVar[1];
                                         
                                         $handle->process($path);
                                         if ($handle->processed) {
@@ -1091,10 +1096,15 @@ final class ContentController extends Controller {
                                             $handle->webp_quality = $quality;
                                         }
 
-                                        $handle->image_resize         = true;
-                                        // $handle->image_ratio = true;
-                                        if ($dimensionVar[0]) $handle->image_x      = $dimensionVar[0];
-                                        if ($dimensionVar[1]) $handle->image_y      = $dimensionVar[1];
+                                        $handle->image_resize           = true;
+                                        $handle->image_ratio            = true;
+                                        $handle->image_ratio_crop       = true;
+
+                                        if ($dimensionVar[0]) 
+                                            $handle->image_x      = $dimensionVar[0];
+
+                                        if ($dimensionVar[1]) 
+                                            $handle->image_y      = $dimensionVar[1];
                                         
                                         $handle->process($path);
                                         if ($handle->processed) {
@@ -1309,65 +1319,34 @@ final class ContentController extends Controller {
 
     }
 
-    public function contentListPage() {
+    public function extractContentData() {
 
-        // Detect route
+        $return = null;
+
         foreach ($this->modules as $moduleKey => $moduleDetail) {
-                    
-            if (isset($moduleDetail['routes']['listing'][$this->get()->lang]) !== false) {
-                $details = $moduleDetail['routes']['listing'][$this->get()->lang];
-            }
-        }
 
-        return [
-            'status' => true,
-            'statusCode' => 200,
-            'arguments' => [
-                'title' => Base::lang('base.welcome'),
-                'output' => Base::lang('base.welcome_message')
-            ],
-            'view' => 'index'
-        ];
+            $extractType = isset($this->get('request')->attributes) !== false ? 'detail' : 'listing';
 
-    }
-
-
-    public function contentDetailPage() {
-
-        // Detect route
-        $detected = false;
-        foreach ($this->modules as $moduleKey => $moduleDetail) {
-                    
             if (
-                isset($moduleDetail['routes']['detail'][$this->get()->lang]) !== false AND
-                isset($this->get('request')->attributes) !== false AND
-                count($attributes = $this->get('request')->attributes)
+                isset($moduleDetail['routes'][$extractType][$this->get()->lang]) !== false
             ) {
-                $details = $moduleDetail['routes']['detail'][$this->get()->lang];
+                $attributes = isset($this->get('request')->attributes) !== false ? $this->get('request')->attributes : [];
+                $details = $moduleDetail['routes'][$extractType][$this->get()->lang];
                 $route = trim($details[1], '/');
 
                 if ($route === $this->get()->endpoint) {
 
                     $this->module = $moduleKey;
                     $selectColumns = [];
+                    $externalColumns = [];
                     foreach ($moduleDetail['inputs'] as $selectCol => $colAttributes) {
 
-                        if ($selectCol === 'widget'/* AND */) {
+                        if ($selectCol === 'widget') {
 
-                            /* From here */
                             foreach ($colAttributes as $moduleName => $moduleDetails) {
-
-                                if ($selectCol !== null) {
-                                    $whereExternal = $moduleName ? 'WHERE id = JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$moduleName.'\')) AND ' : 'WHERE ';
-                                    $selectColumns[] = 
-                                    '(SELECT JSON_ARRAYAGG(input) FROM contents '.$whereExternal.' module = "'.$moduleDetails['source'][1][0].'") AS ' . $moduleName . '_widget';
-                                } else {
-                                    $selectColumns[] = '(NULL) AS ' . $moduleName . '_widget';
-                                }
+                                $externalColumns[] = $moduleName;
+                                $selectColumns[] = '(JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$moduleName.'\'))) AS ' . $moduleName;
                             }
-
-                            Base::dump($selectColumns);
-                            
 
                         } else {
 
@@ -1380,9 +1359,7 @@ final class ContentController extends Controller {
                             if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
                                 $selectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
                             }
-
                         }
-
                     }
 
                     $selectColumns = implode(', ', $selectColumns);
@@ -1401,29 +1378,179 @@ final class ContentController extends Controller {
                             ->where('JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$column.($multilanguage ? '.'.Base::lang('lang.code') : '').'\'))', $columnVal);
                     }
 
-                    $contentDetails = $contentDetails->get();
+                    $contentDetails = $contentDetails->getAll();
 
-                    if (!empty($contentDetails)) {
-                        $detected = true;
+                    if (! empty($contentDetails)) {
+
+                        // Extract files as object
+                        foreach ($contentDetails as $index => $val) {
+                            foreach ($val as $key => $value) {
+                                if (strpos($key, '_src') !== false) {
+                                    try {
+                                        $val->{$key} = json_decode($val->{$key});
+                                        foreach ($contentDetails[$index]->{$key} as $fileParam => $fileUrl) {
+                                            $val->{$key}->$fileParam = Base::base('upload/' . $fileUrl);
+                                        }
+                                    } catch (Exception $e) {
+                                        $val->{$key} = $val->{$key};
+                                    }
+                                }
+                            }
+                            $contentDetails[$index] = $val;
+                        }
+
+                        if (count($externalColumns)) {
+
+                            foreach ($externalColumns as $module) {
+
+                                foreach ($contentDetails as $index => $val) {
+
+                                    $moduleContents = [];
+                                    $externalSelectColumns = [];
+
+                                    if (isset($this->modules[$module]['inputs']) !== false) {
+
+                                        foreach ($this->modules[$module]['inputs'] as $selectCol => $colAttributes) {
+
+                                            if ($selectCol === 'widget') {
+
+                                                foreach ($colAttributes as $moduleName => $moduleDetails) {
+                                                    $externalSelectColumns[] = '(JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$moduleName.'\'))) AS ' . $moduleName;
+                                                }
+
+                                            } else {
+
+                                                $multilanguage = false;
+                                                if (isset($colAttributes['multilanguage']) !== false AND $colAttributes['multilanguage']) {
+                                                    $multilanguage = true;
+                                                }
+                                                $externalSelectColumns[] = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' 
+                                                . $selectCol;
+                                                if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
+                                                    $externalSelectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
+                                                }
+                                            }
+                                        }
+
+                                        $externalSelectColumns = implode(', ', $externalSelectColumns);
+                                        
+                                        $ids = strpos($val->{$module}, ',') !== false ? 
+                                            explode(',', $val->{$module}) : [$val->{$module}];
+
+                                        foreach ($ids as $id) {
+                                            $getData = $model->select($externalSelectColumns)
+                                                ->where('module', $module);
+
+                                            if ($id != 0)
+                                                $getData->where('id', $id);
+
+                                            $getData = $getData->getAll();
+
+                                            foreach ($getData as $index => $getDataDetail) {
+                                                // Extract files as object
+                                                foreach ($getDataDetail as $key => $value) {
+                                                    if (strpos($key, '_src') !== false) {
+                                                        try {
+                                                            $getData[$index]->{$key} = json_decode($getData[$index]->{$key});
+                                                            foreach ($getData[$index]->{$key} as $fileParam => $fileUrl) {
+                                                                $getData[$index]->{$key}->$fileParam = Base::base('upload/' . $fileUrl);
+                                                            }
+                                                        } catch (Exception $e) {
+                                                            $getData[$index]->{$key} = $getData[$index]->{$key};
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            
+                                            $moduleContents = array_merge($moduleContents, $getData);
+                                        }
+                                    }
+
+                                    $contentDetails[$index] = $val; 
+                                    $contentDetails[$index]->{$module} = $moduleContents;
+                                }
+                            }
+                        }
+
+                        $return = [
+                            'content_details' => $contentDetails,
+                            'module_detail' => $moduleDetail,
+                            'module_key' => $moduleKey,
+                        ];
                     }
                     break;
                 }
             }
         }
 
-        if ($detected) {
+        return $return;
 
-            Base::dump($contentDetails);
-            exit;
+    }
+
+    public function contentListPage() {
+
+        $extract = $this->extractContentData();
+
+        Base::dump($extract);
+
+        if ($extract) {
+
+            $arguments = [];
+            $title = Base::lang($extract['module_detail']['name']);
+            $arguments['title'] = $title;
+            $arguments['detail'] = $extract['content_details'];
+            
 
             return [
                 'status' => true,
                 'statusCode' => 200,
+                'arguments' => $arguments,
+                'view' => 'widgets.' . $extract['module_key'] . '_list'
+            ];
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
                 'arguments' => [
-                    'title' => Base::lang('base.welcome'),
-                    'output' => Base::lang('base.welcome_message')
+                    'error' => 404,
+                    'output' => Base::lang('error.page_not_found')
                 ],
-                'view' => 'index'
+                'view' => ['error', 'error']
+            ];
+        }
+
+    }
+
+    public function contentDetailPage() {
+
+        $extract = $this->extractContentData();
+
+        if ($extract) {
+
+            $arguments = [];
+            $title = Base::lang($extract['module_detail']['name']);
+            
+            $arguments['detail'] = $extract['content_details'][0];
+
+            if (isset($contentDetails->{'description'}) !== false) {
+                $arguments['description'] = $contentDetails->{'description'};
+            } elseif (isset($contentDetails->{'content'}) !== false) {
+                $arguments['description'] = trim(strip_tags(htmlspecialchars_decode($contentDetails->{'content'})));
+            }
+
+            if (isset($contentDetails->{'title'}) !== false) {
+                $title = $contentDetails->{'title'} . ' | ' . $title;
+            }
+
+            $arguments['title'] = $title;
+
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => $arguments,
+                'view' => 'widgets.' . $extract['module_key'] . '_detail'
             ];
 
         } else {
