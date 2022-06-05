@@ -114,6 +114,16 @@ return [
 		'default' => false,
 		'name' => 'auth.management_content_upload_file',
 	],
+
+	'management/forms/:form' => [
+		'default' => false,
+		'name' => 'auth.management_forms',
+	],
+	'management/forms/:form/list' => [
+		'default' => false,
+		'name' => 'auth.management_forms_list',
+	],
+
 	'management/logs' => [
 		'default' => false,
 		'name' => 'auth.management_logs',

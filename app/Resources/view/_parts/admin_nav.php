@@ -47,18 +47,29 @@
                                 </a>
                             </li>
                         <?php
-                        } 
-
-                        if ($this->authority('/management/:module')) {
-                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.modules') . '</li>';
                         }
 
                         if ($this->authority('/management/:module')) {
 
+                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.modules') . '</li>';
                             foreach ($modules as $name => $details) {
                                 ?>
                                 <li class="nav-item">
                                     <a class="nav-link<?php echo $this->currentLink('/management/' . $name); ?>" href="<?php echo $this->url('/management/' . $name); ?>">
+                                        <i class="<?php echo $details['icon']; ?> nav-icon"></i> <?php echo KN\Helpers\Base::lang($details['name']); ?>
+                                    </a>
+                                </li>
+                                <?php
+                            }
+                        }
+
+                        if ($this->authority('/management/forms/:form')) {
+
+                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.forms') . '</li>';
+                            foreach ($forms as $name => $details) {
+                                ?>
+                                <li class="nav-item">
+                                    <a class="nav-link<?php echo $this->currentLink('/management/forms/' . $name); ?>" href="<?php echo $this->url('/management/forms/' . $name); ?>">
                                         <i class="<?php echo $details['icon']; ?> nav-icon"></i> <?php echo KN\Helpers\Base::lang($details['name']); ?>
                                     </a>
                                 </li>

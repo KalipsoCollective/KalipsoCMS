@@ -21,11 +21,13 @@ use KN\Model\Logs;
 final class AdminController extends Controller {
 
 	public $modules;
+	public $forms;
 
 	public function __construct($container) {
 
 		parent::__construct($container);
 		$this->modules = file_exists($file = Base::path('app/Resources/modules.php')) ? require $file : [];
+		$this->forms = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
 
 	} 
 
@@ -52,6 +54,7 @@ final class AdminController extends Controller {
 				'description' => Base::lang('base.dashboard_message'),
 				'count' => $count,
 				'modules' => $this->modules,
+				'forms' => $this->forms,
 			],
 			'view' => ['admin.dashboard', 'admin']
 		];
@@ -71,6 +74,7 @@ final class AdminController extends Controller {
 				'description' => Base::lang('base.users_message'),
 				'userRoles' => $userRoles,
 				'modules' => $this->modules,
+				'forms' => $this->forms,
 			],
 			'view' => ['admin.users', 'admin']
 		];
@@ -90,6 +94,7 @@ final class AdminController extends Controller {
 				'description' => Base::lang('base.user_roles_message'),
 				'roles' => $roles,
 				'modules' => $this->modules,
+				'forms' => $this->forms,
 			],
 			'view' => ['admin.user_roles', 'admin']
 		];
@@ -106,6 +111,7 @@ final class AdminController extends Controller {
 				'title' => Base::lang('base.sessions') . ' | ' . Base::lang('base.management'),
 				'description' => Base::lang('base.sessions_message'),
 				'modules' => $this->modules,
+				'forms' => $this->forms,
 			],
 			'view' => ['admin.sessions', 'admin']
 		];
@@ -123,6 +129,7 @@ final class AdminController extends Controller {
 				'title' => Base::lang('base.logs') . ' | ' . Base::lang('base.management'),
 				'description' => Base::lang('base.logs_message'),
 				'modules' => $this->modules,
+				'forms' => $this->forms,
 			],
 			'view' => ['admin.logs', 'admin']
 		];
@@ -143,6 +150,7 @@ final class AdminController extends Controller {
 				'groups' => $parameters['groups'],
 				'languages' => $parameters['languages'],
 				'modules' => $this->modules,
+				'forms' => $this->forms,
 			],
 			'view' => ['admin.settings', 'admin']
 		];

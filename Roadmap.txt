@@ -1,0 +1,12 @@
+- Factory -> Controller add module and forms definition
+- Form -> List
+- Form -> Form Preparing
+- Form -> Form Add
+- Form -> Email Info
+- Form -> Form Detail
+- Form -> Form Update
+- Form -> Form Delete
+
+- Content -> Pages Module
+- Content -> Gallery Module
+- Content -> Blog Module

@@ -77,6 +77,8 @@ return [
         'management_contents_delete' => 'Yönetim - İçerikler - Sil',
         'management_contents_slug' => 'Yönetim - İçerikler - Kısa Ad Sorgulama',
         'management_content_upload_file' => 'Yönetim - İçerikler - Editör Dosya Yükleme',
+        'management_forms' => 'Yönetim - Formlar',
+        'management_forms_list' => 'Yönetim - Formlar - Liste',
     ],
     'settings' => [
         'basic_settings' => 'Temel Ayarlar',
@@ -331,6 +333,10 @@ return [
         'content_delete_problem' => 'İçerik silinirken bir sorun oluştu.',
         'service_list' => 'Servislerimizi bu sayfadan görüntüleyin.',
         'service_detail' => 'İlgili hizmeti görüntüleyin.',
+        'contact' => 'İletişim',
+        'contact_message' => 'İletişim sayfasından bize ulaşabilirsiniz.',
+        'forms' => 'formlar',
+        'information_request_form' => 'Bilgi Talep Formu',
     ],
     'app' => [
         

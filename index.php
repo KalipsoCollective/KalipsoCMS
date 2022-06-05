@@ -81,12 +81,6 @@ try {
             ['GET,POST', '/forms/:form/:id/update', 'FormController@formUpdate', ['Auth@with']],
 
             /*
-            // Contact
-            ['GET,POST', '/forms', 'FormController@forms', ['Auth@with']],
-            ['GET,POST', '/forms/list', 'FormController@formList', ['Auth@with']],
-            ['GET,POST', '/forms/:id', 'FormController@formDetail', ['Auth@with']],
-            ['GET,POST', '/forms/:id/delete', 'FormController@formDelete', ['Auth@with']],
-            ['GET,POST', '/forms/:id/update', 'FormController@formUpdate', ['Auth@with']],
 
             // Menus
             ['GET,POST', '/menus', 'MenuController@menus', ['Auth@with']],
@@ -108,7 +102,7 @@ try {
     $app->route('GET', '/', 'AppController@index', ['Auth@verifyAccount']);
     $app->route('GET', '/{slugs.contact}', 'AppController@contact');
 
-    // Do not remove this route for the KN script library.
+    // Please do not remove for KN to work properly.
     $app->route('GET,POST', '/cron', 'AppController@cronJobs');
     $app->route('GET,POST', '/sandbox', 'AppController@sandbox');
     $app->route('GET,POST', '/sandbox/:action', 'AppController@sandbox');

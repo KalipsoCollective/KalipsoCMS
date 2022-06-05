@@ -77,6 +77,8 @@ return [
         'management_contents_delete' => 'Management - Contents - Delete',
         'management_contents_slug' => 'Management - Contents - Slug Inquiry',
         'management_content_upload_file' => 'Management - Contents - Editor File Upload',
+        'management_forms' => 'Management - Forms',
+        'management_forms_list' => 'Management - Forms - List',
     ],
     'settings' => [
         'basic_settings' => 'Basic Settings',
@@ -331,6 +333,10 @@ return [
         'content_delete_problem' => 'There was a problem updating the content.',
         'service_list' => 'View our services on this page.',
         'service_detail' => 'View the corresponding service.',
+        'contact' => 'Contact',
+        'contact_message' => 'You can reach us from the contact page.',
+        'forms' => 'Forms',
+        'information_request_form' => 'Information Request Form',
     ],
     'app' => [
         

@@ -126,6 +126,7 @@ a {
 
 .navbar.navbar-side .navbar-nav .nav-item .nav-link {
     position: relative;
+    font-size: 0.9rem;
 }
 
 .navbar.navbar-side .navbar-nav .nav-item .nav-link.active:before {
@@ -496,7 +497,6 @@ nav.navbar-side .navbar-nav .nav-item.nav-group {
     min-height: 10vh;
 }
 
-
 .dash-icon {
     font-size: 1.5rem;
     padding: 0.2rem 0.6rem;
@@ -528,7 +528,6 @@ img.table-image {
     margin-left: auto;
     margin-right: auto;
 }
-
 
 @media (max-width: 1200px) {
     nav.navbar-side {

@@ -21,12 +21,14 @@ final class ContentController extends Controller {
 
     public $module;
     public $modules;
+    public $forms;
 
     public function __construct($container) {
 
         parent::__construct($container);
         $this->module = isset($this->get('request')->attributes['module']) !== false ? $this->get('request')->attributes['module'] : 'general';
         $this->modules = file_exists($file = Base::path('app/Resources/modules.php')) ? require $file : [];
+        $this->forms = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
 
     }
 
@@ -51,6 +53,7 @@ final class ContentController extends Controller {
                 'description' => $description,
                 'module' => $this->module,
                 'modules' => $this->modules,
+                'forms' => $this->forms,
                 'languages' => Base::config('app.available_languages'),
                 'moduleForm' => $this->prepareModuleForm($module['inputs']),
             ];
