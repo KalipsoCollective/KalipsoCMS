@@ -1319,6 +1319,72 @@ final class ContentController extends Controller {
 
     }
 
+    public function extractWidgetData($moduleName, $moduleInputs, $ids) {
+
+        $externalSelectColumns = [];
+        $moduleContents = [];
+
+        $model = new Contents;
+
+        foreach ($moduleInputs as $selectCol => $colAttributes) {
+
+            if ($selectCol === 'widget') {
+
+                foreach ($colAttributes as $moduleName => $moduleDetails) {
+                    $externalSelectColumns[] = '(JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$moduleName.'\'))) AS ' . $moduleName;
+                }
+
+            } else {
+
+                $multilanguage = false;
+                if (isset($colAttributes['multilanguage']) !== false AND $colAttributes['multilanguage']) {
+                    $multilanguage = true;
+                }
+                $externalSelectColumns[] = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' 
+                . $selectCol;
+                if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
+                    $externalSelectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
+                }
+
+            }
+        }
+        $externalSelectColumns = implode(', ', $externalSelectColumns);
+        
+        $ids = strpos($ids, ',') !== false ? explode(',', $ids) : [$ids];
+
+        foreach ($ids as $id) {
+
+            $getData = $model->select($externalSelectColumns)
+                ->where('module', $moduleName);
+
+            if ($id != 0)
+                $getData->where('id', $id);
+
+            $getData = $getData->getAll();
+
+            foreach ($getData as $index => $getDataDetail) {
+                // Extract files as object
+                foreach ($getDataDetail as $key => $value) {
+                    if (strpos($key, '_src') !== false) {
+                        try {
+                            $getData[$index]->{$key} = json_decode($getData[$index]->{$key});
+                            foreach ($getData[$index]->{$key} as $fileParam => $fileUrl) {
+                                $getData[$index]->{$key}->$fileParam = Base::base('upload/' . $fileUrl);
+                            }
+                        } catch (Exception $e) {
+                            $getData[$index]->{$key} = $getData[$index]->{$key};
+                        }
+                    }
+                }
+            }
+            
+            $moduleContents = array_merge($moduleContents, $getData);
+        }
+
+        return $moduleContents;
+
+    }
+
     public function extractContentData() {
 
         $return = null;
@@ -1398,75 +1464,26 @@ final class ContentController extends Controller {
                             }
                             $contentDetails[$index] = $val;
                         }
-
+                        
                         if (count($externalColumns)) {
 
                             foreach ($externalColumns as $module) {
-
+                                
                                 foreach ($contentDetails as $index => $val) {
 
                                     $moduleContents = [];
-                                    $externalSelectColumns = [];
-
+                                    
                                     if (isset($this->modules[$module]['inputs']) !== false) {
 
-                                        foreach ($this->modules[$module]['inputs'] as $selectCol => $colAttributes) {
+                                        $widget = $this->extractWidgetData(
+                                            $module,
+                                            $this->modules[$module]['inputs'],
+                                            $val->{$module}
+                                        );
 
-                                            if ($selectCol === 'widget') {
-
-                                                foreach ($colAttributes as $moduleName => $moduleDetails) {
-                                                    $externalSelectColumns[] = '(JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$moduleName.'\'))) AS ' . $moduleName;
-                                                }
-
-                                            } else {
-
-                                                $multilanguage = false;
-                                                if (isset($colAttributes['multilanguage']) !== false AND $colAttributes['multilanguage']) {
-                                                    $multilanguage = true;
-                                                }
-                                                $externalSelectColumns[] = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$selectCol.($multilanguage ? '.'.Base::lang('lang.code') : '').'\')) AS ' 
-                                                . $selectCol;
-                                                if (isset($colAttributes['type']) !== false AND $colAttributes['type'] === 'file') {
-                                                    $externalSelectColumns[] = '(SELECT files FROM files WHERE id = '.$selectCol.') AS ' . $selectCol . '_src';
-                                                }
-                                            }
-                                        }
-
-                                        $externalSelectColumns = implode(', ', $externalSelectColumns);
-                                        
-                                        $ids = strpos($val->{$module}, ',') !== false ? 
-                                            explode(',', $val->{$module}) : [$val->{$module}];
-
-                                        foreach ($ids as $id) {
-                                            $getData = $model->select($externalSelectColumns)
-                                                ->where('module', $module);
-
-                                            if ($id != 0)
-                                                $getData->where('id', $id);
-
-                                            $getData = $getData->getAll();
-
-                                            foreach ($getData as $index => $getDataDetail) {
-                                                // Extract files as object
-                                                foreach ($getDataDetail as $key => $value) {
-                                                    if (strpos($key, '_src') !== false) {
-                                                        try {
-                                                            $getData[$index]->{$key} = json_decode($getData[$index]->{$key});
-                                                            foreach ($getData[$index]->{$key} as $fileParam => $fileUrl) {
-                                                                $getData[$index]->{$key}->$fileParam = Base::base('upload/' . $fileUrl);
-                                                            }
-                                                        } catch (Exception $e) {
-                                                            $getData[$index]->{$key} = $getData[$index]->{$key};
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            
-                                            $moduleContents = array_merge($moduleContents, $getData);
-                                        }
+                                        $moduleContents = array_merge($moduleContents, $widget);
                                     }
-
-                                    $contentDetails[$index] = $val; 
+                                    
                                     $contentDetails[$index]->{$module} = $moduleContents;
                                 }
                             }
@@ -1491,14 +1508,13 @@ final class ContentController extends Controller {
 
         $extract = $this->extractContentData();
 
-        Base::dump($extract);
-
         if ($extract) {
 
             $arguments = [];
             $title = Base::lang($extract['module_detail']['name']);
             $arguments['title'] = $title;
             $arguments['detail'] = $extract['content_details'];
+            $arguments['moduleDetail'] = $extract['module_detail'];
             
 
             return [
@@ -1540,11 +1556,12 @@ final class ContentController extends Controller {
                 $arguments['description'] = trim(strip_tags(htmlspecialchars_decode($contentDetails->{'content'})));
             }
 
-            if (isset($contentDetails->{'title'}) !== false) {
-                $title = $contentDetails->{'title'} . ' | ' . $title;
+            if (isset($arguments['detail']->{'title'}) !== false) {
+                $title = $arguments['detail']->{'title'} . ' | ' . $title;
             }
 
             $arguments['title'] = $title;
+            $arguments['moduleDetail'] = $extract['module_detail'];
 
             return [
                 'status' => true,

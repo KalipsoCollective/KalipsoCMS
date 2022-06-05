@@ -9,10 +9,7 @@
 							echo '<img class="img-fluid" src="' . $detail->header_image_src->original . '" />';
 						}
 
-						echo '<div class="row">
-						<pre>';
-						print_r($detail);
-						exit;
+						echo '<div class="row">';
 						foreach ($detail->countries as $country) {
 							
 							echo '

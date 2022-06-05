@@ -954,6 +954,21 @@ final class Factory
 
     }
 
+    /**
+     *  Dynamic URL Generator
+     *  @param string $route
+     *  @param array $attributes
+     *  @return string $url
+     **/
+    public function dynamicUrl($route, $param = []) {
+
+        foreach ($param as $attr => $value) {
+            $route = str_replace(':' . $attr, $value, $route);
+        }
+        return $this->url($route);
+
+    }
+
 
     /**
      * Returns the active class if the given link is the current link.
