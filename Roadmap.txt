@@ -10,3 +10,9 @@
 - Content -> Pages Module
 - Content -> Gallery Module
 - Content -> Blog Module
+
+- Menu -> Menu Module
+	- Add
+	- List
+	- Edit
+	- Delete
