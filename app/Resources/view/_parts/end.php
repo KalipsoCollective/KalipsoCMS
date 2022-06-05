@@ -3,8 +3,21 @@
 		<script src="<?php echo KN\Helpers\Base::assets('libs/vpjax/vpjax.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/l10n/tr.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/kalipso.table.js'); ?>"></script>
+		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/quill.min.js'); ?>"></script>
+		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/image-resize.min.js'); ?>"></script>
 		<script>
-			function init() {
+			window.init = () => {
+					
+				let contentListSource = null;
+				let contentListColumns = null;
+				if (document.querySelector('#contentsTable')) {
+					const el = document.querySelector('#contentsTable');
+					contentListSource = el.getAttribute('data-source');
+					contentListColumns = el.getAttribute('data-columns');
+					if (contentListColumns) {
+						contentListColumns = JSON.parse(el.getAttribute('data-columns'))
+					}
+				}
 
 				let tableVariables = {
 					usersTable: {
@@ -393,7 +406,27 @@
 							visible: true,
 							searchBar: true
 						}
-					}
+					},
+					contentsTable: {
+						selector: "#contentsTable",
+						language: "<?php echo \KN\Helpers\Base::lang('lang.code'); ?>",
+						server: true,
+						source: contentListSource,
+						columns: contentListColumns,
+						customize: {
+							tableWrapClass: "table-responsive",
+							tableClass: "table table-bordered",
+							inputClass: "form-control form-control-sm",
+							selectClass: "form-control form-control-sm",
+						},
+						tableHeader: {
+							searchBar: true
+						},
+						tableFooter: {
+							visible: true,
+							searchBar: true
+						}
+					},
 				}
 
 				for(const [key, value] of Object.entries(tableVariables)) {

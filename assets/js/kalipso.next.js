@@ -140,6 +140,10 @@ function editorInit(el, domID = null) {
 
 function kalipsoInit(firstLoad = false, initSelector = null) {
 
+	if (typeof window.init === 'function') { 
+		window.init();
+	}
+	
 	// Stored alert remove action
 	alertRemove();
 
@@ -500,10 +504,8 @@ NProgress.start();
 	})
 	document.addEventListener("vPjax:finish", (e) => {
 		NProgress.done();
-		init();
 		kalipsoInit();
 	})
-	init();
 	kalipsoInit(true);
 	setTimeout(() => {
 		NProgress.done()

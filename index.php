@@ -88,13 +88,6 @@ try {
             ['GET,POST', '/menus/:id/delete', 'MenuController@menuDelete', ['Auth@with']],
             ['GET,POST', '/menus/:id/update', 'MenuController@menuUpdate', ['Auth@with']],
 
-            // Widgets
-            ['GET,POST', '/widgets', 'WidgetController@widgets', ['Auth@with']],
-            ['GET,POST', '/widgets/list', 'WidgetController@widgetList', ['Auth@with']],
-            ['GET,POST', '/widgets/add', 'WidgetController@widgetAdd', ['Auth@with']],
-            ['GET,POST', '/widgets/:id', 'WidgetController@widgetDetail', ['Auth@with']],
-            ['GET,POST', '/widgets/:id/delete', 'WidgetController@widgetDelete', ['Auth@with']],
-            ['GET,POST', '/widgets/:id/update', 'WidgetController@widgetUpdate', ['Auth@with']],
             */
 
             // Settings

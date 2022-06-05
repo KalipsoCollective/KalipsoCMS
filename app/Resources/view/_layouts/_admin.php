@@ -4,5 +4,6 @@ return [
 	'header',
 	'admin_nav',
 	'_',
-	'admin_end'
+	'admin_end',
+	'end'
 ];
