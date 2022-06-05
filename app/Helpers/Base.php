@@ -142,7 +142,7 @@ class Base {
             foreach ($extract as $key => $value)
             {  
                 if (isset($from[$key]) !== false) $return[$key] = self::filter($from[$key], $value);
-                else $return[$key] = self::filter('', $value);
+                else $return[$key] = self::filter(null, $value);
             }
         }
         return $return;
@@ -196,9 +196,11 @@ class Base {
 
                 case 'check':
                 case 'check_as_boolean':
-                    $data = ! is_null($data) ? 'on' : 'off'; 
+
+                    $data = ($data) ? 'on' : 'off'; 
                     if ($parameter === 'check_as_boolean')
                         $data = $data === 'on' ? true : false;
+
                     break;
 
                 case 'int':
