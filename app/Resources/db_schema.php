@@ -388,59 +388,6 @@ return [
 			]
 		],
 
-		/* Schemas Table */
-		/*
-		'schemas' => [
-			'cols' => [
-				'id' => [
-					'type'          => 'int',
-					'auto_inc'      => true,
-					'attr'          => 'unsigned',
-					'type_values'   => 11,
-					'index'         => 'PRIMARY'
-				],
-				'name' => [
-					'type'          => 'json',
-				],
-				'description' => [
-					'type'          => 'json',
-				],
-				'icon' => [
-					'type'          => 'varchar',
-					'type_values'   => 80,
-				],
-				'inputs' => [
-					'type'          => 'json',
-				],
-				'routes' => [
-					'type'          => 'json',
-				],
-				'created_at' => [
-					'type'          => 'varchar',
-					'type_values'   => 80,
-					'index'         => 'INDEX'
-				],
-				'created_by' => [
-					'type'          => 'int',
-					'type_values'   => 10,
-					'index'         => 'INDEX'
-				],
-				'updated_at' => [
-					'type'          => 'varchar',
-					'type_values'   => 80,
-					'nullable'      => true,
-					'default'       => 'NULL'
-				],
-				'updated_by' => [
-					'type'          => 'int',
-					'type_values'   => 10,
-					'nullable'      => true,
-					'default'       => 'NULL'
-				],
-			],
-		],
-		*/
-
 		/* Contents Table */
 		'contents' => [
 			'cols' => [
@@ -480,6 +427,54 @@ return [
 					'nullable'      => true,
 					'default'       => 'NULL'
 				],
+			],
+		],
+
+		/* Forms Table */
+		'forms' => [
+			'cols' => [
+				'id' => [
+					'type'          => 'int',
+					'auto_inc'      => true,
+					'attr'          => 'unsigned',
+					'type_values'   => 11,
+					'index'         => 'PRIMARY'
+				],
+				'form' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+				],
+				'input' => [
+					'type'          => 'json',
+				],
+				'created_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'index'         => 'INDEX'
+				],
+				'created_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'index'         => 'INDEX'
+				],
+				'updated_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'nullable'      => true,
+					'default'       => 'NULL'
+				],
+				'updated_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'nullable'      => true,
+					'default'       => 'NULL'
+				],
+				'status' => [
+					'type'          => 'enum',
+					'type_values'   => ['pending', 'in_action', 'completed', 'deleted'],
+					'default'       => 'pending',
+					'index'         => 'INDEX'
+				]
 			],
 		],
 

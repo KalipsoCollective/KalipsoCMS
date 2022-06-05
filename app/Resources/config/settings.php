@@ -9,7 +9,7 @@ return [
 	'default_user_role' => 1,
 	'ssl' => false,
 	'log' => false,
-	'maintenance_mode' => true,
+	'maintenance_mode' => false,
 	'maintenance_mode_desc' => '{"en":"We are under maintenance.","tr":"Bak\u0131m modunday\u0131z."}',
 	'mail_send_type' => 'server',
 	'smtp_address' => 'smtp.yandex.com.tr',

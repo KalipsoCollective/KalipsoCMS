@@ -4,8 +4,9 @@ use KN\Helpers\Base;
 
 return [
 
-	'contact_dorm' => [
+	'contact-form' => [
 		'name' => Base::lang('base.contact'),
+		'icon' => 'ti ti-file-phone', 
 		'inputs' => [
 			'name' => [
 				'label' => 'base.name',
@@ -44,8 +45,9 @@ return [
 			]
 		]
 	],
-	'information_request_form' => [
+	'information-request-form' => [
 		'name' => Base::lang('base.information_request_form'),
+		'icon' => 'ti ti-file-info', 
 		'inputs' => [
 			'name' => [
 				'label' => 'base.name',
@@ -84,5 +86,4 @@ return [
 			]
 		]
 	]
-
 ];

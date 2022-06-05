@@ -70,7 +70,15 @@ try {
             ['GET,POST', '/:module/slug', 'ContentController@contentSlugInquiry', ['Auth@with']],
             ['GET,POST', '/:module/slug/:id', 'ContentController@contentSlugInquiry', ['Auth@with']],
 
+            // Content Slug Check
             ['POST', '/content/:module/upload-file', 'ContentController@uploadAFile', ['Auth@with']],
+
+            // Forms
+            ['GET,POST', '/forms/:form', 'FormController@forms', ['Auth@with']],
+            ['GET,POST', '/forms/:form/list', 'FormController@formList', ['Auth@with']],
+            ['GET,POST', '/forms/:form/:id', 'FormController@formDetail', ['Auth@with']],
+            ['GET,POST', '/forms/:form/:id/delete', 'FormController@formDelete', ['Auth@with']],
+            ['GET,POST', '/forms/:form/:id/update', 'FormController@formUpdate', ['Auth@with']],
 
             /*
             // Contact
@@ -98,6 +106,7 @@ try {
 
     // Single route
     $app->route('GET', '/', 'AppController@index', ['Auth@verifyAccount']);
+    $app->route('GET', '/{slugs.contact}', 'AppController@contact');
 
     // Do not remove this route for the KN script library.
     $app->route('GET,POST', '/cron', 'AppController@cronJobs');
