@@ -114,10 +114,6 @@ return [
 		'default' => false,
 		'name' => 'auth.management_content_upload_file',
 	],
-
-	
-
-
 	'management/logs' => [
 		'default' => false,
 		'name' => 'auth.management_logs',

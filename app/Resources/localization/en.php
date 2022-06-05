@@ -326,6 +326,8 @@ return [
         'content_update_problem' => 'There was a problem editing the content.',
         'content_successfully_deleted' => 'Content successfully deleted.',
         'content_delete_problem' => 'There was a problem updating the content.',
+        'service_list' => 'View our services on this page.',
+        'service_detail' => 'View the corresponding service.',
     ],
     'app' => [
         

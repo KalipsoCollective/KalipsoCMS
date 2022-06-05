@@ -146,6 +146,10 @@ return [
 			'view' => [
 				'listing' => 'contents.service_list',
 				'detail' => 'contents.service_detail',
+			],
+			'description' => [
+				'listing' => 'base.service_list',
+				'detail' => 'base.service_detail',
 			]
 		],
 		'inputs' => [

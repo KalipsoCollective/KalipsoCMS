@@ -1319,6 +1319,84 @@ final class ContentController extends Controller {
 
     }
 
+    public function contentSlugInquiry() {
+
+        extract(Base::input([
+            'id'    => 'int',
+            'slug'  => 'slug',
+            'lang'  => 'nulled_text',
+        ], $this->get('request')->params));
+
+        
+        $alerts = [];
+        $arguments = [];
+
+        if (isset($this->modules[$this->module]) !== false) {
+
+            if (! is_null($slug)) {
+
+                $multilanguage = $lang ? $lang : false;
+                $whereQuery = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.slug'.($lang ? '.'.$lang : '').'\'))';
+
+                $model = new Contents();
+
+                $checkNum = 1;
+                while (1) {
+                    
+                    $slugCheck = $slug . ($checkNum > 1 ? '-' . $checkNum : '');
+
+                    $recordCheck = $model->select('id')
+                        ->where('module', $this->module)
+                        ->where($whereQuery, $slugCheck);
+
+                    if ($id > 0) {
+                        $recordCheck->notWhere('id', $id);
+                    }
+
+                    $recordCheck = $recordCheck->get();
+
+                    if (empty($recordCheck)) {
+                        break;
+                    }
+                    $checkNum++;
+
+                }
+
+                $arguments['manipulation'] = [
+                    '#content'.($id ? 'Edit' : 'Add').' #content_'.($id ? 'edit' : 'add').'_slug' . $lang => [
+                        'attribute'  => [
+                            'value' => $slugCheck
+                        ]
+                    ]
+                ];
+                
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'error',
+                    'message' => Base::lang('error.missing_or_incorrect_parameter')
+                ];
+            }
+
+        } else {
+
+            $alerts[] = [
+                'status' => 'error',
+                'message' => Base::lang('error.module_not_found')
+            ];
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
+    }
+
     public function extractWidgetData($moduleName, $moduleInputs, $ids) {
 
         $externalSelectColumns = [];
@@ -1515,13 +1593,16 @@ final class ContentController extends Controller {
             $arguments['title'] = $title;
             $arguments['detail'] = $extract['content_details'];
             $arguments['moduleDetail'] = $extract['module_detail'];
-            
+
+            if (isset($extract['module_detail']['routes']['description']['listing']) !== false) {
+                $arguments['description'] = Base::lang($extract['module_detail']['routes']['description']['listing']);
+            }
 
             return [
                 'status' => true,
                 'statusCode' => 200,
                 'arguments' => $arguments,
-                'view' => 'widgets.' . $extract['module_key'] . '_list'
+                'view' => $extract['module_detail']['routes']['view']['listing']
             ];
 
         } else {
@@ -1554,6 +1635,8 @@ final class ContentController extends Controller {
                 $arguments['description'] = $contentDetails->{'description'};
             } elseif (isset($contentDetails->{'content'}) !== false) {
                 $arguments['description'] = trim(strip_tags(htmlspecialchars_decode($contentDetails->{'content'})));
+            } elseif (isset($extract['module_detail']['routes']['description']['listing']) !== false) {
+                $arguments['description'] = Base::lang($extract['module_detail']['routes']['description']['listing']);
             }
 
             if (isset($arguments['detail']->{'title'}) !== false) {
@@ -1567,7 +1650,7 @@ final class ContentController extends Controller {
                 'status' => true,
                 'statusCode' => 200,
                 'arguments' => $arguments,
-                'view' => 'widgets.' . $extract['module_key'] . '_detail'
+                'view' => $extract['module_detail']['routes']['view']['detail']
             ];
 
         } else {
@@ -1582,84 +1665,6 @@ final class ContentController extends Controller {
                 'view' => ['error', 'error']
             ];
         }
-    }
-
-    public function contentSlugInquiry() {
-
-        extract(Base::input([
-            'id'    => 'int',
-            'slug'  => 'slug',
-            'lang'  => 'nulled_text',
-        ], $this->get('request')->params));
-
-        
-        $alerts = [];
-        $arguments = [];
-
-        if (isset($this->modules[$this->module]) !== false) {
-
-            if (! is_null($slug)) {
-
-                $multilanguage = $lang ? $lang : false;
-                $whereQuery = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.slug'.($lang ? '.'.$lang : '').'\'))';
-
-                $model = new Contents();
-
-                $checkNum = 1;
-                while (1) {
-                    
-                    $slugCheck = $slug . ($checkNum > 1 ? '-' . $checkNum : '');
-
-                    $recordCheck = $model->select('id')
-                        ->where('module', $this->module)
-                        ->where($whereQuery, $slugCheck);
-
-                    if ($id > 0) {
-                        $recordCheck->notWhere('id', $id);
-                    }
-
-                    $recordCheck = $recordCheck->get();
-
-                    if (empty($recordCheck)) {
-                        break;
-                    }
-                    $checkNum++;
-
-                }
-
-                $arguments['manipulation'] = [
-                    '#content'.($id ? 'Edit' : 'Add').' #content_'.($id ? 'edit' : 'add').'_slug' . $lang => [
-                        'attribute'  => [
-                            'value' => $slugCheck
-                        ]
-                    ]
-                ];
-                
-
-            } else {
-
-                $alerts[] = [
-                    'status' => 'error',
-                    'message' => Base::lang('error.missing_or_incorrect_parameter')
-                ];
-            }
-
-        } else {
-
-            $alerts[] = [
-                'status' => 'error',
-                'message' => Base::lang('error.module_not_found')
-            ];
-        }
-
-        return [
-            'status' => true,
-            'statusCode' => 200,
-            'arguments' => $arguments,
-            'alerts' => $alerts,
-            'view' => null
-        ];
-
     }
 
 }
