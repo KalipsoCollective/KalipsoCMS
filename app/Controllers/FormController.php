@@ -27,6 +27,7 @@ final class FormController extends Controller {
         parent::__construct($container);
         $this->form = isset($this->get('request')->attributes['form']) !== false ? $this->get('request')->attributes['form'] : 'general';
         $this->forms = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
+        $this->modules = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
 
     }
 
