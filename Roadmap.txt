@@ -1,7 +1,7 @@
 + Factory -> Controller add module and forms definition
 
 - Content -> Pages Module
-- Content -> Gallery Module
++ Content -> Gallery Module
 - Content -> Slider Module
 - Content -> Blog Module
 
