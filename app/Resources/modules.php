@@ -440,6 +440,7 @@ return [
 					if ($row->campus_image_src AND $srcset = @json_decode($row->campus_image_src)) {
 						$return = '<div class="image-group">';
 						foreach ($srcset as $src) {
+
 							$href = Base::base('upload/' . $src->original);
 							$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
@@ -493,7 +494,7 @@ return [
 				"searchable" => false,
 				"orderable" => false,
 				"title" => Base::lang('base.image'),
-				"key" => "image_src"
+				"key" => "campus_image_src"
 			],
 			[
 				"searchable" => [

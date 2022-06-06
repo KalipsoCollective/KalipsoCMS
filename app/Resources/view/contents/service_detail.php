@@ -16,8 +16,8 @@
 							<div class="col-4">
 								<h2>' . $country->title . '</h2>
 								' . htmlspecialchars_decode($country->content) . '
-								<img class="img-fluid" src="' . $country->flag_src->original . '">
-								<img class="img-fluid" src="' . $country->campus_image_src->original . '">
+								<img class="img-fluid" src="' . $country->flag_src[0]->original . '">
+								<img class="img-fluid" src="' . $country->campus_image_src[0]->original . '">
 							</div>';
 
 						}
