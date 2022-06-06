@@ -340,6 +340,14 @@ return [
         'gallery' => 'Galeri',
         'gallery_message' => 'Galerileri yönetebileceğiniz sayfadır.',
         'images' => 'Görseller',
+        'blog' => 'Yazılar',
+        'blog_message' => 'Blog yazılarını yönetebileceğiniz sayfadır.',
+        'blog_list' => 'Tüm yazılara bu sayfadan ulaşabilirsiniz.',
+        'blog_detail' => 'İlgili yazıyı görüntüleyin.',
+        'categories' => 'Kategoriler',
+        'categories_message' => 'Kategorileri yönetebileceğiniz sayfadır.',
+        'categories_detail' => 'Kategoriyle ilgili yazıyı görüntüleyin.',
+        'color' => 'Renk',
     ],
     'app' => [
         

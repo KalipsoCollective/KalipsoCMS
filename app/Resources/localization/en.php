@@ -340,6 +340,14 @@ return [
         'gallery' => 'Gallery',
         'gallery_message' => 'This is the page where you can manage the galleries.',
         'images' => 'Images',
+        'blog' => 'Blog',
+        'blog_message' => 'This is the page where you can manage blog posts.',
+        'blog_list' => 'You can find all articles on this page.',
+        'blog_detail' => 'View the related article.',
+        'categories' => 'Categories',
+        'categories_message' => 'This is the page where you can manage categories.',
+        'categories_detail' => 'View the post for the category.',
+        'color' => 'Color',
     ],
     'app' => [
         

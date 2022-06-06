@@ -221,6 +221,8 @@ final class ContentController extends Controller {
 
                     switch ($input['type']) {
                         case 'input':
+                        case 'color':
+                        case 'number':
 
                             if (! is_null($currentVal)) {
                                 $attributes .= 'value="'.$currentVal.'" ';
@@ -231,7 +233,7 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
-                                    <input class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
+                                    <input type="' . ($input['type'] == 'input' ? 'text' : $input['type']) . '" class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
                                     <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
@@ -565,6 +567,10 @@ final class ContentController extends Controller {
                     } elseif ($detail['type'] === 'editor') {
 
                         $inputAreas[$name] = 'nulled_html';
+
+                    } elseif ($detail['type'] === 'color') {
+
+                        $inputAreas[$name] = 'color';
 
                     } elseif ($detail['type'] === 'file') {
 
@@ -955,6 +961,10 @@ final class ContentController extends Controller {
                     } elseif ($detail['type'] === 'editor') {
 
                         $inputAreas[$name] = 'nulled_html';
+
+                    } elseif ($detail['type'] === 'color') {
+
+                        $inputAreas[$name] = 'color';
 
                     } elseif ($detail['type'] === 'file') {
 

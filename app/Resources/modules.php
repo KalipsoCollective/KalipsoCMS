@@ -215,7 +215,139 @@ return [
 				]
 			],
 		]
+	],
+	'categories' => [
+		'name' => 'base.categories',
+		'description' => 'base.categories_message',
+		'icon' => 'ti ti-quote',
+		'from' => '(SELECT 
+						x.id, 
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.description.'.Base::lang('lang.code').'\')), "-") AS description, 
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.color\')), "-") AS color,
+						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+					FROM `contents` x WHERE x.module = "categories") AS raw',
+		'table' => [
+			'id' => [
+				'primary' => true,
+			],
+			'title' => [],
+			'description' => [
+				'formatter' => function($row) {
 
+					$description = Base::stringShortener($row->description, 100);
+					return $description == '' ? '-' : $description;
+				}
+			],
+			'color' => [
+				'formatter' => function($row) {
+					return '
+					<strong class="badge text-light" data-bs-toggle="tooltip" title="' . $row->color . '" style="background: ' . $row->color . '; width: 3rem; height: 1.5rem;">
+						
+					</strong>';
+				}
+			],
+			'created' => [],
+			'updated' => [],
+		],
+		'columns' => [
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.title'),
+				"key" => "title"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.description'),
+				"key" => "description"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.color'),
+				"key" => "color"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
+		],
+		'routes' => [
+			'listing' => false,
+			'detail' => [
+				'en' => ['GET,POST', '/categories/:slug', 'ContentController@contentDetailPage', []],
+				'tr' => ['GET,POST', '/kategoriler/:slug', 'ContentController@contentDetailPage', []]
+			],
+			'view' => [
+				'detail' => 'contents.category_detail',
+			],
+			'description' => [
+				'detail' => 'base.blog_detail',
+			]
+		],
+		'inputs' => [
+			'title' => [
+				'multilanguage' => true,
+				'label' => 'base.title',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+				],
+			],
+			'description' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'textarea',
+				'attributes' => ['required' => 'true'],
+			],
+			'color' => [
+				'label' => 'base.color',
+				'type' => 'color',
+				'col' => 'col-6 d-flex mx-auto',
+				'attributes' => [
+					'required' => 'true',
+				]
+			],
+		]
 	],
 	'gallery' => [
 		'name' => 'base.gallery',
