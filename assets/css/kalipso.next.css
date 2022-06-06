@@ -529,6 +529,52 @@ img.table-image {
     margin-right: auto;
 }
 
+.image-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+}
+
+.image-group a img {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    border: 2px solid #fff;
+    filter: drop-shadow(-1px 2px 4px rgba(0,0,0,0.6));
+}
+
+.image-group a {
+    position: relative;
+}
+
+.image-group a button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: var(--bs-danger);
+    border-radius: 0.4rem;
+    border: 0;
+    color: #fff;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.image-group a:hover {
+    z-index: 1;
+}
+
+.image-group a:hover button {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.image-group a + a {
+    margin-left: -1.2rem;
+}
+
 @media (max-width: 1200px) {
     nav.navbar-side {
         left: -16rem;

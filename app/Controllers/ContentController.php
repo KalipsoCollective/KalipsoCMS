@@ -240,44 +240,50 @@ final class ContentController extends Controller {
                         case 'file':
 
                             $externalBadge = '';
-                            if (! is_null($currentVal)) {
+                            if (! is_null($currentVal) AND is_array($currentVal) AND count($currentVal)) {
 
-                                $getFile = (new Files)->select('id, name, files')->where('id', $currentVal)->get();
+                                $getFiles = (new Files)->select('id, name, files');
+                                if (is_array($currentVal) AND count($currentVal)) {
+                                    $getFiles->in('id', $currentVal);
+                                }
+
+                                $getFiles = $getFiles->getAll();
                                 
-                                if (! empty($getFile)) {
-                                    $getFile->files = json_decode($getFile->files);
-                                    $url = Base::base('upload/' . $getFile->files->original);
-                                    $externalBadge = ' 
-                                    <span class="ms-2" data-target="current_file_buttons_' . $inputName . '">
-                                        <a class="small text-muted" href="' . $url . '" 
-                                            target="_blank"
-                                            data-target="current_file_view_' . $inputName . '"
-                                            >
-                                            ' . Base::lang('base.view') . '
-                                        </a> &middot; 
-                                        <a class="small text-danger" href="javascript:;" 
-                                            data-target="current_file_delete_' . $inputName . '"
-                                            data-kn-again="'.Base::lang('base.are_you_sure').'" 
-                                            data-kn-action="manipulation"
-                                            data-kn-manipulation=\'' . json_encode(
-                                                [
-                                                    '[data-target="current_file_buttons_' . $inputName . '"]' => [
-                                                        'remove_element' => true
-                                                    ]
-                                                ]) . '\'
-                                            >
-                                            ' . Base::lang('base.delete') . '
-                                        </a>
-                                        <input type="hidden" name="current_file_' . $inputName . '" value="' . $getFile->id . '" />
-                                    </span>';
+                                if (! empty($getFiles)) {
+
+                                    $externalBadge = '<div class="image-group">';
+                                    foreach ($getFiles as $fileIndex => $getFile) {
+                                        
+                                        $getFile->files = json_decode($getFile->files);
+                                        $src = Base::base('upload/' . (isset($getFile->files->sm) !== false ? $getFile->files->sm : $getFile->files->original));
+                                        $href = Base::base('upload/' . $getFile->files->original);
+                                        $externalBadge .= '<a href="' . $href . '" target="_blank" data-target="current_file_delete_' . $inputName . $fileIndex . '">
+                                            <img class="table-image" src="' . $src . '" />
+                                            <button href="javascript:;" 
+                                                data-kn-again="'.Base::lang('base.are_you_sure').'" 
+                                                data-kn-action="manipulation"
+                                                data-kn-manipulation=\'' . json_encode(
+                                                    [
+                                                        '[data-target="current_file_delete_' . $inputName . $fileIndex . '"]' => [
+                                                            'remove_element' => true
+                                                        ]
+                                                    ]) . '\'
+                                                >
+                                                ' . Base::lang('base.delete') . '
+                                            </button>
+                                            <input type="hidden" name="current_file_' . $inputName . '[]" value="' . $getFile->id . '" />
+                                        </a>';
+
+                                    }
+                                    $externalBadge .= '</div>';
                                 }
                             }
 
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="">
-                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . Base::lang($input['label']) . $requiredBadge . $externalBadge . '</label>
-                                    <input class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" type="file">
+                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . $externalBadge . Base::lang($input['label']) . $requiredBadge . '</label>
+                                    <input class="form-control" '.$attributes.'name="' . $inputName . (isset($input['attributes']['multiple']) !== false ? '[]' : '') . '" id="' . $idPrefix . '_' . $name . $lang . '" type="file">
                                 </div>
                             </div>';
                             break;
@@ -479,8 +485,6 @@ final class ContentController extends Controller {
                         </button>';
                     }
 
-
-
                     return '
                     <div class="btn-group btn-group-sm" role="group" aria-label="'.Base::lang('base.action').'">
                         '.$buttons.'
@@ -564,7 +568,7 @@ final class ContentController extends Controller {
 
                     } elseif ($detail['type'] === 'file') {
 
-                        $files[$name] = $detail;
+                        $files[$name][] = $detail;
 
                     }
 
@@ -1131,8 +1135,7 @@ final class ContentController extends Controller {
                                         ]);
 
                                         $rollBack[] = $fileId;
-                                        if ($multipleFile) $update[$fileName][$fileKey] = $fileId;
-                                        else $update[$fileName] = $fileId;
+                                        $update[$fileName][] = $fileId;
 
                                     } else {
                                         $alerts[] = [
@@ -1159,6 +1162,11 @@ final class ContentController extends Controller {
 
                             }
 
+                            if ($multipleFile AND is_array(${'current_file_'.$fileName})) {
+                                $update[$fileName] = array_merge(${'current_file_'.$fileName}, $update[$fileName]);
+                            }
+
+
                         } elseif ($requiredFile AND !${'current_file_'.$fileName}) {
 
                             $alerts[] = [
@@ -1171,7 +1179,7 @@ final class ContentController extends Controller {
 
                         } else {
 
-                            $update[$fileName] = ${'current_file_'.$fileName} ? ${'current_file_'.$fileName} : null;
+                            $update[$fileName] = ${'current_file_'.$fileName} ? ${'current_file_'.$fileName} : [];
                         }
                     }
                 }

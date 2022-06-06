@@ -183,6 +183,7 @@ class KalipsoTable {
             $result = $result->fetchAll();
         }
 
+
         foreach ($result as $index => $data) {
             
             $record = (object)[];

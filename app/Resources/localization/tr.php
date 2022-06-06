@@ -337,6 +337,9 @@ return [
         'contact_message' => 'İletişim sayfasından bize ulaşabilirsiniz.',
         'forms' => 'formlar',
         'information_request_form' => 'Bilgi Talep Formu',
+        'gallery' => 'Galeri',
+        'gallery_message' => 'Galerileri yönetebileceğiniz sayfadır.',
+        'images' => 'Görseller',
     ],
     'app' => [
         

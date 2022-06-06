@@ -1,4 +1,10 @@
 + Factory -> Controller add module and forms definition
+
+- Content -> Pages Module
+- Content -> Gallery Module
+- Content -> Slider Module
+- Content -> Blog Module
+
 - Form -> List
 - Form -> Form Preparing
 - Form -> Form Add
@@ -7,11 +13,8 @@
 - Form -> Form Update
 - Form -> Form Delete
 
-- Content -> Pages Module
-- Content -> Gallery Module
-- Content -> Blog Module
-
 - Menu -> Menu Module
+	- Link component
 	- Add
 	- List
 	- Edit

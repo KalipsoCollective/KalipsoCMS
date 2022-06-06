@@ -337,6 +337,9 @@ return [
         'contact_message' => 'You can reach us from the contact page.',
         'forms' => 'Forms',
         'information_request_form' => 'Information Request Form',
+        'gallery' => 'Gallery',
+        'gallery_message' => 'This is the page where you can manage the galleries.',
+        'images' => 'Images',
     ],
     'app' => [
         
