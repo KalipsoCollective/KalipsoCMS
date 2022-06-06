@@ -3,7 +3,6 @@
 use KN\Helpers\Base;
 
 return [
-
 	'services' => [
 		'name' => 'base.services',
 		'description' => 'base.services_message',
@@ -11,7 +10,7 @@ return [
 		'from' => '(SELECT 
 						x.id, 
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
-						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS slug,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.slug.'.Base::lang('lang.code').'\')), "-") AS slug,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.description.'.Base::lang('lang.code').'\')), "-") AS description,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content, 
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.icon\')), 0) AS icon,
@@ -236,6 +235,7 @@ return [
 		]
 
 	],
+	
 	'other-services' => [
 		'name' => 'base.other_services',
 		'description' => 'base.other_services_message',
@@ -729,5 +729,219 @@ return [
 				]
 			],
 		]
+	],
+	'blog' => [
+		'name' => 'base.blog',
+		'description' => 'base.blog_message',
+		'icon' => 'ti ti-blockquote',
+		'from' => '(SELECT 
+						x.id, 
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.slug.'.Base::lang('lang.code').'\')), "-") AS slug,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.description.'.Base::lang('lang.code').'\')), "-") AS description,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content,
+						REPLACE(
+							REPLACE(
+								REPLACE(
+									REPLACE(
+										IFNULL(JSON_EXTRACT(x.input, \'$.header_image\'), ""),
+										" ",
+										""
+									),
+									"\"",
+									""
+								),
+								"]",
+								""
+							),
+							"[",
+							""
+						) AS header_image,
+						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, header_image)) AS header_image_src,
+						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+					FROM `contents` x WHERE x.module = "blog") AS raw',
+		'table' => [
+			'id' => [
+				'primary' => true,
+			],
+			'title' => [],
+			'description' => [
+				'formatter' => function($row) {
+
+					$description = Base::stringShortener($row->description, 100);
+					return $description == '' ? '-' : $description;
+				}
+			],
+			'content' => [
+				'formatter' => function($row) {
+
+					$content = Base::stringShortener(trim(strip_tags(htmlspecialchars_decode($row->content))), 100);
+					return $content == '' ? '-' : $content;
+				}
+			],
+			'header_image_src' => [
+				'formatter' => function($row) {
+					$return = '';
+					if ($row->header_image_src AND $srcset = @json_decode($row->header_image_src)) {
+						$return = '<div class="image-group">';
+						foreach ($srcset as $src) {
+							$href = Base::base('upload/' . $src->original);
+							$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
+							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
+						}
+						$return .= '</div>';
+					} else {
+						$return = '-';
+					}
+					return $return;
+				}
+			],
+			'created' => [],
+			'updated' => [],
+		],
+		'columns' => [
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.title'),
+				"key" => "title"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.description'),
+				"key" => "description"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.content'),
+				"key" => "content"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.header_image'),
+				"key" => "header_image_src"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
+		],
+		'routes' => [ // method - route - controller@method - middlewares as array (like route definition in index.php)
+			'listing' => [
+				'en' => ['GET,POST', '/blog', 'ContentController@contentListPage', []],
+				'tr' => ['GET,POST', '/blog', 'ContentController@contentListPage', []]
+			],
+			'detail' => [
+				'en' => ['GET,POST', '/blog/:slug', 'ContentController@contentDetailPage', []],
+				'tr' => ['GET,POST', '/blog/:slug', 'ContentController@contentDetailPage', []]
+			],
+			'view' => [
+				'listing' => 'contents.blog_list',
+				'detail' => 'contents.blog_detail',
+			],
+			'description' => [
+				'listing' => 'base.blog_list',
+				'detail' => 'base.blog_detail',
+			]
+		],
+		'inputs' => [
+			'title' => [
+				'multilanguage' => true,
+				'label' => 'base.title',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-change' => Base::base('/management/blog/slug')
+				],
+			],
+			'slug' => [
+				'multilanguage' => true,
+				'label' => 'base.slug',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-change' => Base::base('/management/blog/slug')
+				],
+			],
+			'description' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'input',
+				'attributes' => ['required' => 'true'],
+			],
+			'content' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'editor',
+				'attributes' => ['required' => 'true'],
+			],
+			'header_image' => [
+				'label' => 'base.header_image',
+				'type' => 'file',
+				'col' => 'col-12 col-md-4',
+				'attributes' => [
+					'accept' => 'image/*',
+				],
+				'external_parameters' => [
+					'size' => [
+						'original' => [1920, 400]
+					],
+				]
+			],
+			'widget' => [
+				'countries' => [
+					'label' => 'base.categories',
+					'type' => 'select',
+					'source' => ['getModuleDatas', ['categories']],
+					'col' => 'col-12 col-md-4',
+					'use_for_view' => 'title',
+					'attributes' => ['required' => 'true'],
+				]
+			],
+		]
+
 	],
 ];
