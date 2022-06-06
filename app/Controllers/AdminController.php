@@ -20,14 +20,9 @@ use KN\Model\Logs;
 
 final class AdminController extends Controller {
 
-	public $modules;
-	public $forms;
-
 	public function __construct($container) {
 
 		parent::__construct($container);
-		$this->modules = file_exists($file = Base::path('app/Resources/modules.php')) ? require $file : [];
-		$this->forms = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
 
 	} 
 

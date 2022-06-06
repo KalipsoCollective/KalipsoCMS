@@ -19,15 +19,9 @@ use \Verot\Upload\Upload;
 
 final class FormController extends Controller {
 
-    public $form;
-    public $forms;
-
     public function __construct($container) {
 
         parent::__construct($container);
-        $this->form = isset($this->get('request')->attributes['form']) !== false ? $this->get('request')->attributes['form'] : 'general';
-        $this->forms = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
-        $this->modules = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
 
     }
 

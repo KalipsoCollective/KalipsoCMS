@@ -1,4 +1,4 @@
-- Factory -> Controller add module and forms definition
++ Factory -> Controller add module and forms definition
 - Form -> List
 - Form -> Form Preparing
 - Form -> Form Add
