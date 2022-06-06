@@ -8,11 +8,12 @@ return [
 		'description' => 'base.blog_message',
 		'icon' => 'ti ti-blockquote',
 		'from' => '(SELECT 
-						x.id, 
+						x.id,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.slug.'.Base::lang('lang.code').'\')), "-") AS slug,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.description.'.Base::lang('lang.code').'\')), "-") AS description,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.category\')), "-") AS category,
 						REPLACE(
 							REPLACE(
 								REPLACE(
@@ -31,6 +32,7 @@ return [
 							""
 						) AS header_image,
 						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, header_image)) AS header_image_src,
+						(SELECT IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") FROM files WHERE id = category AND module = "categories") AS category_name,
 						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
 						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
 					FROM `contents` x WHERE x.module = "blog") AS raw',
@@ -39,6 +41,7 @@ return [
 				'primary' => true,
 			],
 			'title' => [],
+			'category_name' => [],
 			'description' => [
 				'formatter' => function($row) {
 
@@ -92,6 +95,15 @@ return [
 				"orderable" => true,
 				"title" => Base::lang('base.title'),
 				"key" => "title"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.category'),
+				"key" => "category_name"
 			],
 			[
 				"searchable" => [
@@ -194,7 +206,7 @@ return [
 			'header_image' => [
 				'label' => 'base.header_image',
 				'type' => 'file',
-				'col' => 'col-12 col-md-4',
+				'col' => 'col-12 col-md-8',
 				'attributes' => [
 					'accept' => 'image/*',
 				],
@@ -205,7 +217,7 @@ return [
 				]
 			],
 			'widget' => [
-				'countries' => [
+				'category' => [
 					'label' => 'base.categories',
 					'type' => 'select',
 					'source' => ['getModuleDatas', ['categories']],

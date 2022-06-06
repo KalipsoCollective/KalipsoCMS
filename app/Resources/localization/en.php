@@ -348,6 +348,7 @@ return [
         'categories_message' => 'This is the page where you can manage categories.',
         'categories_detail' => 'View the post for the category.',
         'color' => 'Color',
+        'category' => 'Category',
     ],
     'app' => [
         

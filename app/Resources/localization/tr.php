@@ -348,6 +348,7 @@ return [
         'categories_message' => 'Kategorileri yönetebileceğiniz sayfadır.',
         'categories_detail' => 'Kategoriyle ilgili yazıyı görüntüleyin.',
         'color' => 'Renk',
+        'category' => 'Kategori',
     ],
     'app' => [
         
