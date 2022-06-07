@@ -1,8 +1,8 @@
 {
-    "name": "halillusion/kn",
+    "name": "halillusion/kalipsocms",
     "type": "project",
-    "description": "KalipsoNext - a simple php framework/boilerplate",
-    "keywords": ["framework", "kalipso", "kalipsonext", "php-framework"],
+    "description": "KalipsoCMS - KalipsoNext-based, open source, powerful and experimental content management system.",
+    "keywords": ["framework", "kalipso", "kalipsonext", "php-framework", "cms", "content management system"],
     "license": "MIT",
     "authors": [
         {
