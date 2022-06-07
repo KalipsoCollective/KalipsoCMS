@@ -79,6 +79,12 @@ return [
         'management_content_upload_file' => 'Management - Contents - Editor File Upload',
         'management_forms' => 'Management - Forms',
         'management_forms_list' => 'Management - Forms - List',
+        'management_media' =>  'Management - Media',
+        'management_media_list' =>  'Management - Media - List',
+        'management_media_add' =>  'Management - Media - Add',
+        'management_media_detail' =>  'Management - Media - Detail',
+        'management_media_update' =>  'Management - Media - Edit',
+        'management_media_delete' =>  'Management - Media - Delete',
     ],
     'settings' => [
         'basic_settings' => 'Basic Settings',
@@ -352,6 +358,12 @@ return [
         'pages' => 'Pages',
         'pages_message' => 'It is the page where you can manage the pages.',
         'page_detail' => 'View the relevant page.',
+        'media' => 'Medya Ortamı',
+        'media_message' => 'You can manage the media contents here.',
+        'module' => 'Module',
+        'preview' => 'Preview',
+        'extension' => 'Extension',
+        'size' => 'Size',
     ],
     'app' => [
         

@@ -81,7 +81,6 @@ return [
 		'default' => false,
 		'name' => 'auth.management_sessions_list',
 	],
-
 	'management/:module' => [
 		'default' => false,
 		'name' => 'auth.management_contents',
@@ -114,7 +113,30 @@ return [
 		'default' => false,
 		'name' => 'auth.management_content_upload_file',
 	],
-
+	'management/media' => [
+		'default' => false,
+		'name' => 'auth.management_media',
+	],
+	'management/media/list' => [
+		'default' => false,
+		'name' => 'auth.management_media_list',
+	],
+	'management/media/add' => [
+		'default' => false,
+		'name' => 'auth.management_media_add',
+	],
+	'management/media/:id' => [
+		'default' => false,
+		'name' => 'auth.management_media_detail',
+	],
+	'management/media/:id/update' => [
+		'default' => false,
+		'name' => 'auth.management_media_update',
+	],
+	'management/media/:id/delete' => [
+		'default' => false,
+		'name' => 'auth.management_media_delete',
+	],
 	'management/forms/:form' => [
 		'default' => false,
 		'name' => 'auth.management_forms',

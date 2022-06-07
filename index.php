@@ -51,6 +51,14 @@ try {
             ['GET,POST', '/roles/:id/delete', 'AdminController@roleDelete', ['Auth@with']],
             ['GET,POST', '/roles/:id/update', 'AdminController@roleUpdate', ['Auth@with']],
 
+            // Files
+            ['GET,POST', '/media', 'FileController@medias', ['Auth@with']],
+            ['GET,POST', '/media/list', 'FileController@mediaList', ['Auth@with']],
+            ['GET,POST', '/media/add', 'FileController@mediaAdd', ['Auth@with']],
+            ['GET,POST', '/media/:id', 'FileController@mediaDetail', ['Auth@with']],
+            ['GET,POST', '/media/:id/delete', 'FileController@mediaDelete', ['Auth@with']],
+            ['GET,POST', '/media/:id/update', 'FileController@mediaUpdate', ['Auth@with']],
+
             // Sessions
             ['GET,POST', '/sessions', 'AdminController@sessions', ['Auth@with']],
             ['GET,POST', '/sessions/list', 'AdminController@sessionList', ['Auth@with']],

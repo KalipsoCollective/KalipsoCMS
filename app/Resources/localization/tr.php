@@ -79,6 +79,12 @@ return [
         'management_content_upload_file' => 'Yönetim - İçerikler - Editör Dosya Yükleme',
         'management_forms' => 'Yönetim - Formlar',
         'management_forms_list' => 'Yönetim - Formlar - Liste',
+        'management_media' =>  'Yönetim - Medya Ortamı',
+        'management_media_list' =>  'Yönetim - Medya Ortamı - Liste',
+        'management_media_add' =>  'Yönetim - Medya Ortamı - Ekle',
+        'management_media_detail' =>  'Yönetim - Medya Ortamı - Detay',
+        'management_media_update' =>  'Yönetim - Medya Ortamı - Düzenle',
+        'management_media_delete' =>  'Yönetim - Medya Ortamı - Sil',
     ],
     'settings' => [
         'basic_settings' => 'Temel Ayarlar',
@@ -352,6 +358,12 @@ return [
         'pages' => 'Sayfalar',
         'pages_message' => 'Sayfaları yönetebileceğiniz sayfadır.',
         'page_detail' => 'İlgili sayfayı görüntüleyin.',
+        'media' => 'Medya Ortamı',
+        'media_message' => 'Medya ortamını buradan yönetebilirsiniz.',
+        'module' => 'Modül',
+        'preview' => 'Önizleme',
+        'extension' => 'Uzantı',
+        'size' => 'Boyut',
     ],
     'app' => [
         

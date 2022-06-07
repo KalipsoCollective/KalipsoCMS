@@ -20,6 +20,103 @@
 				}
 
 				let tableVariables = {
+					mediasTable: {
+						selector: "#mediasTable",
+						language: "<?php echo \KN\Helpers\Base::lang('lang.code'); ?>",
+						server: true,
+						source: '<?php echo $this->url('/management/medias/list') ?>',
+						columns: [ 
+							{
+								"searchable": {
+									"type": "number",
+									"min": 1,
+									"max": 999
+								},
+								"orderable": true,
+								"title": "#",
+								"key": "id"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.name'); ?>",
+								"key": "name"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.module'); ?>",
+								"key": "module"
+							},
+							{
+								"searchable": false,
+								"orderable": false,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.preview'); ?>",
+								"key": "preview"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.extension'); ?>",
+								"key": "extension"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.size'); ?>",
+								"key": "size"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.created_at'); ?>",
+								"key": "created"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.updated_at'); ?>",
+								"key": "updated"
+							},
+							{
+								"searchable": false,
+								"orderable": false,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.action'); ?>",
+								"key": "action"
+							}
+						],
+						customize: {
+							tableWrapClass: "table-responsive",
+							tableClass: "table table-bordered",
+							inputClass: "form-control form-control-sm",
+							selectClass: "form-control form-control-sm",
+						},
+						tableHeader: {
+							searchBar: true
+						},
+						tableFooter: {
+							visible: true,
+							searchBar: true
+						}
+					},
 					usersTable: {
 						selector: "#usersTable",
 						language: "<?php echo \KN\Helpers\Base::lang('lang.code'); ?>",

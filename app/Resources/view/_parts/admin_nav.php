@@ -76,16 +76,19 @@
                                 <?php
                             }
                         } 
-                        /*
-                        if ($this->authority('/management/contents')) {
+
+                        if ($this->authority('/management/media')) {
+                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.media') . '</li>';
+                        }
+                        if ($this->authority('/management/media')) {
                         ?>
                             <li class="nav-item">
-                                <a class="nav-link<?php echo $this->currentLink('/management/contents'); ?>" href="<?php echo $this->url('/management/contents'); ?>">
-                                    <i class="ti ti-float-right nav-icon"></i> <?php echo KN\Helpers\Base::lang('base.contents'); ?>
+                                <a class="nav-link<?php echo $this->currentLink('/management/media'); ?>" href="<?php echo $this->url('/management/media'); ?>">
+                                    <i class="ti ti-cloud nav-icon"></i> <?php echo KN\Helpers\Base::lang('base.media'); ?>
                                 </a>
                             </li>
                         <?php
-                        } */
+                        }
 
                         if ($this->authority('/management/logs') OR
                             $this->authority('/management/settings')) {
@@ -115,7 +118,7 @@
             </div>
         </nav>
         <div class="wrap-content">
-            <nav class="navbar admin-nav navbar-light navbar-expand bg-light shadow">
+            <nav class="navbar admin-nav navbar-dark navbar-expand bg-primary shadow">
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse">
                         <button class="navbar-side-toggler" onclick="navOpen()" type="button" aria-label="<?php echo KN\Helpers\Base::lang('base.toggle_navigation'); ?>">
