@@ -32,7 +32,7 @@ return [
 							""
 						) AS header_image,
 						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, header_image)) AS header_image_src,
-						(SELECT IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") FROM files WHERE id = category AND module = "categories") AS category_name,
+						(SELECT IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") FROM contents WHERE id = category) AS category_name,
 						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
 						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
 					FROM `contents` x WHERE x.module = "blog") AS raw',
