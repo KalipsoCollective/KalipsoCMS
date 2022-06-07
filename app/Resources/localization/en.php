@@ -349,6 +349,9 @@ return [
         'categories_detail' => 'View the post for the category.',
         'color' => 'Color',
         'category' => 'Category',
+        'pages' => 'Pages',
+        'pages_message' => 'It is the page where you can manage the pages.',
+        'page_detail' => 'View the relevant page.',
     ],
     'app' => [
         

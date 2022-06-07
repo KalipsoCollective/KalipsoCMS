@@ -349,6 +349,9 @@ return [
         'categories_detail' => 'Kategoriyle ilgili yazıyı görüntüleyin.',
         'color' => 'Renk',
         'category' => 'Kategori',
+        'pages' => 'Sayfalar',
+        'pages_message' => 'Sayfaları yönetebileceğiniz sayfadır.',
+        'page_detail' => 'İlgili sayfayı görüntüleyin.',
     ],
     'app' => [
         
