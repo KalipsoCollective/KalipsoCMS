@@ -418,6 +418,8 @@ final class ContentController extends Controller {
                             $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
                             (new Files)->insert([
                                 'module' => $this->module,
+                                'size' => filesize($handle->file_dst_pathname),
+                                'mime' => $handle->file_dst_mime,
                                 'name' => $handle->file_dst_name_body,
                                 'files' => json_encode([
                                     'original' => $url
@@ -742,7 +744,7 @@ final class ContentController extends Controller {
                                             }
                                         }
 
-                                        $handle->clean();
+                                        
                                         if ($errorOnUpload === false) {
 
                                             $alerts[] = [
@@ -752,6 +754,8 @@ final class ContentController extends Controller {
 
                                             $id = (new Files)->insert([
                                                 'module' => $this->module,
+                                                'size' => filesize($handle->file_dst_pathname),
+                                                'mime' => $handle->file_dst_mime,
                                                 'name' => $originalFileName,
                                                 'files' => json_encode($insertData)
                                             ]);
@@ -772,6 +776,7 @@ final class ContentController extends Controller {
                                                 'class' => ['is-invalid'],
                                             ];
                                         }
+                                        $handle->clean();
 
                                     } else {
 
@@ -1136,7 +1141,6 @@ final class ContentController extends Controller {
                                         }
                                     }
 
-                                    $handle->clean();
                                     if ($errorOnUpload === false) {
 
                                         $alerts[] = [
@@ -1146,6 +1150,8 @@ final class ContentController extends Controller {
 
                                         $fileId = (new Files)->insert([
                                             'module' => $this->module,
+                                            'size' => filesize($handle->file_dst_pathname),
+                                            'mime' => $handle->file_dst_mime,
                                             'name' => $originalFileName,
                                             'files' => json_encode($updateData)
                                         ]);
@@ -1163,6 +1169,7 @@ final class ContentController extends Controller {
                                             'class' => ['is-invalid'],
                                         ];
                                     }
+                                    $handle->clean();
 
                                 } else {
 
