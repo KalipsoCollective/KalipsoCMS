@@ -198,7 +198,6 @@ final class FileController extends Controller {
 
     }
 
-
     public function userDetail() {
 
         $id = (int)$this->get('request')->attributes['id'];
@@ -260,7 +259,6 @@ final class FileController extends Controller {
         ];
 
     }
-
 
     public function userUpdate() {
 
@@ -569,37 +567,34 @@ final class FileController extends Controller {
                             $handle->image_resize         = true;
                             $handle->image_x              = Base::config('app.upload_max_width');
                             $handle->image_ratio_y        = true;
+                            $handle->image_ratio_crop     = true;
                         }
                         
                         $handle->process($path);
                         if ($handle->processed) {
                            
-                            $alerts[] = [
-                                'status' => 'success',
-                                'message' => Base::lang('base.file_successfully_uploaded')
-                            ];
+                            
                             $url = $module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
+                            $fileOutput = [
+                                'original' => $url
+                            ]);
 
-                            (new Files)->insert([
+                            $insert = (new Files)->insert([
                                 'module' => $module,
                                 'size' => filesize($handle->file_dst_pathname),
                                 'mime' => $handle->file_dst_mime,
                                 'name' => $handle->file_dst_name_body,
-                                'files' => json_encode([
-                                    'original' => $url
-                                ])
+                                'files' => json_encode($fileOutput)
                             ]);
 
-                            $arguments['editor_upload'][] = $this->get()->url('upload/' . $url);
+                            if ($insert) {
+                                
+                                $uploadedFiles[$insert] = $fileOutput;
+
+                            }
+
                             $handle->clean();
 
-                        } else {
-                            
-                            $alerts[] = [
-                                'status' => 'error',
-                                'message' => Base::lang('base.file_upload_problem') 
-                                . (isset($handle->error) !== false ? ' (' . $handle->error . ')' : '')
-                            ];
                         }
                     }
                 }
