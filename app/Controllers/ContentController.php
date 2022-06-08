@@ -377,69 +377,27 @@ final class ContentController extends Controller {
 
         if (is_array($files) AND count($files)) {
 
-            if (! is_dir($path = Base::path('upload')))
-                mkdir($path);
+            $fileController = new FileController($this->get());
+            $upload = $fileController->directUpload($this->module, $files);
 
-            if (! is_dir($path .= '/' . $this->module))
-                mkdir($path);
+            if (count($upload)) {
 
-            foreach ($files as $name => $file) {
-
-                foreach ($file as $f) {
-
-                    $handle = new Upload($f, Base::lang('lang.iso_code'));
-                    if ($handle->uploaded) {
-                        $handle->file_new_name_body   = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
-                        $handle->file_max_size = Base::config('app.upload_max_size');
-                        $handle->allowed = array('image/*');
-                        $handle->image_convert = 'webp';
-                        if ($quality = Base::config('app.upload_webp_quality')) {
-                            $handle->webp_quality = $quality;
-                        }
-                        if ($quality = Base::config('app.upload_png_quality')) {
-                            $handle->webp_quality = $quality;
-                        }
-                        if ($quality = Base::config('app.upload_jpeg_quality')) {
-                            $handle->webp_quality = $quality;
-                        }
-
-                        if (Base::config('app.upload_max_width')) {
-                            $handle->image_resize         = true;
-                            $handle->image_x              = Base::config('app.upload_max_width');
-                            $handle->image_ratio_y        = true;
-                        }
-                        
-                        $handle->process($path);
-                        if ($handle->processed) {
+                $url = array_shift($upload);
+                $url = $url['original'];
                            
-                            $alerts[] = [
-                                'status' => 'success',
-                                'message' => Base::lang('base.file_successfully_uploaded')
-                            ];
-                            $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
-                            (new Files)->insert([
-                                'module' => $this->module,
-                                'size' => filesize($handle->file_dst_pathname),
-                                'mime' => $handle->file_dst_mime,
-                                'name' => $handle->file_dst_name_body,
-                                'files' => json_encode([
-                                    'original' => $url
-                                ])
-                            ]);
+                $alerts[] = [
+                    'status' => 'success',
+                    'message' => Base::lang('base.file_successfully_uploaded')
+                ];
 
-                            $arguments['editor_upload'][] = $this->get()->url('upload/' . $url);
-                            $handle->clean();
+                $arguments['editor_upload'][] = $this->get()->url('upload/' . $url);
 
-                        } else {
-                            
-                            $alerts[] = [
-                                'status' => 'error',
-                                'message' => Base::lang('base.file_upload_problem') 
-                                . (isset($handle->error) !== false ? ' (' . $handle->error . ')' : '')
-                            ];
-                        }
-                    }
-                }
+            } else {
+                
+                $alerts[] = [
+                    'status' => 'error',
+                    'message' => Base::lang('base.file_upload_problem') 
+                ];
             }
 
         } else {

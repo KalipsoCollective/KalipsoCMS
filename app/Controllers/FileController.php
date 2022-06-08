@@ -13,6 +13,7 @@ use KN\Core\Controller;
 use KN\Helpers\Base;
 use KN\Helpers\KalipsoTable;
 use KN\Model\Files;
+use \Verot\Upload\Upload;
 
 final class FileController extends Controller {
 
@@ -572,12 +573,11 @@ final class FileController extends Controller {
                         
                         $handle->process($path);
                         if ($handle->processed) {
-                           
                             
                             $url = $module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
                             $fileOutput = [
                                 'original' => $url
-                            ]);
+                            ];
 
                             $insert = (new Files)->insert([
                                 'module' => $module,
@@ -588,13 +588,10 @@ final class FileController extends Controller {
                             ]);
 
                             if ($insert) {
-                                
                                 $uploadedFiles[$insert] = $fileOutput;
-
                             }
 
                             $handle->clean();
-
                         }
                     }
                 }
