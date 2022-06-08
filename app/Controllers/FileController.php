@@ -550,6 +550,53 @@ final class FileController extends Controller {
                             ? $parameters['name'] 
                             : Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
 
+                        /*
+                        foreach ($fileDimension as $dimensionTag => $dimensionVar) {
+
+                            $newFileName = $originalFileName . '_' . $dimensionTag;
+                            $handle->file_new_name_body   = $newFileName;
+
+                            if ($maxSize) $handle->file_max_size = $maxSize;
+                            if ($acceptMime) $handle->allowed = $acceptMime;
+                            if ($convertFile) $handle->image_convert = $convertFile;
+
+                            if ($quality = Base::config('app.upload_webp_quality')) {
+                                $handle->webp_quality = $quality;
+                            }
+
+                            if ($quality = Base::config('app.upload_png_quality')) {
+                                $handle->webp_quality = $quality;
+                            }
+
+                            if ($quality = Base::config('app.upload_jpeg_quality')) {
+                                $handle->webp_quality = $quality;
+                            }
+
+                            $handle->image_resize           = true;
+                            $handle->image_ratio            = true;
+                            $handle->image_ratio_crop       = true;
+
+                            if ($dimensionVar[0]) 
+                                $handle->image_x      = $dimensionVar[0];
+
+                            if ($dimensionVar[1]) 
+                                $handle->image_y      = $dimensionVar[1];
+                            
+                            $handle->process($path);
+                            if ($handle->processed) {
+                               
+                                $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
+                                $insertData[$dimensionTag] = $url;
+                                $fileSize += filesize($handle->file_dst_pathname);
+
+                            } else {
+                                
+                                $errorOnUpload = $handle->error;
+                                break;
+                                
+                            }
+                        } */
+
                         $handle->file_new_name_body   = $fileNewName;
                         $handle->file_max_size = Base::config('app.upload_max_size');
                         $handle->allowed = array('image/*');
