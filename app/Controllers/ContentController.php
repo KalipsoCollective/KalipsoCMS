@@ -15,6 +15,7 @@ use KN\Model\Files;
 use KN\Helpers\Base;
 use KN\Helpers\KalipsoTable;
 use \Verot\Upload\Upload;
+use KN\Controllers\FileController;
 
 
 final class ContentController extends Controller {
@@ -698,7 +699,7 @@ final class ContentController extends Controller {
                                         $errorOnUpload = false;
 
                                         $originalFileName = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 190, false);
-
+                                        $fileSize = 0;
                                         foreach ($fileDimension as $dimensionTag => $dimensionVar) {
 
                                             $newFileName = $originalFileName . '_' . $dimensionTag;
@@ -735,6 +736,7 @@ final class ContentController extends Controller {
                                                
                                                 $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
                                                 $insertData[$dimensionTag] = $url;
+                                                $fileSize += filesize($handle->file_dst_pathname);
 
                                             } else {
                                                 
@@ -754,7 +756,7 @@ final class ContentController extends Controller {
 
                                             $id = (new Files)->insert([
                                                 'module' => $this->module,
-                                                'size' => filesize($handle->file_dst_pathname),
+                                                'size' => $fileSize,
                                                 'mime' => $handle->file_dst_mime,
                                                 'name' => $originalFileName,
                                                 'files' => json_encode($insertData)

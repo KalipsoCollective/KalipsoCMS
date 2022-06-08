@@ -136,6 +136,7 @@ return [
         'contact' => 'iletisim',
     ],
     'base' => [
+        'byte' => 'Bayt',
         'sandbox' => 'Geliştirici Araçları',
         'sandbox_message' => 'Geliştirme sürecinde size yardımcı olacak tüm araçlara bu ekrandan ulaşabilirsiniz.',
         'clear_storage' => 'Klasörleri Temizle',
@@ -364,6 +365,9 @@ return [
         'preview' => 'Önizleme',
         'extension' => 'Uzantı',
         'size' => 'Boyut',
+        'general' => 'Genel',
+        'file_successfully_deleted' => 'Dosya başarıyla silindi.',
+        'file_delete_problem' => 'Dosya silinirken bir sorun oluştu.',
     ],
     'app' => [
         

@@ -6,6 +6,14 @@
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/quill.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/image-resize.min.js'); ?>"></script>
 		<script>
+			<?php 
+			$moduleList = [['value' => 'general', 'name' => KN\Helpers\Base::lang('base.general')]];
+			if (isset($modules)) {
+				foreach ($modules as $moduleName => $moduleData) {
+					$moduleList[] = ['value' => $moduleName, 'name' => KN\Helpers\Base::lang($moduleData['name'])];
+				}
+			}
+			?>
 			window.init = () => {
 					
 				let contentListSource = null;
@@ -24,7 +32,7 @@
 						selector: "#mediasTable",
 						language: "<?php echo \KN\Helpers\Base::lang('lang.code'); ?>",
 						server: true,
-						source: '<?php echo $this->url('/management/medias/list') ?>',
+						source: '<?php echo $this->url('/management/media/list') ?>',
 						columns: [ 
 							{
 								"searchable": {
@@ -47,8 +55,9 @@
 							},
 							{
 								"searchable": {
-									"type": "text",
-									"maxlength": 50
+									"type": "select",
+									"maxlength": 50,
+									"datas": <?php echo json_encode($moduleList); ?>,
 								},
 								"orderable": true,
 								"title": "<?php echo \KN\Helpers\Base::lang('base.module'); ?>",
@@ -58,7 +67,7 @@
 								"searchable": false,
 								"orderable": false,
 								"title": "<?php echo \KN\Helpers\Base::lang('base.preview'); ?>",
-								"key": "preview"
+								"key": "files"
 							},
 							{
 								"searchable": {
@@ -67,7 +76,7 @@
 								},
 								"orderable": true,
 								"title": "<?php echo \KN\Helpers\Base::lang('base.extension'); ?>",
-								"key": "extension"
+								"key": "mime"
 							},
 							{
 								"searchable": {
@@ -107,7 +116,7 @@
 							tableWrapClass: "table-responsive",
 							tableClass: "table table-bordered",
 							inputClass: "form-control form-control-sm",
-							selectClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
 						},
 						tableHeader: {
 							searchBar: true
@@ -218,7 +227,7 @@
 							tableWrapClass: "table-responsive",
 							tableClass: "table table-bordered",
 							inputClass: "form-control form-control-sm",
-							selectClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
 						},
 						tableHeader: {
 							searchBar: true
@@ -297,7 +306,7 @@
 							tableWrapClass: "table-responsive",
 							tableClass: "table table-bordered",
 							inputClass: "form-control form-control-sm",
-							selectClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
 						},
 						tableHeader: {
 							searchBar: true
@@ -406,7 +415,7 @@
 							tableWrapClass: "table-responsive",
 							tableClass: "table table-bordered",
 							inputClass: "form-control form-control-sm",
-							selectClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
 						},
 						tableHeader: {
 							searchBar: true
@@ -494,7 +503,7 @@
 							tableWrapClass: "table-responsive",
 							tableClass: "table table-bordered",
 							inputClass: "form-control form-control-sm",
-							selectClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
 						},
 						tableHeader: {
 							searchBar: true
@@ -514,7 +523,7 @@
 							tableWrapClass: "table-responsive",
 							tableClass: "table table-bordered",
 							inputClass: "form-control form-control-sm",
-							selectClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
 						},
 						tableHeader: {
 							searchBar: true

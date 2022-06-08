@@ -87,6 +87,7 @@ return [
         'management_media_delete' =>  'Management - Media - Delete',
     ],
     'settings' => [
+        'byte' => 'Byte',
         'basic_settings' => 'Basic Settings',
         'secure_settings' => 'Security Settings',
         'email_settings' => 'Email Settings',
@@ -336,7 +337,7 @@ return [
         'content_successfully_updated' => 'Content successfully edited.',
         'content_update_problem' => 'There was a problem editing the content.',
         'content_successfully_deleted' => 'Content successfully deleted.',
-        'content_delete_problem' => 'There was a problem updating the content.',
+        'content_delete_problem' => 'There was a problem deleting the content.',
         'service_list' => 'View our services on this page.',
         'service_detail' => 'View the corresponding service.',
         'contact' => 'Contact',
@@ -364,6 +365,9 @@ return [
         'preview' => 'Preview',
         'extension' => 'Extension',
         'size' => 'Size',
+        'general' => 'General',
+        'file_successfully_deleted' => 'File successfully deleted.',
+        'file_delete_problem' => 'There was a problem deleting the file.',
     ],
     'app' => [
         
