@@ -630,39 +630,38 @@ final class ContentController extends Controller {
 
                             if (isset($this->get('request')->files[$fileName]) !== false) {
 
-                                $maxSize = Base::config('app.upload_max_size');
+                                $uploadParameters = [];
+
                                 if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
-                                    $maxSize = $fileDetails['external_parameters']['max_size'];
+                                    $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
                                 }
 
-                                $acceptMime = Base::config('app.upload_accept');
                                 if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
-                                    $acceptMime = $fileDetails['attributes']['accept'];
+                                    $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
                                 }
 
-                                $convertFile = Base::config('app.upload_convert');
                                 if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
-                                    $convertFile = $fileDetails['external_parameters']['convert'];
+                                    $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
                                 }
 
-                                $fileDimension = ['original' => [0, 0]];
                                 if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
-                                    $fileDimension = $fileDetails['external_parameters']['size'];
+                                    $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
                                 }
 
-                                $uploadParameters = [
-                                    'max_size' => $maxSize,
-                                    'accept_mime' => $acceptMime,
-                                    'convert' => $convertFile,
-                                    'dimension' => $fileDimension,
-                                ];
-
-
-                                $upload = $fileController->directUpload($this->module, $this->get('request')->files[$fileName], $uploadParameters);
+                                $upload = $fileController
+                                    ->directUpload(
+                                        $this->module, 
+                                        $this->get('request')->files[$fileName], 
+                                        $uploadParameters
+                                    );
 
                                 if (count($upload)) {
 
-                                    // FROM HERE
+                                    foreach ($upload as $uploadId => $uploadDetails) {
+                                        $rollBack[] = $uploadId;
+                                        $insert[$fileName][] = $uploadId;
+                                    }
+                                    
 
                                 } else {
 
@@ -677,8 +676,6 @@ final class ContentController extends Controller {
                                 }
 
                                 foreach ($this->get('request')->files[$fileName] as $fileKey => $fileUp) {
-
-                                    
 
                                     $handle = new Upload($fileUp, Base::lang('lang.iso_code'));
                                     if ($handle->uploaded) {
@@ -844,9 +841,8 @@ final class ContentController extends Controller {
         }
 
         if (count($rollBack)) {
-            $controller = new FileController($this->get());
             foreach ($rollBack as $fileId) {
-                $controller->removeFileWithId($fileId);
+                $fileController->removeFileWithId($fileId);
             }
         }
 

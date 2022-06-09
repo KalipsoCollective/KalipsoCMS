@@ -550,15 +550,24 @@ final class FileController extends Controller {
                             ? $parameters['name'] 
                             : Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
 
-                        /*
+                        $fileDimension = ['original' => Base::config('app.upload_max_dimension')];
+
+                        if (isset($parameters['dimension']) !== false) {
+                            $fileDimension = $parameters['dimension'];
+                        }
+
                         foreach ($fileDimension as $dimensionTag => $dimensionVar) {
 
-                            $newFileName = $originalFileName . '_' . $dimensionTag;
-                            $handle->file_new_name_body   = $newFileName;
+                            $handle->file_new_name_body   = $fileNewName;
 
-                            if ($maxSize) $handle->file_max_size = $maxSize;
-                            if ($acceptMime) $handle->allowed = $acceptMime;
-                            if ($convertFile) $handle->image_convert = $convertFile;
+                            if (isset($parameters['max_size']) !== false) $handle->file_max_size = $parameters['max_size'];
+                            elseif ($maxSize = Base::config('app.upload_max_size')) $handle->file_max_size = $maxSize;
+
+                            if (isset($parameters['accept_mime']) !== false) $handle->allowed = $parameters['accept_mime'];
+                            elseif ($acceptMime = Base::config('app.upload_accept')) $handle->file_max_size = $maxSize;
+
+                            if (isset($parameters['convert']) !== false) $handle->image_convert = $parameters['convert'];
+                            elseif ($uploadConvert = Base::config('app.upload_convert')) $handle->image_convert = $uploadConvert;
 
                             if ($quality = Base::config('app.upload_webp_quality')) {
                                 $handle->webp_quality = $quality;
@@ -595,7 +604,7 @@ final class FileController extends Controller {
                                 break;
                                 
                             }
-                        } */
+                        }
 
                         $handle->file_new_name_body   = $fileNewName;
                         $handle->file_max_size = Base::config('app.upload_max_size');

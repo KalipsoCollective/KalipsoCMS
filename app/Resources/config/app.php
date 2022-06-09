@@ -18,6 +18,7 @@ return [
 	'upload_accept' => 'image/*',
 	'upload_convert' => 'webp', // jpg, png, webp, jpeg, gif, bmp
 	'upload_max_width' => 1920,
+	'upload_max_dimension' => [4096, 2160], // 4K
 	'upload_max_size' => 5242880 * 3, // 5 MB * 3 = 15 MB
 	'upload_png_quality' => 8, // without lossless = 0 or (1 - 9)
 	'upload_webp_quality' => 85, // without lossless = 0 or (1 - 100)
