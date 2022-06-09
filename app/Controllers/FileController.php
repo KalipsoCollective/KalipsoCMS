@@ -556,6 +556,10 @@ final class FileController extends Controller {
                             $fileDimension = $parameters['dimension'];
                         }
 
+                        $fileSize = 0;
+                        $uploadedFiles = [];
+                        $fileOutput = [];
+
                         foreach ($fileDimension as $dimensionTag => $dimensionVar) {
 
                             $handle->file_new_name_body   = $fileNewName;
@@ -593,66 +597,33 @@ final class FileController extends Controller {
                             
                             $handle->process($path);
                             if ($handle->processed) {
-                               
-                                $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
-                                $insertData[$dimensionTag] = $url;
+
+                                $url = $module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
+                                $fileOutput[$dimensionTag] = $url;
                                 $fileSize += filesize($handle->file_dst_pathname);
 
-                            } else {
-                                
-                                $errorOnUpload = $handle->error;
-                                break;
-                                
                             }
                         }
 
-                        $handle->file_new_name_body   = $fileNewName;
-                        $handle->file_max_size = Base::config('app.upload_max_size');
-                        $handle->allowed = array('image/*');
-                        $handle->image_convert = 'webp';
-                        if ($quality = Base::config('app.upload_webp_quality')) {
-                            $handle->webp_quality = $quality;
-                        }
-                        if ($quality = Base::config('app.upload_png_quality')) {
-                            $handle->webp_quality = $quality;
-                        }
-                        if ($quality = Base::config('app.upload_jpeg_quality')) {
-                            $handle->webp_quality = $quality;
-                        }
-
-                        if (Base::config('app.upload_max_width')) {
-                            $handle->image_resize         = true;
-                            $handle->image_x              = Base::config('app.upload_max_width');
-                            $handle->image_ratio_y        = true;
-                            $handle->image_ratio_crop     = true;
-                        }
-                        
-                        $handle->process($path);
-                        if ($handle->processed) {
-                            
-                            $url = $module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
-                            $fileOutput = [
-                                'original' => $url
-                            ];
+                        if ($fileSize) {
 
                             $insert = (new Files)->insert([
                                 'module' => $module,
-                                'size' => filesize($handle->file_dst_pathname),
+                                'size' => $fileSize,
                                 'mime' => $handle->file_dst_mime,
-                                'name' => $handle->file_dst_name_body,
+                                'name' => $fileNewName,
                                 'files' => json_encode($fileOutput)
                             ]);
 
                             if ($insert) {
                                 $uploadedFiles[$insert] = $fileOutput;
                             }
-
-                            $handle->clean();
                         }
+
+                        $handle->clean();
                     }
                 }
             }
-
         }
 
         return $uploadedFiles;
