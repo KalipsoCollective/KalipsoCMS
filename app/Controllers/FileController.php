@@ -539,6 +539,10 @@ final class FileController extends Controller {
 
         if (count($files)) {
 
+            if (isset($files['tmp_name']) !== false AND isset($files['size']) !== false) {
+                $files = [...$files];
+            }
+
             foreach ($files as $name => $file) {
 
                 foreach ($file as $f) {
@@ -548,7 +552,7 @@ final class FileController extends Controller {
 
                         $fileNewName = isset($parameters['name']) !== false 
                             ? $parameters['name'] 
-                            : Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
+                            : Base::stringShortener(Base::slugGenerator($handle->file_src_name), 200, false);
 
                         $fileDimension = ['original' => Base::config('app.upload_max_dimension')];
 
@@ -557,7 +561,6 @@ final class FileController extends Controller {
                         }
 
                         $fileSize = 0;
-                        $uploadedFiles = [];
                         $fileOutput = [];
 
                         foreach ($fileDimension as $dimensionTag => $dimensionVar) {

@@ -11,7 +11,6 @@ namespace KN\Controllers;
 
 use KN\Core\Controller;
 use KN\Model\Contents;
-use KN\Model\Files;
 use KN\Helpers\Base;
 use KN\Helpers\KalipsoTable;
 use \Verot\Upload\Upload;
@@ -605,12 +604,6 @@ final class ContentController extends Controller {
                 if (count($files)) {
 
                     $fileController = new FileController($this->get());
-
-                    if (! is_dir($path = Base::path('upload')))
-                        mkdir($path);
-
-                    if (! is_dir($path .= '/' . $this->module))
-                        mkdir($path);
 
                     foreach ($files as $fileName => $detail) {
 

@@ -415,6 +415,7 @@ nav.navbar-side .navbar-nav .nav-item + .nav-item {
     width: 100%;
     text-align: center;
     border-radius: 50%;
+    color: #fff;
     transition: all 0.3s ease-in-out;
 }
 
@@ -588,7 +589,6 @@ img.table-image {
     color: #fff;
     background: var(--bs-danger);
 }
-
 
 @media (max-width: 1200px) {
     nav.navbar-side {
