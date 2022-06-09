@@ -633,4 +633,11 @@ final class FileController extends Controller {
 
     }
 
+    public function getFilesInId($ids = []) {
+
+        return (new Files)->select('id, name, files')
+            ->in('id', $ids)
+            ->getAll();
+    }
+
 }

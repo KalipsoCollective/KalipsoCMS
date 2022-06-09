@@ -90,6 +90,7 @@ final class ContentController extends Controller {
             $fillDatas = json_decode($fill->input);
             $id = $fill->id;
             $idPrefix = 'content_edit';
+            $fileController = new FileController($this->get());
         }
 
         $moduleForm = '';
@@ -244,12 +245,7 @@ final class ContentController extends Controller {
                             $externalBadge = '';
                             if (! is_null($currentVal) AND is_array($currentVal) AND count($currentVal)) {
 
-                                $getFiles = (new Files)->select('id, name, files');
-                                if (is_array($currentVal) AND count($currentVal)) {
-                                    $getFiles->in('id', $currentVal);
-                                }
-
-                                $getFiles = $getFiles->getAll();
+                                $getFiles = $fileController->getFilesInId($currentVal);
                                 
                                 if (! empty($getFiles)) {
 
@@ -1087,6 +1083,96 @@ final class ContentController extends Controller {
                         }
                     }
                 }
+
+                /*
+                if (count($files)) {
+
+                    $fileController = new FileController($this->get());
+
+                    foreach ($files as $fileName => $detail) {
+
+                        foreach ($detail as $k => $fileDetails) {
+                        
+                            $requiredFile = false;
+                            $multipleFile = false;
+
+                            if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
+                                $requiredFile = true;
+                            }
+
+                            if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
+                                $multipleFile = true;
+                            }
+
+                            if (isset($this->get('request')->files[$fileName]) !== false) {
+
+                                $uploadParameters = [];
+
+                                if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
+                                    $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
+                                }
+
+                                if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
+                                    $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
+                                }
+
+                                if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
+                                    $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
+                                }
+
+                                if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
+                                    $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
+                                }
+
+                                $upload = $fileController
+                                    ->directUpload(
+                                        $this->module, 
+                                        $this->get('request')->files[$fileName], 
+                                        $uploadParameters
+                                    );
+
+                                if (count($upload)) {
+
+                                    foreach ($upload as $uploadId => $uploadDetails) {
+                                        $insert[$fileName][] = $uploadId;
+                                        $rollBack[] = $uploadId;
+                                    }
+                                    
+                                    $alerts[] = [
+                                        'status' => 'success',
+                                        'message' => Base::lang('base.file_successfully_uploaded')
+                                    ];
+
+                                } else {
+
+                                    $alerts[] = [
+                                        'status' => 'error',
+                                        'message' => Base::lang('base.file_upload_problem') 
+                                        . ' (' . Base::lang($fileDetails['label']) . ')'
+                                    ];
+                                    $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                        'class' => ['is-invalid'],
+                                    ];
+                                }
+
+                            } elseif ($requiredFile) {
+
+                                $alerts[] = [
+                                    'status' => 'warning',
+                                    'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
+                                ];
+                                $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                    'class' => ['is-invalid'],
+                                ];
+
+                            } else {
+
+                                $insert[$fileName] = [];
+                            }
+                        }
+                    }
+                }
+                */
 
                 // reassign old ID.
                 if (isset($arguments['manipulation']) !== false AND count($arguments['manipulation']) AND isset($requiredAreas['files']) !== false) {
