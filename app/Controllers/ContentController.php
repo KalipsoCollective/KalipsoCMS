@@ -98,6 +98,8 @@ final class ContentController extends Controller {
         $multilanguage = false;
         foreach ($module as $name => $input) {
 
+            $col = isset($widget['col']) !== false ? $widget['col'] : 'col-12 col-md-6';
+
             if ($name === 'widget') { // Relational content
 
                 foreach ($input as $key => $widget) {
@@ -129,7 +131,11 @@ final class ContentController extends Controller {
                     $requiredWidget = false;
                     if (isset($widget['attributes']) !== false) {
                         foreach ($widget['attributes'] as $attribute => $val) {
-                            $attributes .= $attribute . '="'.$val.'" ';
+                            if (in_array($attribute, ['required', 'selected', 'checked']) !== false) 
+                                $attributes .= $attribute . ' ';
+                            else
+                                $attributes .= $attribute . '="'.$val.'" ';
+
                             if ($attribute === 'required') {
                                 $requiredWidget = true;
                             }
@@ -147,8 +153,9 @@ final class ContentController extends Controller {
                     <div class="' . $col . '">
                         <div class="form-floating">
                             <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
-                                '.(! $requiredWidget ? '<option value=""></option>' : '').'
-                                <option value="0"'.$allSelected.'>' . Base::lang('base.all') . '</option>
+                                '.(! $requiredWidget ?
+                                 '<option value=""></option>' : 
+                                 '<option value=""'.$allSelected.'>' . Base::lang('base.all') . '</option>').'
                                 '.$options.'
                             </select>
                             <label for="' . $idPrefix . '_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
@@ -164,41 +171,44 @@ final class ContentController extends Controller {
 
                     $nameSubfix = $languages;
                     $moduleForm .= '
-                    <div class="col-12 bg-light p-1 rounded shadow shadow-sm border border-1 border-gray">
-                        <div class="row g-4 align-items-center">
-                            <div class="col-4 col-md-2">
-                                <div class="nav nav-pills flex-column" id="' . $idPrefix . '_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
-                                foreach ($languages as $i => $lang) {
-                                    $moduleForm .= '
-                                    <button class="nav-link'.($i===0 ? ' active' : '').'" id="' . $idPrefix . '_'.$name.'-tab" data-bs-toggle="pill" data-bs-target="#' . $idPrefix . '_'.$name.'-'.$lang.'" type="button" role="tab" aria-controls="' . $idPrefix . '_'.$name.'-'.$lang.'" aria-selected="'.($i===0 ? 'true' : 'false').'">
-                                        '.Base::lang('langs.'.$lang).'
-                                    </button>';
-                                }
-                        $moduleForm .= '
-                                </div>
+                    <div class="' . $col . ' kn-multilang-content">
+                        <div class="kn-multilang-content-switch">
+                            <div class="nav nav-pills flex-column" id="' . $idPrefix . '_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
+                            foreach ($languages as $i => $lang) {
+                                $moduleForm .= '
+                                <button class="nav-link'.($i===0 ? ' active' : '').'" id="' . $idPrefix . '_'.$name.'-tab-'.$lang.'" data-bs-toggle="pill" data-bs-target="#' . $idPrefix . '_'.$name.'-'.$lang.'" type="button" role="tab" aria-controls="' . $idPrefix . '_'.$name.'-'.$lang.'" aria-selected="'.($i===0 ? 'true' : 'false').'">
+                                    '.Base::lang('langs.'.$lang).'
+                                </button>';
+                            }
+                    $moduleForm .= '
                             </div>
-                            <div class="col-8 col-md-10 ps-0">
-                                <div class="tab-content" id="' . $idPrefix . '_'.$name.'-tablist">';
+                        </div>
+                        <div class="tab-content">';
                                 
                 }
+
+                $col = isset($input['col']) !== false ? $input['col'] : 'col-12 col-md-6';
 
                 foreach ($nameSubfix as $i => $lang) {
                     
                     $attributes = '';
                     if (isset($input['attributes']) !== false) {
                         foreach ($input['attributes'] as $attribute => $val) {
-                            $attributes .= $attribute . '="'.$val.'" ';
+                            if (in_array($attribute, ['required', 'checked', 'selected']) !== false)
+                                $attributes .= $attribute . ' ';
+                            else
+                                $attributes .= $attribute . '="'.$val.'" ';
+                            
                         }
                     }
 
                     $currentVal = null;
-                    $col = 'col-12 col-md-6';
                     $inputName = is_null($lang) ? $name : $name.'['.$lang.']';
                     // multilingual
                     if (! is_null($lang)) {
                         $col = 'col';
                         $moduleForm .= '
-                        <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="' . $idPrefix . '_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="' . $idPrefix . '_'.$name.'-tab">';
+                        <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="' . $idPrefix . '_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="' . $idPrefix . '_'.$name.'-tab-'.$lang.'">';
 
                         if (isset($fillDatas->{$name}->{$lang}) !== false) {
                             $currentVal = $fillDatas->{$name}->{$lang};
@@ -209,10 +219,6 @@ final class ContentController extends Controller {
                         if (isset($fillDatas->{$name}) !== false) {
                             $currentVal = $fillDatas->{$name};
                         }
-                    }
-
-                    if (isset($input['col']) !== false) {
-                        $col = $input['col'];
                     }
 
                     $requiredBadge = '';
@@ -280,7 +286,7 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="">
-                                    <label for="content_' . $name . $lang . '" class="form-label small text-muted m-0">' . $externalBadge . Base::lang($input['label']) . $requiredBadge . '</label>
+                                    <label for="' . $idPrefix . '_' . $name . $lang . '" class="form-label small text-muted m-0">' . $externalBadge . Base::lang($input['label']) . $requiredBadge . '</label>
                                     <input class="form-control" '.$attributes.'name="' . $inputName . (isset($input['attributes']['multiple']) !== false ? '[]' : '') . '" id="' . $idPrefix . '_' . $name . $lang . '" type="file">
                                 </div>
                             </div>';
@@ -301,7 +307,7 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
-                                    <select class="form-select" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($widget['label']) . '">
+                                    <select class="form-select" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '">
                                         '.$options.'
                                     </select>
                                     <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
@@ -337,8 +343,6 @@ final class ContentController extends Controller {
                 if (isset($input['multilanguage']) !== false AND $input['multilanguage']) {
                     $multilanguage = true;
                     $moduleForm .= '
-                                </div>
-                            </div>  
                         </div>
                     </div>';
                 }

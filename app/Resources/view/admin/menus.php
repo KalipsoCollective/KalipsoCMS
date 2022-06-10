@@ -23,7 +23,7 @@
 		if ($this->authority('management/menus/add')) {
 		?>
 			<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-dialog modal-dialog-centered modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="addModalLabel"><?php echo \KN\Helpers\Base::lang('base.add_new'); ?></h5>
@@ -44,19 +44,12 @@
 										<label for="roleName"><?php echo \KN\Helpers\Base::lang('base.name'); ?></label>
 									</div>
 								</div>
-								<div class="col-12">
-									<div class="form-floating">
-										<select class="form-select" id="roleRoutes" required multiple style="height: 300px" name="routes[]" aria-label="<?php echo \KN\Helpers\Base::lang('base.routes'); ?>">
-											<?php
-											/*
-											foreach ($roles as $route => $detail) {
-												echo '
-												<option value="' . $route . '"' . ($detail['default'] ? ' selected' : '') . '>
-													' . \KN\Helpers\Base::lang($detail['name']) . '
-												</option>';
-											}*/	?>
-										</select>
-										<label for="roleRoutes"><?php echo \KN\Helpers\Base::lang('base.routes'); ?></label>
+								<div class="row kn-menu-drag">
+									<div class="col-12">
+										<div class="kn-menu-item">
+											<div class="col-12">
+											</div>
+										</div>
 									</div>
 								</div>
 							</form>
@@ -73,7 +66,7 @@
 		if ($this->authority('management/menus/:id')) {
 		?>
 			<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-dialog modal-dialog-centered modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="editModalLabel"><?php echo \KN\Helpers\Base::lang('base.view'); ?></h5>
@@ -120,7 +113,7 @@
 		if ($this->authority('management/menus/:id/delete')) {
 		?>
 			<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-dialog modal-dialog-centered modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="deleteModalLabel"><?php echo \KN\Helpers\Base::lang('base.delete_role'); ?></h5>

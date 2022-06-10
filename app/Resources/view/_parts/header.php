@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="<?php echo KN\Helpers\Base::lang('lang.iso_code'); ?>" dir="<?php echo KN\Helpers\Base::lang('lang.dir'); ?>">
+<html lang="<?php echo KN\Helpers\Base::lang('lang.code'); ?>" dir="<?php echo KN\Helpers\Base::lang('lang.dir'); ?>">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
