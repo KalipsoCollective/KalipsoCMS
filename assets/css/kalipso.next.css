@@ -339,6 +339,7 @@ nav.navbar-side {
     justify-content: flex-start;
     align-items: flex-start;
     transition: 0.2s ease-out;
+    overflow-y: auto;
 }
 
 nav.navbar-side .container-fluid {
