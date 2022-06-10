@@ -85,6 +85,12 @@ return [
         'management_media_detail' =>  'Management - Media - Detail',
         'management_media_update' =>  'Management - Media - Edit',
         'management_media_delete' =>  'Management - Media - Delete',
+        'management_menu' =>  'Management - Menus',
+        'management_menu_list' =>  'Management - Menus - List',
+        'management_menu_add' =>  'Management - Menus - Add',
+        'management_menu_detail' =>  'Management - Menus - Detail',
+        'management_menu_update' =>  'Management - Menus - Edit',
+        'management_menu_delete' =>  'Management - Menus - Delete',
     ],
     'settings' => [
         'byte' => 'Byte',
@@ -368,6 +374,9 @@ return [
         'general' => 'General',
         'file_successfully_deleted' => 'File successfully deleted.',
         'file_delete_problem' => 'There was a problem deleting the file.',
+        'menus' => 'Menus',
+        'menus_message' => 'This is the page where you can manage the menus.',
+        'other' => 'Other',
     ],
     'app' => [
         

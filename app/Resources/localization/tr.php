@@ -85,6 +85,12 @@ return [
         'management_media_detail' =>  'Yönetim - Medya Ortamı - Detay',
         'management_media_update' =>  'Yönetim - Medya Ortamı - Düzenle',
         'management_media_delete' =>  'Yönetim - Medya Ortamı - Sil',
+        'management_menu' =>  'Yönetim - Menüler',
+        'management_menu_list' =>  'Yönetim - Menüler - Liste',
+        'management_menu_add' =>  'Yönetim - Menüler - Ekle',
+        'management_menu_detail' =>  'Yönetim - Menüler - Detay',
+        'management_menu_update' =>  'Yönetim - Menüler - Düzenle',
+        'management_menu_delete' =>  'Yönetim - Menüler - Sil',
     ],
     'settings' => [
         'basic_settings' => 'Temel Ayarlar',
@@ -368,6 +374,9 @@ return [
         'general' => 'Genel',
         'file_successfully_deleted' => 'Dosya başarıyla silindi.',
         'file_delete_problem' => 'Dosya silinirken bir sorun oluştu.',
+        'menus' => 'Menüler',
+        'menus_message' => 'Menüleri yönetebileceğiniz sayfadır.',
+        'other' => 'Diğer',
     ],
     'app' => [
         

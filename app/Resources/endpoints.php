@@ -137,6 +137,30 @@ return [
 		'default' => false,
 		'name' => 'auth.management_media_delete',
 	],
+	'management/menus' => [
+		'default' => false,
+		'name' => 'auth.management_menu',
+	],
+	'management/menus/list' => [
+		'default' => false,
+		'name' => 'auth.management_menu_list',
+	],
+	'management/menus/add' => [
+		'default' => false,
+		'name' => 'auth.management_menu_add',
+	],
+	'management/menus/:id' => [
+		'default' => false,
+		'name' => 'auth.management_menu_detail',
+	],
+	'management/menus/:id/update' => [
+		'default' => false,
+		'name' => 'auth.management_menu_update',
+	],
+	'management/menus/:id/delete' => [
+		'default' => false,
+		'name' => 'auth.management_menu_delete',
+	],
 	'management/forms/:form' => [
 		'default' => false,
 		'name' => 'auth.management_forms',

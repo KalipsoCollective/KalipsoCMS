@@ -88,8 +88,6 @@ try {
             ['GET,POST', '/forms/:form/:id/delete', 'FormController@formDelete', ['Auth@with']],
             ['GET,POST', '/forms/:form/:id/update', 'FormController@formUpdate', ['Auth@with']],
 
-            /*
-
             // Menus
             ['GET,POST', '/menus', 'MenuController@menus', ['Auth@with']],
             ['GET,POST', '/menus/list', 'MenuController@menuList', ['Auth@with']],
@@ -97,8 +95,6 @@ try {
             ['GET,POST', '/menus/:id', 'MenuController@menuDetail', ['Auth@with']],
             ['GET,POST', '/menus/:id/delete', 'MenuController@menuDelete', ['Auth@with']],
             ['GET,POST', '/menus/:id/update', 'MenuController@menuUpdate', ['Auth@with']],
-
-            */
 
             // Settings
             ['GET,POST', '/settings', 'AdminController@settings', ['Auth@with']],

@@ -63,34 +63,6 @@
                             }
                         }
 
-                        if ($this->authority('/management/:module')) {
-
-                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.modules') . '</li>';
-                            foreach ($modules as $name => $details) {
-                                ?>
-                                <li class="nav-item">
-                                    <a class="nav-link<?php echo $this->currentLink('/management/' . $name); ?>" href="<?php echo $this->url('/management/' . $name); ?>">
-                                        <i class="<?php echo $details['icon']; ?> nav-icon"></i> <?php echo KN\Helpers\Base::lang($details['name']); ?>
-                                    </a>
-                                </li>
-                                <?php
-                            }
-                        }
-
-                        if ($this->authority('/management/:module')) {
-
-                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.modules') . '</li>';
-                            foreach ($modules as $name => $details) {
-                                ?>
-                                <li class="nav-item">
-                                    <a class="nav-link<?php echo $this->currentLink('/management/' . $name); ?>" href="<?php echo $this->url('/management/' . $name); ?>">
-                                        <i class="<?php echo $details['icon']; ?> nav-icon"></i> <?php echo KN\Helpers\Base::lang($details['name']); ?>
-                                    </a>
-                                </li>
-                                <?php
-                            }
-                        }
-
                         if ($this->authority('/management/forms/:form')) {
 
                             echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.forms') . '</li>';
@@ -106,13 +78,24 @@
                         } 
 
                         if ($this->authority('/management/media')) {
+
                             echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.media') . '</li>';
-                        }
-                        if ($this->authority('/management/media')) {
-                        ?>
+                            ?>
                             <li class="nav-item">
                                 <a class="nav-link<?php echo $this->currentLink('/management/media'); ?>" href="<?php echo $this->url('/management/media'); ?>">
                                     <i class="ti ti-cloud nav-icon"></i> <?php echo KN\Helpers\Base::lang('base.media'); ?>
+                                </a>
+                            </li>
+                        <?php
+                        }
+
+                        if ($this->authority('/management/menus')) {
+
+                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.other') . '</li>';
+                            ?>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $this->currentLink('/management/menus'); ?>" href="<?php echo $this->url('/management/menus'); ?>">
+                                    <i class="ti ti-sitemap nav-icon"></i> <?php echo KN\Helpers\Base::lang('base.menus'); ?>
                                 </a>
                             </li>
                         <?php
