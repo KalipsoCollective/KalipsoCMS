@@ -49,6 +49,15 @@ a {
     text-decoration: none !important;
 }
 
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0.3rem 0.5rem rgb(0 0 0 / 10%);
+    border-color: var(--bs-blue);
+}
+
+.form-control, .form-select {
+    border-width: 2px;
+}
+
 .wrap {
     min-height: calc(100vh - 4.53rem);
     padding-top: 4rem;
@@ -590,6 +599,39 @@ img.table-image {
     color: #fff;
     background: var(--bs-danger);
 }
+
+.kn-multilang-content .tab-content {
+    padding: 0.2rem;
+    background: #e5e5e5;
+    border-radius: 0.2rem;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.kn-multilang-content .kn-multilang-content-switch {
+    padding: 0;
+}
+
+.kn-multilang-content .kn-multilang-content-switch .nav {
+}
+
+.kn-multilang-content .kn-multilang-content-switch .nav .nav-link {
+    padding: 0.1rem 0.5rem;
+    font-size: 0.8rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    color: #7e7d7d;
+}
+
+.kn-multilang-content .kn-multilang-content-switch .nav .nav-link.active {
+    color: #919191;
+    background: #e5e5e5;
+}
+
+.ql-toolbar, .ql-container {
+    background: #fff;
+}
+
 
 @media (max-width: 1200px) {
     nav.navbar-side {

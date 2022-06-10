@@ -47,7 +47,7 @@
                             </li>
                             <?php
                             if ($this->authority('auth/logout')) { ?>
-                                <div class="vr"></div>
+                                <li class="vr"></li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="<?php echo $this->url('/auth/logout'); ?>">
                                         <?php echo KN\Helpers\Base::lang('base.logout'); ?>

@@ -146,7 +146,7 @@
                                     <i class="ti ti-user"></i>
                                 </a>
                             </li>
-                            <div class="vr"></div>
+                            <li class="vr"></li>
                             <li class="nav-item danger">
                                 <a title="<?php echo KN\Helpers\Base::lang('base.logout'); ?>" data-bs-toggle="tooltip" data-bs-placement="left" class="nav-link" href="<?php echo $this->url('/auth/logout'); ?>">
                                     <i class="ti ti-power"></i>

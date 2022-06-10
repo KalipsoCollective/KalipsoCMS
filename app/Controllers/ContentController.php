@@ -98,7 +98,7 @@ final class ContentController extends Controller {
         $multilanguage = false;
         foreach ($module as $name => $input) {
 
-            $col = isset($widget['col']) !== false ? $widget['col'] : 'col-12 col-md-6';
+            $col = isset($input['col']) !== false ? $input['col'] : 'col-12 col-md-6';
 
             if ($name === 'widget') { // Relational content
 
@@ -131,6 +131,7 @@ final class ContentController extends Controller {
                     $requiredWidget = false;
                     if (isset($widget['attributes']) !== false) {
                         foreach ($widget['attributes'] as $attribute => $val) {
+
                             if (in_array($attribute, ['required', 'selected', 'checked']) !== false) 
                                 $attributes .= $attribute . ' ';
                             else
@@ -152,7 +153,7 @@ final class ContentController extends Controller {
                     $moduleForm .= '
                     <div class="' . $col . '">
                         <div class="form-floating">
-                            <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '" placeholder="' . Base::lang($widget['label']) . '">
+                            <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '">
                                 '.(! $requiredWidget ?
                                  '<option value=""></option>' : 
                                  '<option value=""'.$allSelected.'>' . Base::lang('base.all') . '</option>').'
@@ -173,7 +174,7 @@ final class ContentController extends Controller {
                     $moduleForm .= '
                     <div class="' . $col . ' kn-multilang-content">
                         <div class="kn-multilang-content-switch">
-                            <div class="nav nav-pills flex-column" id="' . $idPrefix . '_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
+                            <div class="nav nav-pills" id="' . $idPrefix . '_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
                             foreach ($languages as $i => $lang) {
                                 $moduleForm .= '
                                 <button class="nav-link'.($i===0 ? ' active' : '').'" id="' . $idPrefix . '_'.$name.'-tab-'.$lang.'" data-bs-toggle="pill" data-bs-target="#' . $idPrefix . '_'.$name.'-'.$lang.'" type="button" role="tab" aria-controls="' . $idPrefix . '_'.$name.'-'.$lang.'" aria-selected="'.($i===0 ? 'true' : 'false').'">

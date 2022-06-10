@@ -157,6 +157,7 @@ return [
 		],
 		'inputs' => [
 			'title' => [
+				'col' => 'col-12 col-md-4',
 				'multilanguage' => true,
 				'label' => 'base.title',
 				'type' => 'input',
@@ -166,6 +167,7 @@ return [
 				],
 			],
 			'slug' => [
+				'col' => 'col-12 col-md-4',
 				'multilanguage' => true,
 				'label' => 'base.slug',
 				'type' => 'input',
@@ -175,21 +177,33 @@ return [
 				],
 			],
 			'description' => [
+				'col' => 'col-12 col-md-4',
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'input',
 				'attributes' => ['required' => 'true'],
 			],
 			'content' => [
+				'col' => 'col-12 col-lg-10',
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'editor',
 				'attributes' => ['required' => 'true'],
 			],
+			'widget' => [
+				'category' => [
+					'label' => 'base.categories',
+					'type' => 'select',
+					'source' => ['getModuleDatas', ['categories']],
+					'col' => 'col-12 col-lg-2 pt-4',
+					'use_for_view' => 'title',
+					'attributes' => ['required' => 'true'],
+				]
+			],
 			'header_image' => [
 				'label' => 'base.header_image',
 				'type' => 'file',
-				'col' => 'col-12 col-md-8',
+				'col' => 'col-12',
 				'attributes' => [
 					'accept' => 'image/*',
 				],
@@ -199,16 +213,7 @@ return [
 					],
 				]
 			],
-			'widget' => [
-				'category' => [
-					'label' => 'base.categories',
-					'type' => 'select',
-					'source' => ['getModuleDatas', ['categories']],
-					'col' => 'col-12 col-md-4',
-					'use_for_view' => 'title',
-					'attributes' => ['required' => 'true'],
-				]
-			],
+			
 		]
 	],
 	'blog' => [
