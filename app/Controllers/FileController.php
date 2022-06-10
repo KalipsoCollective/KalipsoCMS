@@ -545,7 +545,15 @@ final class FileController extends Controller {
 
             foreach ($files as $name => $file) {
 
-                foreach ($file as $f) {
+                if (isset($file[0]) === false) {
+                    $file = [$file];
+                }
+                
+                foreach ($file as $k => $f) {
+
+                    if (is_string($k) AND is_string($f)) {
+                        $f = $file;
+                    }
 
                     $handle = new Upload($f, Base::lang('lang.iso_code'));
                     if ($handle->uploaded) {

@@ -919,14 +919,10 @@ final class ContentController extends Controller {
                 // Files
                 if (count($files)) {
 
-                    if (! is_dir($path = Base::path('upload')))
-                        mkdir($path);
-
-                    if (! is_dir($path .= '/' . $this->module))
-                        mkdir($path);
+                    $fileController = new FileController($this->get());
 
                     foreach ($files as $fileName => $fileDetails) {
-
+                    
                         $requiredFile = false;
                         $multipleFile = false;
 
@@ -940,123 +936,53 @@ final class ContentController extends Controller {
 
                         if (isset($this->get('request')->files[$fileName]) !== false) {
 
-                            foreach ($this->get('request')->files[$fileName] as $fileKey => $fileUp) {
+                            $uploadParameters = [];
 
-                                $maxSize = Base::config('app.upload_max_size');
-                                if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
-                                    $maxSize = $fileDetails['external_parameters']['max_size'];
+                            if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
+                                $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
+                            }
+
+                            if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
+                                $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
+                            }
+
+                            if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
+                                $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
+                            }
+
+                            if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
+                                $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
+                            }
+
+                            $upload = $fileController
+                                ->directUpload(
+                                    $this->module, 
+                                    $this->get('request')->files[$fileName], 
+                                    $uploadParameters
+                                );
+
+                            if (count($upload)) {
+
+                                foreach ($upload as $uploadId => $uploadDetails) {
+                                    $update[$fileName][] = $uploadId;
+                                    $rollBack[] = $uploadId;
                                 }
+                                
+                                $alerts[] = [
+                                    'status' => 'success',
+                                    'message' => Base::lang('base.file_successfully_uploaded')
+                                ];
 
-                                $acceptMime = Base::config('app.upload_accept');
-                                if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
-                                    $acceptMime = $fileDetails['attributes']['accept'];
-                                }
+                            } else {
 
-                                $convertFile = Base::config('app.upload_convert');
-                                if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
-                                    $convertFile = $fileDetails['external_parameters']['convert'];
-                                }
-
-                                $fileDimension = ['original' => [0, 0]];
-                                if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
-                                    $fileDimension = $fileDetails['external_parameters']['size'];
-                                }
-
-                                $handle = new Upload($fileUp, Base::lang('lang.iso_code'));
-                                if ($handle->uploaded) {
-
-                                    $updateData = [];
-                                    $errorOnUpload = false;
-
-                                    $originalFileName = Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 190, false);
-
-                                    foreach ($fileDimension as $dimensionTag => $dimensionVar) {
-
-                                        $newFileName = $originalFileName . '_' . $dimensionTag;
-                                        $handle->file_new_name_body   = $newFileName;
-
-                                        if ($maxSize) $handle->file_max_size = $maxSize;
-                                        if ($acceptMime) $handle->allowed = $acceptMime;
-                                        if ($convertFile) $handle->image_convert = $convertFile;
-
-                                        if ($quality = Base::config('app.upload_webp_quality')) {
-                                            $handle->webp_quality = $quality;
-                                        }
-
-                                        if ($quality = Base::config('app.upload_png_quality')) {
-                                            $handle->webp_quality = $quality;
-                                        }
-
-                                        if ($quality = Base::config('app.upload_jpeg_quality')) {
-                                            $handle->webp_quality = $quality;
-                                        }
-
-                                        $handle->image_resize           = true;
-                                        $handle->image_ratio            = true;
-                                        $handle->image_ratio_crop       = true;
-
-                                        if ($dimensionVar[0]) 
-                                            $handle->image_x      = $dimensionVar[0];
-
-                                        if ($dimensionVar[1]) 
-                                            $handle->image_y      = $dimensionVar[1];
-                                        
-                                        $handle->process($path);
-                                        if ($handle->processed) {
-                                           
-                                            $url = $this->module . '/' . $handle->file_dst_name_body . '.' . $handle->file_dst_name_ext;
-                                            $updateData[$dimensionTag] = $url;
-
-                                        } else {
-                                            
-                                            $errorOnUpload = $handle->error;
-                                            break;
-                                            
-                                        }
-                                    }
-
-                                    if ($errorOnUpload === false) {
-
-                                        $alerts[] = [
-                                            'status' => 'success',
-                                            'message' => Base::lang('base.file_successfully_uploaded') . ' (' . $originalFileName . ')'
-                                        ];
-
-                                        $fileId = (new Files)->insert([
-                                            'module' => $this->module,
-                                            'size' => filesize($handle->file_dst_pathname),
-                                            'mime' => $handle->file_dst_mime,
-                                            'name' => $originalFileName,
-                                            'files' => json_encode($updateData)
-                                        ]);
-
-                                        $rollBack[] = $fileId;
-                                        $update[$fileName][] = $fileId;
-
-                                    } else {
-                                        $alerts[] = [
-                                            'status' => 'error',
-                                            'message' => Base::lang('base.file_upload_problem') 
-                                            . (isset($handle->error) !== false ? ' (' . Base::lang($fileDetails['label']) . ' -> ' . $errorOnUpload . ')' : '')
-                                        ];
-                                        $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
-                                            'class' => ['is-invalid'],
-                                        ];
-                                    }
-                                    $handle->clean();
-
-                                } else {
-
-                                    $alerts[] = [
-                                        'status' => 'warning',
-                                        'message' => Base::lang('base.file_not_uploaded') . ' (' . Base::lang($fileDetails['label']) . ')'
-                                    ];
-                                    $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
-                                        'class' => ['is-invalid'],
-                                    ];
-
-                                }
-
+                                $alerts[] = [
+                                    'status' => 'error',
+                                    'message' => Base::lang('base.file_upload_problem') 
+                                    . ' (' . Base::lang($fileDetails['label']) . ')'
+                                ];
+                                $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                    'class' => ['is-invalid'],
+                                ];
                             }
 
                             if ($multipleFile AND is_array(${'current_file_'.$fileName})) {
@@ -1065,7 +991,6 @@ final class ContentController extends Controller {
                                     (isset($update[$fileName]) !== false ? $update[$fileName] : [])
                                 );
                             }
-
 
                         } elseif ($requiredFile AND !${'current_file_'.$fileName}) {
 
@@ -1083,96 +1008,6 @@ final class ContentController extends Controller {
                         }
                     }
                 }
-
-                /*
-                if (count($files)) {
-
-                    $fileController = new FileController($this->get());
-
-                    foreach ($files as $fileName => $detail) {
-
-                        foreach ($detail as $k => $fileDetails) {
-                        
-                            $requiredFile = false;
-                            $multipleFile = false;
-
-                            if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
-                                $requiredFile = true;
-                            }
-
-                            if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
-                                $multipleFile = true;
-                            }
-
-                            if (isset($this->get('request')->files[$fileName]) !== false) {
-
-                                $uploadParameters = [];
-
-                                if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
-                                    $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
-                                }
-
-                                if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
-                                    $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
-                                }
-
-                                if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
-                                    $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
-                                }
-
-                                if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
-                                    $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
-                                }
-
-                                $upload = $fileController
-                                    ->directUpload(
-                                        $this->module, 
-                                        $this->get('request')->files[$fileName], 
-                                        $uploadParameters
-                                    );
-
-                                if (count($upload)) {
-
-                                    foreach ($upload as $uploadId => $uploadDetails) {
-                                        $insert[$fileName][] = $uploadId;
-                                        $rollBack[] = $uploadId;
-                                    }
-                                    
-                                    $alerts[] = [
-                                        'status' => 'success',
-                                        'message' => Base::lang('base.file_successfully_uploaded')
-                                    ];
-
-                                } else {
-
-                                    $alerts[] = [
-                                        'status' => 'error',
-                                        'message' => Base::lang('base.file_upload_problem') 
-                                        . ' (' . Base::lang($fileDetails['label']) . ')'
-                                    ];
-                                    $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
-                                        'class' => ['is-invalid'],
-                                    ];
-                                }
-
-                            } elseif ($requiredFile) {
-
-                                $alerts[] = [
-                                    'status' => 'warning',
-                                    'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
-                                ];
-                                $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
-                                    'class' => ['is-invalid'],
-                                ];
-
-                            } else {
-
-                                $insert[$fileName] = [];
-                            }
-                        }
-                    }
-                }
-                */
 
                 // reassign old ID.
                 if (isset($arguments['manipulation']) !== false AND count($arguments['manipulation']) AND isset($requiredAreas['files']) !== false) {
