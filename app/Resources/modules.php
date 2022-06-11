@@ -917,6 +917,7 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.title',
 				'type' => 'input',
+				'col' => 'col-12 col-md-6',
 				'attributes' => [
 					'required' => 'true',
 					'data-kn-change' => Base::base('/management/services/slug')
@@ -926,6 +927,7 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.slug',
 				'type' => 'input',
+				'col' => 'col-12 col-md-6',
 				'attributes' => [
 					'required' => 'true',
 					'data-kn-change' => Base::base('/management/services/slug')
@@ -935,18 +937,36 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'input',
+				'col' => 'col-12 col-md-8',
 				'attributes' => ['required' => 'true'],
+			],
+			'icon' => [
+				'label' => 'base.icon',
+				'type' => 'input',
+				'attributes' => ['required' => 'true'],
+				'col' => 'col-12 col-md-2 pt-4',
+			],
+			'widget' => [
+				'countries' => [
+					'label' => 'base.countries',
+					'type' => 'select',
+					'source' => ['getModuleDatas', ['countries']],
+					'col' => 'col-12 col-md-2 pt-4',
+					'use_for_view' => 'title',
+					'attributes' => ['required' => 'true'],
+				]
 			],
 			'content' => [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'editor',
+				'col' => 'col-12',
 				'attributes' => ['required' => 'true'],
 			],
 			'header_image' => [
 				'label' => 'base.header_image',
 				'type' => 'file',
-				'col' => 'col-12 col-md-4',
+				'col' => 'col-12',
 				'attributes' => [
 					'accept' => 'image/*',
 				],
@@ -954,22 +974,6 @@ return [
 					'size' => [
 						'original' => [1920, 400]
 					],
-				]
-			],
-			'icon' => [
-				'label' => 'base.icon',
-				'type' => 'input',
-				'attributes' => ['required' => 'true'],
-				'col' => 'col-12 col-md-4',
-			],
-			'widget' => [
-				'countries' => [
-					'label' => 'base.countries',
-					'type' => 'select',
-					'source' => ['getModuleDatas', ['countries']],
-					'col' => 'col-12 col-md-4',
-					'use_for_view' => 'title',
-					'attributes' => ['required' => 'true'],
 				]
 			],
 		]
