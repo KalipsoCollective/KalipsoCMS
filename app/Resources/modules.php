@@ -1079,23 +1079,25 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.title',
 				'type' => 'input',
+				'col' => 'col-12 col-md-10',
 				'attributes' => [
 					'required' => 'true',
 				],
+			],
+			'icon' => [
+				'label' => 'base.icon',
+				'type' => 'input',
+				'col' => 'col-12 col-md-2 pt-4',
+				'attributes' => [
+					'required' => 'true',
+				]
 			],
 			'content' => [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'editor',
+				'col' => 'col-12',
 				'attributes' => ['required' => 'true'],
-			],
-			'icon' => [
-				'label' => 'base.icon',
-				'type' => 'input',
-				'col' => 'col-12 d-flex align-items-center justify-content-center',
-				'attributes' => [
-					'required' => 'true',
-				]
 			],
 		]
 	],
