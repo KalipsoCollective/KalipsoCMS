@@ -390,6 +390,7 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.title',
 				'type' => 'input',
+				'col' => 'col-12 col-md-4',
 				'attributes' => [
 					'required' => 'true',
 					'data-kn-change' => Base::base('/management/blog/slug')
@@ -399,6 +400,7 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.slug',
 				'type' => 'input',
+				'col' => 'col-12 col-md-4',
 				'attributes' => [
 					'required' => 'true',
 					'data-kn-change' => Base::base('/management/blog/slug')
@@ -408,18 +410,30 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'input',
+				'col' => 'col-12 col-md-4',
 				'attributes' => ['required' => 'true'],
 			],
 			'content' => [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'editor',
+				'col' => 'col-12 col-md-10',
 				'attributes' => ['required' => 'true'],
+			],
+			'widget' => [
+				'category' => [
+					'label' => 'base.categories',
+					'type' => 'select',
+					'source' => ['getModuleDatas', ['categories']],
+					'col' => 'col-12 col-md-2 pt-3',
+					'use_for_view' => 'title',
+					'attributes' => ['required' => 'true'],
+				]
 			],
 			'header_image' => [
 				'label' => 'base.header_image',
 				'type' => 'file',
-				'col' => 'col-12 col-md-8',
+				'col' => 'col-12',
 				'attributes' => [
 					'accept' => 'image/*',
 				],
@@ -427,16 +441,6 @@ return [
 					'size' => [
 						'original' => [1920, 400]
 					],
-				]
-			],
-			'widget' => [
-				'category' => [
-					'label' => 'base.categories',
-					'type' => 'select',
-					'source' => ['getModuleDatas', ['categories']],
-					'col' => 'col-12 col-md-4',
-					'use_for_view' => 'title',
-					'attributes' => ['required' => 'true'],
 				]
 			],
 		]
@@ -554,24 +558,27 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.title',
 				'type' => 'input',
+				'col' => 'col-12 col-md-6',
 				'attributes' => [
 					'required' => 'true',
 				],
+			],
+			'color' => [
+				'label' => 'base.color',
+				'type' => 'color',
+				'col' => 'col-12 col-md-6 pt-4',
+				'attributes' => [
+					'required' => 'true',
+				]
 			],
 			'description' => [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'textarea',
+				'col' => 'col-12',
 				'attributes' => ['required' => 'true'],
 			],
-			'color' => [
-				'label' => 'base.color',
-				'type' => 'color',
-				'col' => 'col-6 d-flex mx-auto',
-				'attributes' => [
-					'required' => 'true',
-				]
-			],
+			
 		]
 	],
 	'gallery' => [
