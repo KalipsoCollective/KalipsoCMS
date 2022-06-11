@@ -377,6 +377,8 @@ return [
         'menus' => 'Menüler',
         'menus_message' => 'Menüleri yönetebileceğiniz sayfadır.',
         'other' => 'Diğer',
+        'direct_link' => 'Direkt Bağlantı',
+        'parameter' => 'Parametre',
     ],
     'app' => [
         

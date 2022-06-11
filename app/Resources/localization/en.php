@@ -377,6 +377,8 @@ return [
         'menus' => 'Menus',
         'menus_message' => 'This is the page where you can manage the menus.',
         'other' => 'Other',
+        'direct_link' => 'Direct Link',
+        'parameter' => 'Parameter',
     ],
     'app' => [
         
