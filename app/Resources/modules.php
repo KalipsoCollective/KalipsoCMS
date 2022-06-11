@@ -711,6 +711,7 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.title',
 				'type' => 'input',
+				'col' => 'col-12 col-md-4',
 				'attributes' => [
 					'required' => 'true',
 				],
@@ -719,6 +720,7 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'textarea',
+				'col' => 'col-12 col-md-8',
 				'attributes' => ['required' => 'true'],
 			],
 			'images' => [
