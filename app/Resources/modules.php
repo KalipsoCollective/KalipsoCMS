@@ -1274,19 +1274,15 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.title',
 				'type' => 'input',
+				'col' => 'col-12 col-md-8',
 				'attributes' => [
 					'required' => 'true',
 				],
 			],
-			'content' => [
-				'multilanguage' => true,
-				'label' => 'base.description',
-				'type' => 'editor',
-				'attributes' => ['required' => 'true'],
-			],
 			'flag' => [
 				'label' => 'base.flag',
 				'type' => 'file',
+				'col' => 'col-12 col-md-2',
 				'attributes' => [
 					'accept' => 'image/*',
 					'required' => 'true',
@@ -1300,6 +1296,7 @@ return [
 			'campus_image' => [
 				'label' => 'base.image',
 				'type' => 'file',
+				'col' => 'col-12 col-md-2',
 				'attributes' => [
 					'accept' => 'image/*',
 					'required' => 'true',
@@ -1311,6 +1308,13 @@ return [
 					// 'max_size' => 1024, // 1KB
 					// 'convert' => 'png',
 				]
+			],
+			'content' => [
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'editor',
+				'col' => 'col-12',
+				'attributes' => ['required' => 'true'],
 			],
 		]
 	],
