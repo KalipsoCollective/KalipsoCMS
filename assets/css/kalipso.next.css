@@ -632,6 +632,12 @@ img.table-image {
     background: #fff;
 }
 
+.kn-menu-item {
+    background: #ebebeb;
+    padding: 0.2rem;
+    border-radius: 0.2rem;
+}
+
 
 @media (max-width: 1200px) {
     nav.navbar-side {
