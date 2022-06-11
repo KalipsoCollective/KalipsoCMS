@@ -46,51 +46,68 @@
 								</div>
 								<div class="col-12 col-md-1">
 									<div class="d-grid">
-										<button class="btn btn-primary btn-lg" type="button">
+										<button class="btn btn-primary btn-lg" type="button" data-kn-action="manipulation" data-kn-manipulation='<?php
+										echo json_encode([
+											'manipulation' => [
+												'#addModal .kn-menu-drag' => [
+													'html_append' => '
+														<div class="kn-menu-item">
+															<div class="row g-1">
+																<div class="col-12 col-md-11">
+																	<div class="row g-1">
+																		<div class="col-12">
+																			<div class="form-floating">
+																				<input type="url" class="form-control form-control-sm" name="links[0][direct_link]" id="directLink" placeholder="' . \KN\Helpers\Base::lang('base.direct_link').'">
+																				<label for="directLink">' . \KN\Helpers\Base::lang('base.direct_link').'</label>
+																			</div>
+																		</div>
+																		<div class="col-12">
+																			<div class="row g-1">
+																				<div class="col-sm-8">
+																					<div class="form-floating">
+																						<select class="form-select form-select-sm" id="theRoleRoutes" name="links[0][dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
+																						</select>
+																						<label for="theRoleRoutes">' . \KN\Helpers\Base::lang('base.module').'</label>
+																					</div>
+																				</div>
+																				<div class="col-sm-4">
+																					<div class="form-floating">
+																						<select class="form-select form-select-sm" id="theRoleRoutes" name="links[0][dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
+																						</select>
+																						<label for="theRoleRoutes">' . \KN\Helpers\Base::lang('base.parameter').'</label>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-12 col-md-1">
+																	<div class="d-grid gap-2">
+																		<button class="btn btn-danger" type="button">
+																			<i class="ti ti-circle-minus"></i>
+																		</button>
+																		<button class="btn btn-dark kn-menu-item-dragger" type="button">
+																			<i class="ti ti-drag-drop"></i>
+																		</button>
+																	</div>
+																</div>
+																<div class="kn-menu-drag">
+																</div>
+																</div>
+															</div>
+														</div>
+													'
+												]
+											]
+
+										]);
+
+										?>'>
 											<i class="ti ti-circle-plus"></i>
 										</button>
 									</div>
 								</div>
 								<div class="kn-menu-drag">
-									<div class="kn-menu-item">
-										<div class="row g-1">
-											<div class="col-12 col-md-11">
-												<div class="row g-1">
-													<div class="col-12">
-														<div class="form-floating">
-															<input type="url" class="form-control form-control-sm" name="links[0][direct_link]" id="directLink" placeholder="<?php echo \KN\Helpers\Base::lang('base.direct_link'); ?>">
-															<label for="directLink"><?php echo \KN\Helpers\Base::lang('base.direct_link'); ?></label>
-														</div>
-													</div>
-													<div class="col-12">
-														<div class="row g-1">
-															<div class="col-sm-8">
-																<div class="form-floating">
-																	<select class="form-select form-select-sm" id="theRoleRoutes" name="links[0][dynamic_link][module]" aria-label="<?php echo \KN\Helpers\Base::lang('base.module'); ?>">
-																	</select>
-																	<label for="theRoleRoutes"><?php echo \KN\Helpers\Base::lang('base.module'); ?></label>
-																</div>
-															</div>
-															<div class="col-sm-4">
-																<div class="form-floating">
-																	<select class="form-select form-select-sm" id="theRoleRoutes" name="links[0][dynamic_link][parameter]" aria-label="<?php echo \KN\Helpers\Base::lang('base.parameter'); ?>">
-																	</select>
-																	<label for="theRoleRoutes"><?php echo \KN\Helpers\Base::lang('base.parameter'); ?></label>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="col-12 col-md-1">
-												<div class="d-grid gap-2">
-													<button class="btn btn-danger" type="button">
-														<i class="ti ti-circle-minus"></i>
-													</button>
-												</div>
-											</div>
-										</div>
-									</div>
 								</div>
 							</form>
 						</div>

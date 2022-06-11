@@ -5,6 +5,7 @@
 		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/kalipso.table.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/quill.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/image-resize.min.js'); ?>"></script>
+		<script src="<?php echo KN\Helpers\Base::assets('libs/draggable/draggable.bundle.min.js'); ?>"></script>
 		<script>
 			<?php 
 			$moduleList = [['value' => 'general', 'name' => KN\Helpers\Base::lang('base.general')]];
@@ -15,7 +16,7 @@
 			}
 			?>
 			window.init = () => {
-					
+
 				let contentListSource = null;
 				let contentListColumns = null;
 				if (document.querySelector('#contentsTable')) {
@@ -538,6 +539,18 @@
 				for(const [key, value] of Object.entries(tableVariables)) {
 					window[key] = new KalipsoTable(value);
 				}
+
+				const drag = new Draggable.Sortable(document.querySelectorAll('.kn-menu-drag'), {
+					draggable: '.kn-menu-item',
+					handle: '.kn-menu-item-dragger',
+					mirror: {
+						constrainDimensions: true
+					},
+					exclude: {
+						plugins: [Draggable.Plugins.Focusable],
+						sensors: [Draggable.Sensors.TouchSensor],
+					  },
+				});
 
 			}
 		</script>

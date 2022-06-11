@@ -258,25 +258,13 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 							}, 500);
 
 						} catch (error) {
-							
+
 							if (action === 'manipulation') {
 
 								if (e.target.getAttribute('data-kn-manipulation')) {
 
 									const manipulation = JSON.parse(e.target.getAttribute('data-kn-manipulation'));
-
-									for (const [selector, data] of Object.entries(manipulation)) {
-			
-										if (document.querySelector(selector)) {
-
-											/**
-											 * DOM manipulation for removing element. 
-											 */
-											if (data.remove_element !== undefined && data.remove_element) {
-												document.querySelector(selector).remove();
-											}
-										}
-									}
+									responseFormatter(manipulation);
 								}
 							}
 						}
@@ -464,10 +452,22 @@ function responseFormatter(response, dom = null) {
 				}
 
 				/**
+				 * DOM manipulation for removing class. 
+				 */
+				if (data.remove_element !== undefined && data.remove_element) {
+					dom.querySelector(selector).remove();
+				}
+
+				/**
 				 * DOM manipulation inner html. 
 				 */
 				if (data.html !== undefined && data.html) {
 					dom.querySelector(selector).innerHTML = data.html;
+				}
+
+				if (data.html_append !== undefined && data.html_append) {
+					const currentHtml = dom.querySelector(selector).innerHTML;
+					dom.querySelector(selector).innerHTML += data.html_append;
 				}
 			}
 		}

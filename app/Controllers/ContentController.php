@@ -268,9 +268,10 @@ final class ContentController extends Controller {
                                                 data-kn-again="'.Base::lang('base.are_you_sure').'" 
                                                 data-kn-action="manipulation"
                                                 data-kn-manipulation=\'' . json_encode(
-                                                    [
-                                                        '[data-target="current_file_delete_' . $inputName . $fileIndex . '"]' => [
-                                                            'remove_element' => true
+                                                    [   'manipulation' => [
+                                                            '[data-target="current_file_delete_' . $inputName . $fileIndex . '"]' => [
+                                                                'remove_element' => true
+                                                            ]
                                                         ]
                                                     ]) . '\'
                                                 >

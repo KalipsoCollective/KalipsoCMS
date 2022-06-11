@@ -638,6 +638,17 @@ img.table-image {
     border-radius: 0.2rem;
 }
 
+.kn-menu-item + .kn-menu-item {
+    margin-top: 0.5rem;
+}
+
+.kn-menu-item.draggable-source--is-dragging {
+    opacity: 0.2;
+}
+
+i.ti {
+    pointer-events: none;
+}
 
 @media (max-width: 1200px) {
     nav.navbar-side {
