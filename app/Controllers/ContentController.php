@@ -320,7 +320,7 @@ final class ContentController extends Controller {
                             $moduleForm .= '
                             <div class="'.$col.'">
                                 <div class="form-floating">
-                                    <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 200px">' . $currentVal . '</textarea>
+                                    <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 100px">' . $currentVal . '</textarea>
                                     <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                 </div>
                             </div>';
