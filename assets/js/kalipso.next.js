@@ -488,8 +488,10 @@ function responseFormatter(response, dom = null) {
 						}
 						data.html_append = data.html_append.replaceAll('(DYNAMIC_ID)', dynamicId)
 					}
-
-					dom.querySelector(selector).innerHTML += data.html_append;
+					let clone = document.createElement('div');
+					clone.innerHTML = data.html_append;
+					clone = clone.children[0];
+					dom.querySelector(selector).appendChild(clone);
 				}
 			}
 		}
