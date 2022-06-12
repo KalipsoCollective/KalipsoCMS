@@ -633,7 +633,7 @@ img.table-image {
 }
 
 .kn-menu-item {
-    background: #ebebeb;
+    background: rgb(0 0 0 / 10%);
     padding: 0.2rem;
     border-radius: 0.2rem;
 }
@@ -642,8 +642,16 @@ img.table-image {
     margin-top: 0.5rem;
 }
 
+.kn-menu-drag {
+    margin: 0.5rem 0;
+}
+
 .kn-menu-item.draggable-source--is-dragging {
     opacity: 0.2;
+}
+
+.kn-menu-item .kn-menu-item {
+    margin-left: 1rem;
 }
 
 i.ti {

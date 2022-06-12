@@ -355,6 +355,10 @@ function alertRemove() {
 	}
 }
 
+function draggable() {
+
+}
+
 function responseFormatter(response, dom = null) {
 
 	if (dom === null) {
@@ -471,6 +475,24 @@ function responseFormatter(response, dom = null) {
 				}
 			}
 		}
+	}
+
+	if (dom && response.dragger !== undefined) {
+		
+		if (window.drag !== undefined)
+			window.drag.destroy();
+
+		window.drag = new Draggable.Sortable(document.querySelectorAll('.kn-menu-drag'), {
+			draggable: '.kn-menu-item',
+			handle: '.kn-menu-item-dragger',
+			mirror: {
+				constrainDimensions: true
+			},
+			exclude: {
+				plugins: [Draggable.Plugins.Focusable],
+				sensors: [Draggable.Sensors.TouchSensor],
+			}
+		});
 	}
 
 	if (dom && response.editor_upload !== undefined) {

@@ -540,17 +540,7 @@
 					window[key] = new KalipsoTable(value);
 				}
 
-				const drag = new Draggable.Sortable(document.querySelectorAll('.kn-menu-drag'), {
-					draggable: '.kn-menu-item',
-					handle: '.kn-menu-item-dragger',
-					mirror: {
-						constrainDimensions: true
-					},
-					exclude: {
-						plugins: [Draggable.Plugins.Focusable],
-						sensors: [Draggable.Sensors.TouchSensor],
-					}
-				});
+				draggable();
 
 			}
 		</script>

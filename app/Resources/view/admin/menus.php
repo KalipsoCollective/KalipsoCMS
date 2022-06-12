@@ -48,10 +48,11 @@
 									<div class="d-grid">
 										<button class="btn btn-primary btn-lg" type="button" data-kn-action="manipulation" data-kn-manipulation='<?php
 										echo json_encode([
+											'dragger' => true,
 											'manipulation' => [
 												'#addModal .kn-menu-drag' => [
 													'html_append' => '
-														<div class="kn-menu-item">
+														<div class="kn-menu-drag kn-menu-item">
 															<div class="row g-1">
 																<div class="col-12 col-md-11">
 																	<div class="row g-1">
@@ -90,9 +91,6 @@
 																			<i class="ti ti-drag-drop"></i>
 																		</button>
 																	</div>
-																</div>
-																<div class="kn-menu-drag">
-																</div>
 																</div>
 															</div>
 														</div>
