@@ -549,7 +549,7 @@
 					exclude: {
 						plugins: [Draggable.Plugins.Focusable],
 						sensors: [Draggable.Sensors.TouchSensor],
-					  },
+					}
 				});
 
 			}
