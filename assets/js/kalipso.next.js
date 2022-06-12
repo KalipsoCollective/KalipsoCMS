@@ -469,11 +469,26 @@ function responseFormatter(response, dom = null) {
 				 * DOM manipulation inner html. 
 				 */
 				if (data.html !== undefined && data.html) {
-					dom.querySelector(selector).innerHTML = data.html;
+					dom.querySelector(selector).cloneNode(true).innerHTML = data.html;
 				}
 
 				if (data.html_append !== undefined && data.html_append) {
 					const currentHtml = dom.querySelector(selector).innerHTML;
+					if (data.html_append_dynamic !== undefined && data.html_append_dynamic) {
+
+						let dynamicId = 0;
+						const div = document.createElement('div');
+						div.innerHTML = data.html_append;
+						const referenceClass = '.' + div.children[0].classList[0];
+
+						if (currentHtml.trim() !== '') {
+							const currentDiv = document.createElement('div');
+							currentDiv.innerHTML = currentHtml;
+							dynamicId = currentDiv.querySelectorAll(referenceClass).length;
+						}
+						data.html_append = data.html_append.replaceAll('(DYNAMIC_ID)', dynamicId)
+					}
+
 					dom.querySelector(selector).innerHTML += data.html_append;
 				}
 			}

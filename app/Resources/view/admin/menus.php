@@ -23,7 +23,7 @@
 		if ($this->authority('management/menus/add')) {
 		?>
 			<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-dialog modal-dialog-centered modal-xl">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="addModalLabel"><?php echo \KN\Helpers\Base::lang('base.add_new'); ?></h5>
@@ -58,24 +58,24 @@
 																	<div class="row g-1">
 																		<div class="col-12">
 																			<div class="form-floating">
-																				<input type="url" class="form-control form-control-sm" name="links[0][direct_link]" id="directLink" placeholder="' . \KN\Helpers\Base::lang('base.direct_link').'">
-																				<label for="directLink">' . \KN\Helpers\Base::lang('base.direct_link').'</label>
+																				<input type="url" class="form-control form-control-sm" name="links[(DYNAMIC_ID)][direct_link]" placeholder="' . \KN\Helpers\Base::lang('base.direct_link').'">
+																				<label>' . \KN\Helpers\Base::lang('base.direct_link').'</label>
 																			</div>
 																		</div>
 																		<div class="col-12">
 																			<div class="row g-1">
 																				<div class="col-sm-8">
 																					<div class="form-floating">
-																						<select class="form-select form-select-sm" id="theRoleRoutes" name="links[0][dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
+																						<select class="form-select form-select-sm" name="links[(DYNAMIC_ID)][dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
 																						</select>
-																						<label for="theRoleRoutes">' . \KN\Helpers\Base::lang('base.module').'</label>
+																						<label>' . \KN\Helpers\Base::lang('base.module').'</label>
 																					</div>
 																				</div>
 																				<div class="col-sm-4">
 																					<div class="form-floating">
-																						<select class="form-select form-select-sm" id="theRoleRoutes" name="links[0][dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
+																						<select class="form-select form-select-sm" name="links[(DYNAMIC_ID)][dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
 																						</select>
-																						<label for="theRoleRoutes">' . \KN\Helpers\Base::lang('base.parameter').'</label>
+																						<label>' . \KN\Helpers\Base::lang('base.parameter').'</label>
 																					</div>
 																				</div>
 																			</div>
@@ -84,23 +84,25 @@
 																</div>
 																<div class="col-12 col-md-1">
 																	<div class="d-grid gap-2">
-																		<button class="btn btn-danger" type="button" data-kn-action="remove" data-kn-parent="kn-menu-item">
+																		<button class="btn btn-danger btn-sm" type="button" data-kn-action="remove" data-kn-parent=".kn-menu-item">
 																			<i class="ti ti-circle-minus"></i>
 																		</button>
-																		<button class="btn btn-dark kn-menu-item-dragger" type="button">
+																		<button class="btn btn-dark btn-sm kn-menu-item-dragger" type="button">
 																			<i class="ti ti-drag-drop"></i>
 																		</button>
+																		<input type="checkbox" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off">
+																		<label class="btn btn-outline-primary btn-sm" for="targetBlank(DYNAMIC_ID)">
+																			<i class="ti ti-external-link"></i>
+																		</label><br>
 																	</div>
 																</div>
 															</div>
 														</div>
-													'
+													',
+													'html_append_dynamic' => true
 												]
 											]
-
-										]);
-
-										?>'>
+										]); ?>'>
 											<i class="ti ti-circle-plus"></i>
 										</button>
 									</div>
