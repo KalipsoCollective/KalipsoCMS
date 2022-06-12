@@ -266,6 +266,9 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 									const manipulation = JSON.parse(e.target.getAttribute('data-kn-manipulation'));
 									responseFormatter(manipulation);
 								}
+							} else if (action === 'remove' && e.target.getAttribute('data-kn-parent')) {
+
+								e.target.closest(e.target.getAttribute('data-kn-parent')).remove();
 							}
 						}
 					}
