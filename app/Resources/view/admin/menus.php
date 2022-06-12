@@ -84,7 +84,7 @@
 																</div>
 																<div class="col-12 col-md-1">
 																	<div class="d-grid gap-2">
-																		<button class="btn btn-danger" type="button">
+																		<button class="btn btn-danger" type="button" data-kn-action="remove" data-kn-parent="kn-menu-item">
 																			<i class="ti ti-circle-minus"></i>
 																		</button>
 																		<button class="btn btn-dark kn-menu-item-dragger" type="button">
