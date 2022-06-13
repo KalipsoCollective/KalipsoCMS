@@ -91,6 +91,7 @@ return [
         'management_menu_detail' =>  'Management - Menus - Detail',
         'management_menu_update' =>  'Management - Menus - Edit',
         'management_menu_delete' =>  'Management - Menus - Delete',
+        'management_menu_get_params' => 'Management - Menus - Get Menu Details',
     ],
     'settings' => [
         'byte' => 'Byte',

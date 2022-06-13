@@ -558,7 +558,7 @@ function responseFormatter(response, dom = null) {
 				 * DOM manipulation inner html. 
 				 */
 				if (data.html !== undefined && data.html) {
-					dom.querySelector(selector).cloneNode(true).innerHTML = data.html;
+					dom.querySelector(selector).innerHTML = data.html;
 				}
 
 				if (data.html_append !== undefined && data.html_append) {

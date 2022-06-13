@@ -161,6 +161,10 @@ return [
 		'default' => false,
 		'name' => 'auth.management_menu_delete',
 	],
+	'management/menus/get-menu-params' => [
+		'default' => false,
+		'name' => 'auth.management_menu_get_params',
+	],
 	'management/forms/:form' => [
 		'default' => false,
 		'name' => 'auth.management_forms',

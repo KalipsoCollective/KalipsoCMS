@@ -91,6 +91,7 @@ return [
         'management_menu_detail' =>  'Yönetim - Menüler - Detay',
         'management_menu_update' =>  'Yönetim - Menüler - Düzenle',
         'management_menu_delete' =>  'Yönetim - Menüler - Sil',
+        'management_menu_get_params' => 'Yönetim - Menüler - Menü Detaylarını Getir',
     ],
     'settings' => [
         'basic_settings' => 'Temel Ayarlar',

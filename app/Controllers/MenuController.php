@@ -179,6 +179,11 @@ final class MenuController extends Controller {
 
 	}
 
+	public function getMenuParameters() {
+
+		
+
+	}
 
 	public function userAdd() {
 
