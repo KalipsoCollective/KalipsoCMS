@@ -91,10 +91,11 @@ try {
             // Menus
             ['GET,POST', '/menus', 'MenuController@menus', ['Auth@with']],
             ['GET,POST', '/menus/list', 'MenuController@menuList', ['Auth@with']],
-            ['GET,POST', '/menus/add', 'MenuController@menAdd', ['Auth@with']],
+            ['GET,POST', '/menus/add', 'MenuController@menuAdd', ['Auth@with']],
             ['GET,POST', '/menus/:id', 'MenuController@menuDetail', ['Auth@with']],
             ['GET,POST', '/menus/:id/delete', 'MenuController@menuDelete', ['Auth@with']],
             ['GET,POST', '/menus/:id/update', 'MenuController@menuUpdate', ['Auth@with']],
+            ['GET,POST', '/menus/get-params', 'MenuController@getMenuParameters', ['Auth@with']],
 
             // Settings
             ['GET,POST', '/settings', 'AdminController@settings', ['Auth@with']],

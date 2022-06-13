@@ -380,6 +380,7 @@ return [
         'direct_link' => 'Direct Link',
         'parameter' => 'Parameter',
         'key' => 'Key',
+        'basic' => 'Basic',
     ],
     'app' => [
         

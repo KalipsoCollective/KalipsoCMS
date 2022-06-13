@@ -348,7 +348,7 @@ return [
         'service_detail' => 'İlgili hizmeti görüntüleyin.',
         'contact' => 'İletişim',
         'contact_message' => 'İletişim sayfasından bize ulaşabilirsiniz.',
-        'forms' => 'formlar',
+        'forms' => 'Formlar',
         'information_request_form' => 'Bilgi Talep Formu',
         'gallery' => 'Galeri',
         'gallery_message' => 'Galerileri yönetebileceğiniz sayfadır.',
@@ -380,6 +380,7 @@ return [
         'direct_link' => 'Direkt Bağlantı',
         'parameter' => 'Parametre',
         'key' => 'Anahtar',
+        'basic' => 'Temel',
     ],
     'app' => [
         

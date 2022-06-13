@@ -292,6 +292,7 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 		document.addEventListener("change", async function(e) {
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
+				console.log(e)
 				if (e.target.getAttribute('data-kn-change')) {
 					
 					e.preventDefault();
@@ -320,6 +321,8 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 						options.append('slug', e.target.value);
 						options.append('lang', e.target.getAttribute('data-kn-lang'));
 						options.append('id', e.target.getAttribute('data-kn-id'));
+					} else if (e.target.getAttribute('data-kn-change').indexOf('/menus/get-params') !== -1) {
+						options.append('module', e.target.value);
 					} else {
 						keep = true;
 					}
@@ -353,10 +356,6 @@ function multidimensionalMenuForm(dom = null) {
 	let items = [];
 	let index = -1;
 
-	// console.log();
-	// console.log(dom.querySelector('.kn-menu-drag:not(.kn-menu-item)').querySelectorAll('.kn-menu-item'));
-	// console.log(dom.querySelector('.kn-menu-drag:not(.kn-menu-item)').querySelectorAll('.kn-menu-item').length);
-
 	if (dom.querySelector('.kn-menu-drag').childNodes.length) {
 		let item = {};
 		[...dom.querySelector('.kn-menu-drag').childNodes].map((child) => {
@@ -366,12 +365,12 @@ function multidimensionalMenuForm(dom = null) {
 					index++;
 					items[index] = {};
 					if (child.querySelector('.row')) {
-						
-						const inputs = child.querySelector('.row').querySelectorAll('[data-name]');
+
+						const inputs = child.querySelector('.row').querySelectorAll('[name]');
 						[...inputs].map((input) => {
 
 							const regex = /\[(.*?)\]/gm;
-							const matches = input.getAttribute('data-name').match(regex);
+							const matches = input.getAttribute('name').match(regex);
 							if (matches !== null) {
 								let keys = [];
 								// clean keys
@@ -381,7 +380,11 @@ function multidimensionalMenuForm(dom = null) {
 								}
 
 								// put values
-								const value = input.value;
+								let value = input.value;
+								if (input.checked !== undefined) {
+									value = input.checked;
+								}
+
 								if (keys[1] !== undefined) {
 									items[index][keys[0]] = items[index][keys[0]] === undefined ? {} : items[index][keys[0]];
 									items[index][keys[0]][keys[1]] = value;

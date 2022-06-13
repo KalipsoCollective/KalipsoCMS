@@ -62,7 +62,7 @@
 													$tabContents .= '
 													<div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="name-'.$lang.'(DYNAMIC_ID)" role="tabpanel" aria-labelledby="name-tab-'.$lang.'(DYNAMIC_ID)">
 														<div class="form-floating">
-															<input type="text" class="form-control" data-name="links[name][' . $lang . ']" id="menuName' . $lang . '(DYNAMIC_ID)" placeholder="'.\KN\Helpers\Base::lang('base.name').'">
+															<input type="text" class="form-control" name="links[name][' . $lang . ']" id="menuName' . $lang . '(DYNAMIC_ID)" placeholder="'.\KN\Helpers\Base::lang('base.name').'">
 															<label for="menuName' . $lang . '">'.\KN\Helpers\Base::lang('base.name').'</label>
 														</div>
 													</div>';
@@ -89,7 +89,7 @@
 																		</div>
 																		<div class="col-12">
 																			<div class="form-floating">
-																				<input type="url" class="form-control form-control-sm" data-name="links[direct_link]" placeholder="' . \KN\Helpers\Base::lang('base.direct_link').'">
+																				<input type="url" class="form-control form-control-sm" name="links[direct_link]" placeholder="' . \KN\Helpers\Base::lang('base.direct_link').'">
 																				<label>' . \KN\Helpers\Base::lang('base.direct_link').'</label>
 																			</div>
 																		</div>
@@ -97,14 +97,15 @@
 																			<div class="row g-1">
 																				<div class="col-sm-8">
 																					<div class="form-floating">
-																						<select class="form-select form-select-sm" data-name="links[dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
+																						<select data-kn-change="'.$this->url('management/menus/get-params').'" class="form-select form-select-sm" name="links[dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
+																							'.$menuOptions.'
 																						</select>
 																						<label>' . \KN\Helpers\Base::lang('base.module').'</label>
 																					</div>
 																				</div>
 																				<div class="col-sm-4">
 																					<div class="form-floating">
-																						<select class="form-select form-select-sm" data-name="links[dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
+																						<select class="form-select form-select-sm" name="links[dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
 																						</select>
 																						<label>' . \KN\Helpers\Base::lang('base.parameter').'</label>
 																					</div>
@@ -121,7 +122,7 @@
 																		<button class="btn btn-dark btn-sm kn-menu-item-dragger" type="button">
 																			<i class="ti ti-drag-drop"></i>
 																		</button>
-																		<input type="checkbox" data-name="links[blank]" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off">
+																		<input type="checkbox" name="links[blank]" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off">
 																		<label class="btn btn-outline-primary btn-sm" for="targetBlank(DYNAMIC_ID)">
 																			<i class="ti ti-external-link"></i>
 																		</label><br>

@@ -33,12 +33,49 @@ final class MenuController extends Controller {
 				'description' => Base::lang('base.menus_message'),
 				'modules' => $this->modules,
 				'forms' => $this->forms,
+				'menuOptions' => $this->menuOptionsAsHTML()
 			],
 			'view' => ['admin.menus', 'admin']
 		];
 
 	}
 
+	public function menuOptions() {
+
+		$options = [
+			'basic' => [
+				'home' => Base::lang('base.home'),
+				'login' => Base::lang('base.login'),
+				'register' => Base::lang('base.register'),
+				'recovery' => Base::lang('base.recovery_account'),
+			],
+			'modules' => [],
+			'forms' => [],
+		];
+		foreach ($this->modules as $key => $data) {
+			$options['modules'][$key] = Base::lang($data['name']);
+		}
+
+		foreach ($this->forms as $key => $data) {
+			$options['forms'][$key] = Base::lang($data['name']);
+		}
+
+		return $options;
+
+	}
+
+	public function menuOptionsAsHTML($values = null) {
+
+		$options = '';
+		foreach ($this->menuOptions() as $section => $links) {
+			$options .= '<optgroup label="' . Base::lang('base.' . $section) . '">';
+			foreach ($links as $value => $name) {
+				$options .= '<option value="' . $section . '_' . $value . '">' . $name . '</option>';
+			}
+			$options .= '</optgroup>';
+		}
+		return $options;
+	}
 
 	public function userList() {
 
