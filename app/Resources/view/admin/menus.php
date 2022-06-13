@@ -97,7 +97,7 @@
 																			<div class="row g-1">
 																				<div class="col-sm-8">
 																					<div class="form-floating">
-																						<select data-kn-change="'.$this->url('management/menus/get-params').'" class="form-select form-select-sm" name="links[dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
+																						<select data-kn-change="'.$this->url('management/menus/get-menu-params').'" data-kn-target="#menuParameter(DYNAMIC_ID)" class="form-select form-select-sm" name="links[dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
 																							'.$menuOptions.'
 																						</select>
 																						<label>' . \KN\Helpers\Base::lang('base.module').'</label>
@@ -105,7 +105,7 @@
 																				</div>
 																				<div class="col-sm-4">
 																					<div class="form-floating">
-																						<select class="form-select form-select-sm" name="links[dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
+																						<select class="form-select form-select-sm" id="menuParameter(DYNAMIC_ID)" name="links[dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
 																						</select>
 																						<label>' . \KN\Helpers\Base::lang('base.parameter').'</label>
 																					</div>

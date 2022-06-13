@@ -382,6 +382,8 @@ return [
         'parameter' => 'Parametre',
         'key' => 'Anahtar',
         'basic' => 'Temel',
+        'list' => 'Liste',
+        'list_as_dropdown' => 'Açılır Menü Olarak İçerikler'
     ],
     'app' => [
         

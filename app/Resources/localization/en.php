@@ -382,6 +382,8 @@ return [
         'parameter' => 'Parameter',
         'key' => 'Key',
         'basic' => 'Basic',
+        'list' => 'List',
+        'list_as_dropdown' => 'List as Dropdown'
     ],
     'app' => [
         

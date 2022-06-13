@@ -292,7 +292,8 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 		document.addEventListener("change", async function(e) {
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
-			
+				
+				console.log()
 				if (e.target.getAttribute('data-kn-change')) {
 					
 					e.preventDefault();
@@ -321,11 +322,12 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 						options.append('slug', e.target.value);
 						options.append('lang', e.target.getAttribute('data-kn-lang'));
 						options.append('id', e.target.getAttribute('data-kn-id'));
-					} else if (e.target.getAttribute('data-kn-change').indexOf('/menus/get-params') !== -1) {
+					} else if (e.target.getAttribute('data-kn-change').indexOf('/menus/get-menu-params') !== -1) {
 						options.append('module', e.target.value);
-					} else {
+						options.append('target',e.target.getAttribute('data-kn-target'));
+					} /* else {
 						keep = true;
-					}
+					}*/
 
 					if (! keep) {
 

@@ -14,6 +14,7 @@ use KN\Helpers\Base;
 use KN\Helpers\KalipsoTable;
 use KN\Core\Model;
 use KN\Model\Menu;
+use KN\Controllers\ContentController;
 
 final class MenuController extends Controller {
 
@@ -53,7 +54,8 @@ final class MenuController extends Controller {
 			'forms' => [],
 		];
 		foreach ($this->modules as $key => $data) {
-			$options['modules'][$key] = Base::lang($data['name']);
+			if ($data['routes']['listing'] OR $data['routes']['detail']) 
+				$options['modules'][$key] = Base::lang($data['name']);
 		}
 
 		foreach ($this->forms as $key => $data) {
@@ -66,7 +68,7 @@ final class MenuController extends Controller {
 
 	public function menuOptionsAsHTML($values = null) {
 
-		$options = '';
+		$options = '<option value=""></option>';
 		foreach ($this->menuOptions() as $section => $links) {
 			$options .= '<optgroup label="' . Base::lang('base.' . $section) . '">';
 			foreach ($links as $value => $name) {
@@ -179,9 +181,90 @@ final class MenuController extends Controller {
 
 	}
 
-	public function getMenuParameters() {
+	public function getMenuParameters($module = null) {
+
+		if (is_null($module)) {
+			extract(Base::input([
+				'module'  => 'nulled_text',
+				'target'  => 'nulled_text',
+			], $this->get('request')->params));
+		}
 
 		
+		$arguments = [];
+		$html = ' ';
+
+		if (! is_null($module) AND strpos($module, '_') !== false) {
+
+			$module = explode('_', $module, 2);
+			if ($module[0] === 'modules') {
+				
+				if (isset($this->modules[$module[1]]) !== false) {
+					$module = $module[1];
+					$moduleDetail = $this->modules[$module];
+					if ($moduleDetail['routes']['listing']) {
+						$html .= '<option value="list">' . Base::lang('base.list') . '</option>';
+					}
+
+					if ($moduleDetail['routes']['detail']) {
+						$html .= '<option value="list">' . Base::lang('base.list_as_dropdown') . '</option>';
+
+						$contents = (new ContentController($this->get()))->getModuleDatas($module);
+
+						if (count($contents)) {
+							$html .= '<optgroup label="' . Base::lang('base.contents') . '">';
+							foreach ($contents as $content) {
+								$contentDetails = json_decode($content->input);
+								$val = $content->id;
+								if (isset($contentDetails->title) AND 
+									(
+										is_string($contentDetails->title) OR 
+										isset($contentDetails->title->{Base::lang('lang.code')}) !== false
+									)
+								) {
+
+									$text = is_string($contentDetails->title) ? $contentDetails->title : $contentDetails->title->{Base::lang('lang.code')};
+
+								} elseif (isset($contentDetails->name) AND 
+									(
+										is_string($contentDetails->name) OR 
+										isset($contentDetails->name->{Base::lang('lang.code')}) !== false
+									)
+								) {
+
+									$text = is_string($contentDetails->name) ? $contentDetails->name : $contentDetails->name->{Base::lang('lang.code')};
+
+								} else {
+									$text = $val;
+								}
+								$html .= '<option value="' . $val . '">' . $text . '</option>';
+							}
+							$html .= '</optgroup>';
+						}
+					}
+
+				}
+
+			} elseif ($module[0] === 'forms') {
+	
+
+
+			}
+
+		}
+
+		$arguments['manipulation'] = [
+			$target => [
+				'html'  => $html
+			]
+		];
+
+		return [
+			'status' => true,
+			'statusCode' => 200,
+			'arguments' => $arguments,
+			'view' => null
+		];
 
 	}
 

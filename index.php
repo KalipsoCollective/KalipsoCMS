@@ -95,7 +95,7 @@ try {
             ['GET,POST', '/menus/:id', 'MenuController@menuDetail', ['Auth@with']],
             ['GET,POST', '/menus/:id/delete', 'MenuController@menuDelete', ['Auth@with']],
             ['GET,POST', '/menus/:id/update', 'MenuController@menuUpdate', ['Auth@with']],
-            ['GET,POST', '/menus/get-params', 'MenuController@getMenuParameters', ['Auth@with']],
+            ['GET,POST', '/menus/get-menu-params', 'MenuController@getMenuParameters', ['Auth@with']],
 
             // Settings
             ['GET,POST', '/settings', 'AdminController@settings', ['Auth@with']],
