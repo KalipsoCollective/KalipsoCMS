@@ -537,6 +537,50 @@ return [
 			],
 		],
 
+		/* Menus Table */
+		'menus' => [
+			'cols' => [
+				'id' => [
+					'type'          => 'int',
+					'auto_inc'      => true,
+					'attr'          => 'UNSIGNED',
+					'type_values'   => 11,
+					'index'         => 'PRIMARY'
+				],
+				'key' => [
+					'type'          => 'varchar',
+					'type_values'   => 255,
+					'index'         => 'UNIQUE'
+				],
+				'items' => [
+					'type'          => 'json',
+				],
+				'created_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'index'         => 'INDEX'
+				],
+				'created_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'default'       => 0,
+					'index'         => 'INDEX'
+				],
+				'updated_at' => [
+					'type'          => 'varchar',
+					'type_values'   => 80,
+					'nullable'      => true,
+					'default'       => 'NULL',
+				],
+				'updated_by' => [
+					'type'          => 'int',
+					'type_values'   => 10,
+					'nullable'      => true,
+					'default'       => 'NULL',
+				]
+			],
+		],
+
 	],
 	'table_values' => [
 		'charset'   => 'utf8mb4', // You can use 'utf8' if the structure is causing problems.

@@ -13,7 +13,7 @@ use KN\Core\Controller;
 use KN\Helpers\Base;
 use KN\Helpers\KalipsoTable;
 use KN\Core\Model;
-use KN\Model\Menu;
+use KN\Model\Menus;
 use KN\Controllers\ContentController;
 
 final class MenuController extends Controller {
