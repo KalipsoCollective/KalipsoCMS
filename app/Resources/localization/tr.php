@@ -379,6 +379,7 @@ return [
         'other' => 'Diğer',
         'direct_link' => 'Direkt Bağlantı',
         'parameter' => 'Parametre',
+        'key' => 'Anahtar',
     ],
     'app' => [
         

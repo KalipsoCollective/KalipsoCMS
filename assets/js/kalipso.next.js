@@ -5,7 +5,10 @@
  * Released under the MIT License
  */
 
-
+/*!
+ * formToObject.js
+ * Copyright (c) 2013-2014 Serban Ghita
+ */
 async function kalipsoFetch(url = null, method = 'POST', data = {}) {
 
 	url = url ?? window.location.href;
@@ -170,17 +173,27 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 				el.classList.remove('border-danger');
 			})
 
+			// ;
+			
+
 			// Append Datas
-			const data = new FormData(dom);
-			const editor = dom.querySelectorAll('[data-kn-toggle="editor"]');
-			if (editor.length) {
+			let data = null ;
+			if (dom.getAttribute('action').includes('/management/menus/add')) {
+				data = new FormData();
+				const items = multidimensionalMenuForm(dom);
+				data.append('key', dom.querySelector('[name="key"]').value);
+				data.append('items', JSON.stringify(items));
 
-				for (var i = 0; i < editor.length; i++) {
-					let name = editor[i].getAttribute('data-name');
-					let value = editor[i].querySelector('.ql-editor').innerHTML;
-					data.append(name, value);
+			} else {
+				data = new FormData(dom);
+				const editor = dom.querySelectorAll('[data-kn-toggle="editor"]');
+				if (editor.length) {
+					for (var i = 0; i < editor.length; i++) {
+						let name = editor[i].getAttribute('data-name');
+						let value = editor[i].querySelector('.ql-editor').innerHTML;
+						data.append(name, value);
+					}
 				}
-
 			}
 
 			// Fetch
@@ -335,6 +348,64 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 	
 }
 
+function multidimensionalMenuForm(dom = null) {
+
+	let items = [];
+	let index = -1;
+
+	// console.log();
+	// console.log(dom.querySelector('.kn-menu-drag:not(.kn-menu-item)').querySelectorAll('.kn-menu-item'));
+	// console.log(dom.querySelector('.kn-menu-drag:not(.kn-menu-item)').querySelectorAll('.kn-menu-item').length);
+
+	if (dom.querySelector('.kn-menu-drag').childNodes.length) {
+		let item = {};
+		[...dom.querySelector('.kn-menu-drag').childNodes].map((child) => {
+
+			if (child.nodeName !== '#text') {
+				if (child.classList.contains('kn-menu-item')) {
+					index++;
+					items[index] = {};
+					if (child.querySelector('.row')) {
+						
+						const inputs = child.querySelector('.row').querySelectorAll('[data-name]');
+						[...inputs].map((input) => {
+
+							const regex = /\[(.*?)\]/gm;
+							const matches = input.getAttribute('data-name').match(regex);
+							if (matches !== null) {
+								let keys = [];
+								// clean keys
+								for (var i = 0; i < matches.length; i++) {
+									let key = matches[i].replace(/\[|\]/g, "");
+									keys[i] = key;
+								}
+
+								// put values
+								const value = input.value;
+								if (keys[1] !== undefined) {
+									items[index][keys[0]] = items[index][keys[0]] === undefined ? {} : items[index][keys[0]];
+									items[index][keys[0]][keys[1]] = value;
+								} else {
+									items[index][keys[0]] = value;
+								}
+
+							}
+						})
+					}
+
+					if (child.querySelector('.kn-menu-drag')) {
+						items[index]['sub'] = multidimensionalMenuForm(child.parentElement);
+					}
+				}
+			}
+		});
+
+	}
+
+	return items;
+
+}
+
 const sanitizeHTML = function (str) {
 	var temp = document.createElement('div');
 	temp.textContent = str;
@@ -359,6 +430,21 @@ function alertRemove() {
 }
 
 function draggable() {
+
+	if (window.drag !== undefined)
+			window.drag.destroy();
+
+	window.drag = new Draggable.Sortable(document.querySelectorAll('.kn-menu-drag'), {
+		draggable: '.kn-menu-item',
+		handle: '.kn-menu-item-dragger',
+		mirror: {
+			constrainDimensions: true
+		},
+		exclude: {
+			plugins: [Draggable.Plugins.Focusable],
+			sensors: [Draggable.Sensors.TouchSensor],
+		}
+	});
 
 }
 
@@ -498,21 +584,8 @@ function responseFormatter(response, dom = null) {
 	}
 
 	if (dom && response.dragger !== undefined) {
-		
-		if (window.drag !== undefined)
-			window.drag.destroy();
 
-		window.drag = new Draggable.Sortable(document.querySelectorAll('.kn-menu-drag'), {
-			draggable: '.kn-menu-item',
-			handle: '.kn-menu-item-dragger',
-			mirror: {
-				constrainDimensions: true
-			},
-			exclude: {
-				plugins: [Draggable.Plugins.Focusable],
-				sensors: [Draggable.Sensors.TouchSensor],
-			}
-		});
+		draggable()
 	}
 
 	if (dom && response.editor_upload !== undefined) {

@@ -30,7 +30,7 @@
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo \KN\Helpers\Base::lang('base.close'); ?>"></button>
 						</div>
 						<div class="modal-body">
-							<form class="row g-1" data-kn-form id="roleAdd" method="post" action="<?php echo $this->url('management/menus/add'); ?>">
+							<form class="row g-1" data-kn-form id="menuAdd" method="post" action="<?php echo $this->url('management/menus/add'); ?>">
 								<div class="form-loader">
 									<div class="spinner-border text-light" role="status">
 										<span class="visually-hidden"><?php echo \KN\Helpers\Base::lang('base.loading'); ?></span>
@@ -40,13 +40,41 @@
 								</div>
 								<div class="col-12 col-md-11">
 									<div class="form-floating">
-										<input type="text" class="form-control" required name="name" id="roleName" placeholder="<?php echo \KN\Helpers\Base::lang('base.name'); ?>">
-										<label for="roleName"><?php echo \KN\Helpers\Base::lang('base.name'); ?></label>
+										<input type="text" class="form-control" required name="key" id="menuKey" placeholder="<?php echo \KN\Helpers\Base::lang('base.key'); ?>">
+										<label for="menuKey"><?php echo \KN\Helpers\Base::lang('base.key'); ?></label>
 									</div>
 								</div>
 								<div class="col-12 col-md-1">
 									<div class="d-grid">
 										<button class="btn btn-primary btn-lg" type="button" data-kn-action="manipulation" data-kn-manipulation='<?php
+
+										$languages = \KN\Helpers\Base::config('app.available_languages');
+										$tabContents = '';
+										$nameArea = '
+										<div class="col-12 kn-multilang-content">
+											<div class="kn-multilang-content-switch">
+												<div class="nav nav-pills" id="menuName-tablist" role="tablist" aria-orientation="vertical">';
+												foreach ($languages as $i => $lang) {
+													$nameArea .= '
+													<button class="nav-link'.($i===0 ? ' active' : '').'" id="name-tab-'.$lang.'(DYNAMIC_ID)" data-bs-toggle="pill" data-bs-target="#name-'.$lang.'(DYNAMIC_ID)" type="button" role="tab" aria-controls="name-tab-'.$lang.'(DYNAMIC_ID)" aria-selected="'.($i===0 ? 'true' : 'false').'">
+														' . \KN\Helpers\Base::lang('langs.' . $lang ) . '
+													</button>';
+													$tabContents .= '
+													<div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="name-'.$lang.'(DYNAMIC_ID)" role="tabpanel" aria-labelledby="name-tab-'.$lang.'(DYNAMIC_ID)">
+														<div class="form-floating">
+															<input type="text" class="form-control" data-name="links[name][' . $lang . ']" id="menuName' . $lang . '(DYNAMIC_ID)" placeholder="'.\KN\Helpers\Base::lang('base.name').'">
+															<label for="menuName' . $lang . '">'.\KN\Helpers\Base::lang('base.name').'</label>
+														</div>
+													</div>';
+												}
+										$nameArea .= '
+												</div>
+											</div>
+											<div class="tab-content">
+												' . $tabContents . '
+											</div>
+										</div>';
+
 										echo json_encode([
 											'dragger' => true,
 											'manipulation' => [
@@ -57,8 +85,11 @@
 																<div class="col-12 col-md-11">
 																	<div class="row g-1">
 																		<div class="col-12">
+																			' . $nameArea . '
+																		</div>
+																		<div class="col-12">
 																			<div class="form-floating">
-																				<input type="url" class="form-control form-control-sm" name="links[(DYNAMIC_ID)][direct_link]" placeholder="' . \KN\Helpers\Base::lang('base.direct_link').'">
+																				<input type="url" class="form-control form-control-sm" data-name="links[direct_link]" placeholder="' . \KN\Helpers\Base::lang('base.direct_link').'">
 																				<label>' . \KN\Helpers\Base::lang('base.direct_link').'</label>
 																			</div>
 																		</div>
@@ -66,14 +97,14 @@
 																			<div class="row g-1">
 																				<div class="col-sm-8">
 																					<div class="form-floating">
-																						<select class="form-select form-select-sm" name="links[(DYNAMIC_ID)][dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
+																						<select class="form-select form-select-sm" data-name="links[dynamic_link][module]" aria-label="' . \KN\Helpers\Base::lang('base.module').'">
 																						</select>
 																						<label>' . \KN\Helpers\Base::lang('base.module').'</label>
 																					</div>
 																				</div>
 																				<div class="col-sm-4">
 																					<div class="form-floating">
-																						<select class="form-select form-select-sm" name="links[(DYNAMIC_ID)][dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
+																						<select class="form-select form-select-sm" data-name="links[dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
 																						</select>
 																						<label>' . \KN\Helpers\Base::lang('base.parameter').'</label>
 																					</div>
@@ -90,7 +121,7 @@
 																		<button class="btn btn-dark btn-sm kn-menu-item-dragger" type="button">
 																			<i class="ti ti-drag-drop"></i>
 																		</button>
-																		<input type="checkbox" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off">
+																		<input type="checkbox" data-name="links[blank]" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off">
 																		<label class="btn btn-outline-primary btn-sm" for="targetBlank(DYNAMIC_ID)">
 																			<i class="ti ti-external-link"></i>
 																		</label><br>
@@ -113,7 +144,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo \KN\Helpers\Base::lang('base.close'); ?></button>
-							<button type="submit" form="roleAdd" class="btn btn-success"><?php echo \KN\Helpers\Base::lang('base.add'); ?></button>
+							<button type="submit" form="menuAdd" class="btn btn-success"><?php echo \KN\Helpers\Base::lang('base.add'); ?></button>
 						</div>
 					</div>
 				</div>

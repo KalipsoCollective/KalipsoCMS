@@ -643,6 +643,7 @@ img.table-image {
 }
 
 .kn-menu-drag {
+    margin: 1rem 0;
 }
 
 .kn-menu-item.draggable-source--is-dragging {
@@ -652,6 +653,21 @@ img.table-image {
 .kn-menu-item .kn-menu-item {
     margin-left: 1rem;
 }
+
+.kn-menu-item .kn-multilang-content-switch .nav .nav-link {
+    background: #fff;
+    color: #686868;
+}
+
+.kn-menu-item .kn-multilang-content-switch .nav .nav-link.active {
+    background: #686868;
+    color: #fff;
+}
+
+.kn-menu-item .kn-multilang-content .tab-content {
+    background: #686868
+}
+
 
 i.ti {
     pointer-events: none;

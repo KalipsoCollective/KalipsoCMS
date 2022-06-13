@@ -379,6 +379,7 @@ return [
         'other' => 'Other',
         'direct_link' => 'Direct Link',
         'parameter' => 'Parameter',
+        'key' => 'Key',
     ],
     'app' => [
         
