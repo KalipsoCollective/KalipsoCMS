@@ -292,7 +292,7 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 		document.addEventListener("change", async function(e) {
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
-				console.log(e)
+			
 				if (e.target.getAttribute('data-kn-change')) {
 					
 					e.preventDefault();
