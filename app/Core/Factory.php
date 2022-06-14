@@ -980,11 +980,7 @@ final class Factory
      **/
     public function dynamicUrl($route, $param = []) {
 
-        foreach ($param as $attr => $value) {
-            $route = str_replace(':' . $attr, $value, $route);
-        }
-        return $this->url($route);
-
+        return Base::base(Base::dynamicURL($route, $param));
     }
 
 

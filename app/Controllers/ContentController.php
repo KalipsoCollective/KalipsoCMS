@@ -84,6 +84,16 @@ final class ContentController extends Controller {
 
     }
 
+    public function getContent($id = 0) {
+
+        $return = null;
+        if ($id) {
+            $return = (new Contents())->where('id', $id)->get();
+        }
+        return $return;
+
+    }
+
     public function prepareModuleForm($module, $fill = null) {
 
         $idPrefix = 'content_add';

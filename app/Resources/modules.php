@@ -790,20 +790,22 @@ return [
 			],
 			'link' => [
 				'formatter' => function($row) {
-					/*
 					$return = '';
-					if ($row->image_src AND $srcset = @json_decode($row->image_src)) {
-						$return = '<div class="image-group">';
-						foreach ($srcset as $src) {
-							$href = Base::base('upload/' . $src->original);
-							$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
-							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
+					$row->link = @json_decode($row->link);
+					if (is_object($row->link)) {
+						$link = '#';
+						if (isset($row->link->direct_link) !== false AND $row->link->direct_link) {
+							$link = $row->link->direct_link;
+						} elseif (isset($row->link->dynamic_link->module) !== false AND $row->link->dynamic_link->module) {
+							$link = Base::generateURL(
+								$row->link->dynamic_link->module,
+								(isset($row->link->dynamic_link->parameter) !== false ? $row->link->dynamic_link->parameter : null)
+							);
 						}
-						$return .= '</div>';
-					} else {
-						$return = '-';
-					}*/
-					return $row->link;
+
+						$return = '<a href="' . $link . '" target="_blank">' . $row->link->name->{Base::lang('lang.code')} . '</a>';
+					}
+					return $return;
 				}
 			],
 			'image_src' => [

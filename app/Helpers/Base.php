@@ -75,6 +75,39 @@ class Base {
 
 
     /**
+     * Generate URL
+     * @param  string|null $body
+     * @return string $return
+     */
+    public static function generateURL($module, $parameter = null) {
+
+        $body = '';
+        if (strpos($module, '_') !== false) {
+
+            $menuController = (new \KN\Controllers\MenuController((object)['request'=>'']));
+            $module = explode('_', $module, 2);
+            $body = $menuController->urlGenerator($module[0], $module[1], $parameter);
+        }
+
+        return self::base($body);
+    }
+
+    /**
+     *  Dynamic URL Generator
+     *  @param string $route
+     *  @param array $attributes
+     *  @return string $url
+     **/
+    public static function dynamicURL($route, $param = []) {
+
+        foreach ($param as $attr => $value) {
+            $route = str_replace(':' . $attr, $value, $route);
+        }
+        return $route;
+    }
+
+
+    /**
      * Configuration Parameters
      * @param  string $setting setting value name
      * @return string|null|array|object $return  setting value

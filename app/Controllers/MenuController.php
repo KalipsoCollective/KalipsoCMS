@@ -78,6 +78,110 @@ final class MenuController extends Controller {
 
 	}
 
+
+	public function urlGenerator($section, $area, $parameter = null) {
+
+		$return = '';
+		switch ($section) {
+			case 'basic':
+				switch ($area) {
+					case 'home':
+						$return = '/';
+						break;
+
+					case 'login':
+						$return = '/auth/login';
+						break;
+
+					case 'register':
+						$return = '/auth/register';
+						break;
+
+					case 'recovery':
+						$return = '/auth/recovery';
+						break;
+				}
+				break;
+
+			case 'modules':
+				$lang = Base::lang('lang.code');
+				foreach ($this->modules as $key => $data) {
+					if ($data['routes']['listing'] OR $data['routes']['detail'] AND $key === $area) {
+						
+						if (
+							$data['routes']['listing'] AND 
+							isset($data['routes']['listing'][$lang]) !== false AND 
+							($parameter === 'list' OR $parameter === 'list_as_dropdown') OR is_null($parameter)) 
+						{
+							$return = $data['routes']['listing'][$lang][1];
+
+						} elseif ($data['routes']['detail'] AND 
+							isset($data['routes']['detail'][$lang]) !== false AND 
+							(int)$parameter 
+						) {
+							
+							$content = ( new ContentController( $this->get() ) )
+								->getContent((int)$parameter);
+
+							if ($content) {
+
+								$content->input = json_decode($content->input);
+								if (isset($content->input->slug->{$lang}) !== false) {
+
+									$return = Base::dynamicURL(
+										$data['routes']['detail'][$lang][1], 
+										['slug' => $content->input->slug->{$lang}]
+									);
+
+								}
+
+							}
+						}
+					}
+				}
+				break;
+			
+			case 'forms':
+				/*
+				$lang = Base::lang('lang.code');
+				foreach ($this->modules as $key => $data) {
+					if ($data['routes']['listing'] OR $data['routes']['detail'] AND $key === $area) {
+						
+						if (
+							$data['routes']['listing'] AND 
+							isset($data['routes']['listing'][]) !== false AND 
+							($parameter === 'list' OR $parameter === 'list_as_dropdown') OR is_null($parameter)) 
+						{
+							$return = $data['routes']['listing'][$lang];
+
+						} elseif ($data['routes']['detail'] AND 
+							isset($data['routes']['detail'][$lang]) !== false AND 
+							(int)$parameter 
+						) {
+							
+							$data = ( new ContentController( $this->get() ) )
+								->getContent((int)$parameter);
+
+							if ($data) {
+
+								$data->input = @json_decode($data->input);
+								if (isset($data->input->slug->{$lang}) !== false) {
+
+									$return = $this->get()->dynamicUrl($data['routes']['detail'][$lang], ['slug' => $data->input->slug->{$lang}]);
+
+								}
+
+							}
+						}
+					}
+				}
+				*/
+				break;
+		}
+		return $return;
+
+	}
+
 	public function menuOptionsAsHTML($currentValue = null) {
 
 		$options = '<option value=""></option>';
