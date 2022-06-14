@@ -7,4 +7,3 @@ Form Add
 Form List
 Form Detail
 Form Delete
-Upload MIME def.
