@@ -220,7 +220,13 @@ final class MenuController extends Controller {
 					'exclude' => true,
 					'formatter' => function($row) {
 
-						$total = array_sum(array_map('count', json_decode($row->items, true)));
+						$total = 0;
+						$arr = json_decode($row->items, true);
+						array_walk_recursive($arr, function($val, $key) use (&$total) {
+							if ($key == 'direct_link') {
+								$total++;
+							}
+						});
 						return $total;
 					}
 				],
@@ -382,50 +388,35 @@ final class MenuController extends Controller {
 	}
 
 
-	public function userDelete() {
+	public function menuDelete() {
 
 		$id = (int)$this->get('request')->attributes['id'];
 
 		$alerts = [];
 		$arguments = [];
 
-		$model = new Users();
+		$model = new Menus();
 		
-		$getUser = $model->select('id, u_name')->where('id', $id)->get();
-		if (! empty($getUser)) {
+		$getMenu = $model->select('id')->where('id', $id)->get();
+		if (! empty($getMenu)) {
 
-			if ($id !== (int)Base::userData('id')) {
+			$delete = $model->where('id', $id)->delete();
 
-				$update = $model->where('id', $id)->update([
-					'status' => 'deleted'
-				]);
+			if ($delete) {
 
-				if ($update) {
-
-					(new Sessions())->where('user_id', $id)->delete();
-					$alerts[] = [
-						'status' => 'success',
-						'message' => Base::lang('base.user_successfully_deleted')
-					];
-					$arguments['table_reset'] = 'usersTable';
-
-				} else {
-
-					$alerts[] = [
-						'status' => 'error',
-						'message' => Base::lang('base.user_delete_problem')
-					];
-				}
+				$alerts[] = [
+					'status' => 'success',
+					'message' => Base::lang('base.menu_successfully_deleted')
+				];
+				$arguments['table_reset'] = 'menusTable';
 
 			} else {
 
 				$alerts[] = [
 					'status' => 'error',
-					'message' => Base::lang('base.user_delete_problem_for_own_account')
+					'message' => Base::lang('base.menu_delete_problem')
 				];
 			}
-
-			
 
 		} else {
 
