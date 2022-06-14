@@ -560,7 +560,7 @@ final class FileController extends Controller {
 
                         $fileNewName = isset($parameters['name']) !== false 
                             ? $parameters['name'] 
-                            : Base::stringShortener(Base::slugGenerator($handle->file_src_name), 200, false);
+                            : Base::stringShortener(Base::slugGenerator($handle->file_src_name_body), 200, false);
 
                         $fileDimension = ['original' => Base::config('app.upload_max_dimension')];
 
@@ -573,7 +573,7 @@ final class FileController extends Controller {
 
                         foreach ($fileDimension as $dimensionTag => $dimensionVar) {
 
-                            $handle->file_new_name_body   = $fileNewName;
+                            $handle->file_new_name_body   = $fileNewName . '_' . $dimensionTag;
 
                             if (isset($parameters['max_size']) !== false) $handle->file_max_size = $parameters['max_size'];
                             elseif ($maxSize = Base::config('app.upload_max_size')) $handle->file_max_size = $maxSize;
@@ -621,7 +621,7 @@ final class FileController extends Controller {
                             $insert = (new Files)->insert([
                                 'module' => $module,
                                 'size' => $fileSize,
-                                'mime' => $handle->file_dst_mime,
+                                'mime' => $handle->file_dst_name_ext,
                                 'name' => $fileNewName,
                                 'files' => json_encode($fileOutput)
                             ]);
