@@ -437,47 +437,27 @@ final class MenuController extends Controller {
 	}
 
 
-	public function userDetail() {
+	public function menuDetail() {
 
 		$id = (int)$this->get('request')->attributes['id'];
 
 		$alerts = [];
 		$arguments = [];
 
-		$model = new Users();
-		$getUser = $model->select('id, u_name, f_name, l_name, email, role_id')->where('id', $id)->get();
-		if (! empty($getUser)) {
-
-			$userRoles = (new UserRoles)->select('name, id')->orderBy('name', 'asc')->getAll();
-			$options = '';
-
-			foreach ($userRoles as $role) {
-				$selected = $role->id == $getUser->role_id ? true : false;
-				$options .= '
-				<option value="' . $role->id. '"' . ($selected ? ' selected' : '') . '>
-					' . $role->name . '
-				</option>';
-			}
+		$model = new Menus();
+		$getMenu = $model->select('id, menu_key, items')->where('id', $id)->get();
+		if (! empty($getMenu)) {
 
 			$arguments['modal_open'] = ['#editModal'];
 			$arguments['manipulation'] = [
-				'#userUpdate' => [
-					'attribute' => ['action' => $this->get()->url('management/users/' . $id . '/update')],
+				'#menuUpdate' => [
+					'attribute' => ['action' => $this->get()->url('management/menus/' . $id . '/update')],
 				],
-				'#theUserEmail' => [
-					'attribute' => ['value' => $getUser->email],
+				'#editModal [name="menu_key"]' => [
+					'attribute' => ['value' => $getMenu->menu_key],
 				],
-				'#theUserName' => [
-					'attribute' => ['value' => $getUser->u_name],
-				],
-				'#thefName' => [
-					'attribute' => $getUser->f_name ? ['value' => $getUser->f_name] : ['value' => ''],
-				],
-				'#thelName' => [
-					'attribute' => $getUser->l_name ? ['value' => $getUser->l_name] : ['value' => ''],
-				],
-				'#theRoles' => [
-					'html'	=> $options
+				'#editModal #menuItems' => [
+					'html' => 'test',
 				],
 			];
 
