@@ -175,7 +175,7 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 			
 			// Append Datas
 			let data = null ;
-			if (dom.getAttribute('action').includes('/management/menus/') && (dom.getAttribute('action').includes('/add') || dom.getAttribute('action').includes('/edit'))) {
+			if (dom.getAttribute('action').includes('/management/menus/') && (dom.getAttribute('action').includes('/add') || dom.getAttribute('action').includes('/update'))) {
 				data = new FormData();
 				const items = multidimensionalMenuForm(dom);
 				data.append('menu_key', dom.querySelector('[name="menu_key"]').value);
