@@ -12,6 +12,7 @@ namespace KN\Controllers;
 use KN\Core\Controller;
 use KN\Model\Contents;
 use KN\Helpers\Base;
+use KN\Helpers\HTML;
 use KN\Helpers\KalipsoTable;
 use \Verot\Upload\Upload;
 use KN\Controllers\FileController;
@@ -167,188 +168,199 @@ final class ContentController extends Controller {
 
             } else {
 
-                $nameSubfix = [null];
-                if (isset($input['multilanguage']) !== false AND $input['multilanguage']) {
+                if ($input['type'] === 'url_widget') { // URL Widget
 
-                    $nameSubfix = $languages;
-                    $moduleForm .= '
-                    <div class="' . $col . ' kn-multilang-content">
-                        <div class="kn-multilang-content-switch">
-                            <div class="nav nav-pills" id="' . $idPrefix . '_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
-                            foreach ($languages as $i => $lang) {
-                                $moduleForm .= '
-                                <button class="nav-link'.($i===0 ? ' active' : '').'" id="' . $idPrefix . '_'.$name.'-tab-'.$lang.'" data-bs-toggle="pill" data-bs-target="#' . $idPrefix . '_'.$name.'-'.$lang.'" type="button" role="tab" aria-controls="' . $idPrefix . '_'.$name.'-'.$lang.'" aria-selected="'.($i===0 ? 'true' : 'false').'">
-                                    '.Base::lang('langs.'.$lang).'
-                                </button>';
-                            }
-                    $moduleForm .= '
+                    $menuController = new MenuController($this->get());
+                    $moduleForm .= HTML::menuModuleUrlWidget([
+                        'menu_options' => $menuController->menuOptionsAsHTML(),
+                        'name' => $name,
+                        'label' => Base::lang($input['label']),
+                    ]);
+
+                } else {
+
+                    $nameSubfix = [null];
+                    if (isset($input['multilanguage']) !== false AND $input['multilanguage']) {
+
+                        $nameSubfix = $languages;
+                        $moduleForm .= '
+                        <div class="' . $col . ' kn-multilang-content">
+                            <div class="kn-multilang-content-switch">
+                                <div class="nav nav-pills" id="' . $idPrefix . '_'.$name.'-tablist" role="tablist" aria-orientation="vertical">';
+                                foreach ($languages as $i => $lang) {
+                                    $moduleForm .= '
+                                    <button class="nav-link'.($i===0 ? ' active' : '').'" id="' . $idPrefix . '_'.$name.'-tab-'.$lang.'" data-bs-toggle="pill" data-bs-target="#' . $idPrefix . '_'.$name.'-'.$lang.'" type="button" role="tab" aria-controls="' . $idPrefix . '_'.$name.'-'.$lang.'" aria-selected="'.($i===0 ? 'true' : 'false').'">
+                                        '.Base::lang('langs.'.$lang).'
+                                    </button>';
+                                }
+                        $moduleForm .= '
+                                </div>
                             </div>
-                        </div>
-                        <div class="tab-content">';
+                            <div class="tab-content">';
+                                    
+                    }
+
+                    $col = isset($input['col']) !== false ? $input['col'] : 'col-12 col-md-6';
+
+                    foreach ($nameSubfix as $i => $lang) {
+                        
+                        $attributes = '';
+                        if (isset($input['attributes']) !== false) {
+                            foreach ($input['attributes'] as $attribute => $val) {
+                                if (in_array($attribute, ['required', 'checked', 'selected']) !== false)
+                                    $attributes .= $attribute . ' ';
+                                else
+                                    $attributes .= $attribute . '="'.$val.'" ';
                                 
-                }
+                            }
+                        }
 
-                $col = isset($input['col']) !== false ? $input['col'] : 'col-12 col-md-6';
+                        $currentVal = null;
+                        $inputName = is_null($lang) ? $name : $name.'['.$lang.']';
+                        // multilingual
+                        if (! is_null($lang)) {
+                            $col = 'col';
+                            $moduleForm .= '
+                            <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="' . $idPrefix . '_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="' . $idPrefix . '_'.$name.'-tab-'.$lang.'">';
 
-                foreach ($nameSubfix as $i => $lang) {
-                    
-                    $attributes = '';
-                    if (isset($input['attributes']) !== false) {
-                        foreach ($input['attributes'] as $attribute => $val) {
-                            if (in_array($attribute, ['required', 'checked', 'selected']) !== false)
-                                $attributes .= $attribute . ' ';
-                            else
-                                $attributes .= $attribute . '="'.$val.'" ';
+                            if (isset($fillDatas->{$name}->{$lang}) !== false) {
+                                $currentVal = $fillDatas->{$name}->{$lang};
+                            }
+
+                        } else {
                             
-                        }
-                    }
-
-                    $currentVal = null;
-                    $inputName = is_null($lang) ? $name : $name.'['.$lang.']';
-                    // multilingual
-                    if (! is_null($lang)) {
-                        $col = 'col';
-                        $moduleForm .= '
-                        <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="' . $idPrefix . '_'.$name.'-'.$lang.'" role="tabpanel" aria-labelledby="' . $idPrefix . '_'.$name.'-tab-'.$lang.'">';
-
-                        if (isset($fillDatas->{$name}->{$lang}) !== false) {
-                            $currentVal = $fillDatas->{$name}->{$lang};
-                        }
-
-                    } else {
-                        
-                        if (isset($fillDatas->{$name}) !== false) {
-                            $currentVal = $fillDatas->{$name};
-                        }
-                    }
-
-                    $requiredBadge = '';
-                    if (isset($input['attributes']['required']) !== false AND $input['attributes']['required']) {
-                        $requiredBadge = ' <sup class="text-danger">*</sup>';
-                    }
-
-                    switch ($input['type']) {
-                        case 'input':
-                        case 'color':
-                        case 'number':
-
-                            if (! is_null($currentVal)) {
-                                $attributes .= 'value="'.$currentVal.'" ';
+                            if (isset($fillDatas->{$name}) !== false) {
+                                $currentVal = $fillDatas->{$name};
                             }
-                            $attributes .= 'data-kn-lang="'.$lang.'" ';
-                            if (isset($id) !== false) $attributes .= 'data-kn-id="'.$id.'" ';
+                        }
 
-                            $moduleForm .= '
-                            <div class="'.$col.'">
-                                <div class="form-floating">
-                                    <input type="' . ($input['type'] == 'input' ? 'text' : $input['type']) . '" class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
-                                    <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
-                                </div>
-                            </div>';
-                            break;
+                        $requiredBadge = '';
+                        if (isset($input['attributes']['required']) !== false AND $input['attributes']['required']) {
+                            $requiredBadge = ' <sup class="text-danger">*</sup>';
+                        }
 
-                        case 'file':
+                        switch ($input['type']) {
+                            case 'input':
+                            case 'color':
+                            case 'number':
 
-                            $externalBadge = '';
-                            if (! is_null($currentVal) AND is_array($currentVal) AND count($currentVal)) {
+                                if (! is_null($currentVal)) {
+                                    $attributes .= 'value="'.$currentVal.'" ';
+                                }
+                                $attributes .= 'data-kn-lang="'.$lang.'" ';
+                                if (isset($id) !== false) $attributes .= 'data-kn-id="'.$id.'" ';
 
-                                $getFiles = $fileController->getFilesInId($currentVal);
-                                
-                                if (! empty($getFiles)) {
+                                $moduleForm .= '
+                                <div class="'.$col.'">
+                                    <div class="form-floating">
+                                        <input type="' . ($input['type'] == 'input' ? 'text' : $input['type']) . '" class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
+                                        <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
+                                    </div>
+                                </div>';
+                                break;
 
-                                    $externalBadge = '<div class="image-group">';
-                                    foreach ($getFiles as $fileIndex => $getFile) {
-                                        
-                                        $getFile->files = json_decode($getFile->files);
-                                        $src = Base::base('upload/' . (isset($getFile->files->sm) !== false ? $getFile->files->sm : $getFile->files->original));
-                                        $href = Base::base('upload/' . $getFile->files->original);
-                                        $externalBadge .= '<a href="' . $href . '" target="_blank" data-target="current_file_delete_' . $inputName . $fileIndex . '">
-                                            <img class="table-image" src="' . $src . '" />
-                                            <button href="javascript:;" 
-                                                data-kn-again="'.Base::lang('base.are_you_sure').'" 
-                                                data-kn-action="manipulation"
-                                                data-kn-manipulation=\'' . json_encode(
-                                                    [   'manipulation' => [
-                                                            '[data-target="current_file_delete_' . $inputName . $fileIndex . '"]' => [
-                                                                'remove_element' => true
+                            case 'file':
+
+                                $externalBadge = '';
+                                if (! is_null($currentVal) AND is_array($currentVal) AND count($currentVal)) {
+
+                                    $getFiles = $fileController->getFilesInId($currentVal);
+                                    
+                                    if (! empty($getFiles)) {
+
+                                        $externalBadge = '<div class="image-group">';
+                                        foreach ($getFiles as $fileIndex => $getFile) {
+                                            
+                                            $getFile->files = json_decode($getFile->files);
+                                            $src = Base::base('upload/' . (isset($getFile->files->sm) !== false ? $getFile->files->sm : $getFile->files->original));
+                                            $href = Base::base('upload/' . $getFile->files->original);
+                                            $externalBadge .= '<a href="' . $href . '" target="_blank" data-target="current_file_delete_' . $inputName . $fileIndex . '">
+                                                <img class="table-image" src="' . $src . '" />
+                                                <button href="javascript:;" 
+                                                    data-kn-again="'.Base::lang('base.are_you_sure').'" 
+                                                    data-kn-action="manipulation"
+                                                    data-kn-manipulation=\'' . json_encode(
+                                                        [   'manipulation' => [
+                                                                '[data-target="current_file_delete_' . $inputName . $fileIndex . '"]' => [
+                                                                    'remove_element' => true
+                                                                ]
                                                             ]
-                                                        ]
-                                                    ]) . '\'
-                                                >
-                                                ' . Base::lang('base.delete') . '
-                                            </button>
-                                            <input type="hidden" name="current_file_' . $inputName . '[]" value="' . $getFile->id . '" />
-                                        </a>';
+                                                        ]) . '\'
+                                                    >
+                                                    ' . Base::lang('base.delete') . '
+                                                </button>
+                                                <input type="hidden" name="current_file_' . $inputName . '[]" value="' . $getFile->id . '" />
+                                            </a>';
 
+                                        }
+                                        $externalBadge .= '</div>';
                                     }
-                                    $externalBadge .= '</div>';
                                 }
-                            }
 
-                            $moduleForm .= '
-                            <div class="'.$col.'">
-                                <div class="">
-                                    <label for="' . $idPrefix . '_' . $name . $lang . '" class="form-label small text-muted m-0">' . $externalBadge . Base::lang($input['label']) . $requiredBadge . '</label>
-                                    <input class="form-control" '.$attributes.'name="' . $inputName . (isset($input['attributes']['multiple']) !== false ? '[]' : '') . '" id="' . $idPrefix . '_' . $name . $lang . '" type="file">
-                                </div>
-                            </div>';
-                            break;
-                        
-                        case 'select':
-                            $options = '';
-                            if (isset($input['data']) !== false) {
-                                foreach ($input['data'] as $val => $text) {
-                                    $selected = '';
-                                    if (! is_null($currentVal) AND $currentVal == $val) {
-                                        $selected .= ' selected';
+                                $moduleForm .= '
+                                <div class="'.$col.'">
+                                    <div class="">
+                                        <label for="' . $idPrefix . '_' . $name . $lang . '" class="form-label small text-muted m-0">' . $externalBadge . Base::lang($input['label']) . $requiredBadge . '</label>
+                                        <input class="form-control" '.$attributes.'name="' . $inputName . (isset($input['attributes']['multiple']) !== false ? '[]' : '') . '" id="' . $idPrefix . '_' . $name . $lang . '" type="file">
+                                    </div>
+                                </div>';
+                                break;
+                            
+                            case 'select':
+                                $options = '';
+                                if (isset($input['data']) !== false) {
+                                    foreach ($input['data'] as $val => $text) {
+                                        $selected = '';
+                                        if (! is_null($currentVal) AND $currentVal == $val) {
+                                            $selected .= ' selected';
+                                        }
+                                        $options .= '<option value="'.$val.'"' . $selected . '>' . $text . '</option>';
                                     }
-                                    $options .= '<option value="'.$val.'"' . $selected . '>' . $text . '</option>';
                                 }
-                            }
 
-                            $moduleForm .= '
-                            <div class="'.$col.'">
-                                <div class="form-floating">
-                                    <select class="form-select" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '">
-                                        '.$options.'
-                                    </select>
-                                    <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
-                                </div>
-                            </div>';
-                            break;
+                                $moduleForm .= '
+                                <div class="'.$col.'">
+                                    <div class="form-floating">
+                                        <select class="form-select" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '">
+                                            '.$options.'
+                                        </select>
+                                        <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
+                                    </div>
+                                </div>';
+                                break;
 
-                        case 'textarea':
-                            $moduleForm .= '
-                            <div class="'.$col.'">
-                                <div class="form-floating">
-                                    <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 100px">' . $currentVal . '</textarea>
-                                    <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
-                                </div>
-                            </div>';
-                            break;
+                            case 'textarea':
+                                $moduleForm .= '
+                                <div class="'.$col.'">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" style="min-height: 100px">' . $currentVal . '</textarea>
+                                        <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
+                                    </div>
+                                </div>';
+                                break;
 
-                        case 'editor':
+                            case 'editor':
+                                $moduleForm .= '
+                                <div class="'.$col.'">
+                                    <div data-kn-toggle="editor" class="editor" data-options=\'' . json_encode(['placeholder'=>Base::lang($input['label'])])  . '\' data-name="' . $inputName . '" data-module="' . $this->module . '">' . htmlspecialchars_decode((string) $currentVal) . '</div>
+                                </div>';
+                                break;
+                        }
+
+                        if (! is_null($lang)) {
                             $moduleForm .= '
-                            <div class="'.$col.'">
-                                <div data-kn-toggle="editor" class="editor" data-options=\'' . json_encode(['placeholder'=>Base::lang($input['label'])])  . '\' data-name="' . $inputName . '" data-module="' . $this->module . '">' . htmlspecialchars_decode((string) $currentVal) . '</div>
                             </div>';
-                            break;
+                        }
+
                     }
 
-                    if (! is_null($lang)) {
+                    if (isset($input['multilanguage']) !== false AND $input['multilanguage']) {
+                        $multilanguage = true;
                         $moduleForm .= '
+                            </div>
                         </div>';
                     }
-
                 }
-
-                if (isset($input['multilanguage']) !== false AND $input['multilanguage']) {
-                    $multilanguage = true;
-                    $moduleForm .= '
-                        </div>
-                    </div>';
-                }
-                    
             }
         }
 
@@ -518,7 +530,7 @@ final class ContentController extends Controller {
 
                 } else {
 
-                    if ($detail['type'] === 'input' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
 
                         $inputAreas[$name] = 'nulled_text';
 
@@ -835,7 +847,7 @@ final class ContentController extends Controller {
 
                 } else {
 
-                    if ($detail['type'] === 'input' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
 
                         $inputAreas[$name] = 'nulled_text';
 

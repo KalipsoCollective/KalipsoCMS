@@ -392,6 +392,11 @@ return [
         'menu_successfully_updated' => 'The menu has been successfully updated.',
         'menu_update_problem' => 'There was a problem updating the menu.',
         'menu_integrity_problem' => 'There seems to be a problem with the menu data integrity, you should check to make sure there are no missing fields.',
+        'sliders' => 'Sliders',
+        'sliders_message' => 'You can manage the slider contents here.',
+        'link' => 'Link',
+        'order' => 'Order',
+        'links' => 'Links',
     ],
     'app' => [
         

@@ -20,19 +20,6 @@
 			</div>
 		</div>
 		<?php
-		$jsonParameters = json_encode([
-			'dragger' => true,
-			'manipulation' => [
-				'#addModal .kn-menu-drag' => [
-					'html_append' => \KN\Helpers\HTML::urlWidget([
-						'menu_options' => $menuOptions,
-						'kn_drag' => true
-					]),
-					'html_append_dynamic' => true
-				]
-			]
-		]);
-
 		if ($this->authority('management/menus/add')) {	?>
 
 			<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -59,7 +46,7 @@
 								</div>
 								<div class="col-12 col-md-1">
 									<div class="d-grid">
-										<button class="btn btn-primary btn-lg" type="button" data-kn-action="manipulation" data-kn-manipulation='<?php echo $jsonParameters; ?>'><i class="ti ti-circle-plus"></i>
+										<button class="btn btn-primary btn-lg" type="button" data-kn-action="manipulation" data-kn-manipulation='<?php echo $menuJson; ?>'><i class="ti ti-circle-plus"></i>
 										</button>
 									</div>
 								</div>
@@ -104,7 +91,7 @@
 								<?php if ($this->authority('management/menus/:id/update')) { ?>
 								<div class="col-12 col-md-1">
 									<div class="d-grid">
-										<button class="btn btn-primary btn-lg" type="button" data-kn-action="manipulation" data-kn-manipulation='<?php echo str_replace('#addModal', '#editModal', $jsonParameters); ?>'><i class="ti ti-circle-plus"></i>
+										<button class="btn btn-primary btn-lg" type="button" data-kn-action="manipulation" data-kn-manipulation='<?php echo str_replace('#addModal', '#editModal', $menuJson); ?>'><i class="ti ti-circle-plus"></i>
 										</button>
 									</div>
 								</div>

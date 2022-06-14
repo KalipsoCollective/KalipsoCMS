@@ -11,6 +11,7 @@ namespace KN\Controllers;
 
 use KN\Core\Controller;
 use KN\Helpers\Base;
+use KN\Helpers\HTML;
 use KN\Helpers\KalipsoTable;
 use KN\Core\Model;
 use KN\Model\Menus;
@@ -34,7 +35,18 @@ final class MenuController extends Controller {
 				'description' => Base::lang('base.menus_message'),
 				'modules' => $this->modules,
 				'forms' => $this->forms,
-				'menuOptions' => $this->menuOptionsAsHTML()
+				'menuJson' => json_encode([
+					'dragger' => true,
+					'manipulation' => [
+						'#addModal .kn-menu-drag' => [
+							'html_append' => HTML::menuModuleUrlWidget([
+								'menu_options' => $this->menuOptionsAsHTML(),
+								'kn_drag' => true
+							]),
+							'html_append_dynamic' => true
+						]
+					]
+				])
 			],
 			'view' => ['admin.menus', 'admin']
 		];
@@ -85,9 +97,9 @@ final class MenuController extends Controller {
 			extract(Base::input([
 				'module'  => 'nulled_text',
 				'target'  => 'nulled_text',
+				'widget'  => 'check_as_boolean',
 			], $this->get('request')->params));
 		}
-
 		
 		$arguments = [];
 		$html = ' ';
@@ -105,7 +117,10 @@ final class MenuController extends Controller {
 					}
 
 					if ($moduleDetail['routes']['detail']) {
-						$html .= '<option value="list">' . Base::lang('base.list_as_dropdown') . '</option>';
+
+						if (! $widget) {
+							$html .= '<option value="list">' . Base::lang('base.list_as_dropdown') . '</option>';
+						}
 
 						$contents = (new ContentController($this->get()))->getModuleDatas($module);
 
@@ -447,6 +462,8 @@ final class MenuController extends Controller {
 		$model = new Menus();
 		$getMenu = $model->select('id, menu_key, items')->where('id', $id)->get();
 		if (! empty($getMenu)) {
+
+			//$menuContent = HTML::menu
 
 			$arguments['modal_open'] = ['#editModal'];
 			$arguments['manipulation'] = [

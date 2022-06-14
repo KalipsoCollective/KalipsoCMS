@@ -392,6 +392,11 @@ return [
         'menu_successfully_updated' => 'Menu başarıyla güncellendi.',
         'menu_update_problem' => 'Menu güncellenirken bir sorun oluştu.',
         'menu_integrity_problem' => 'Menü veri bütünlüğünde bir sorun görünüyor, eksik alan kalmaması için kontrol etmelisiniz.',
+        'sliders' => 'Slaytlar',
+        'sliders_message' => 'Slaytları yönetebileceğiniz sayfadır.',
+        'link' => 'Bağlantı',
+        'order' => 'Sıra',
+        'links' => 'Bağlantılar',
     ],
     'app' => [
         
