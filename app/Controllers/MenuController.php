@@ -78,27 +78,32 @@ final class MenuController extends Controller {
 
 	}
 
-	public function menuOptionsAsHTML($values = null) {
+	public function menuOptionsAsHTML($currentValue = null) {
 
 		$options = '<option value=""></option>';
 		foreach ($this->menuOptions() as $section => $links) {
 			$options .= '<optgroup label="' . Base::lang('base.' . $section) . '">';
 			foreach ($links as $value => $name) {
-				$options .= '<option value="' . $section . '_' . $value . '">' . $name . '</option>';
+				$optValue = $section . '_' . $value;
+				$options .= '<option value="' . $optValue . '"'.($currentValue == $optValue ? ' selected' : '').'>' . $name . '</option>';
 			}
 			$options .= '</optgroup>';
 		}
 		return $options;
 	}
 
-	public function getMenuParameters($module = null) {
+	public function getMenuParameters($module = null, $parameter = null) {
 
+		
 		if (is_null($module)) {
 			extract(Base::input([
-				'module'  => 'nulled_text',
-				'target'  => 'nulled_text',
-				'widget'  => 'check_as_boolean',
+				'module'  => 'nulled_text', // related module
+				'target'  => 'nulled_text', // target
+				'widget'  => 'check_as_boolean', // direct link parameter for other modules
 			], $this->get('request')->params));
+		} else {
+			$returnDirect = true;
+			$widget = false;
 		}
 		
 		$arguments = [];
@@ -109,17 +114,19 @@ final class MenuController extends Controller {
 			$module = explode('_', $module, 2);
 			if ($module[0] === 'modules') {
 				
+
 				if (isset($this->modules[$module[1]]) !== false) {
+
 					$module = $module[1];
 					$moduleDetail = $this->modules[$module];
 					if ($moduleDetail['routes']['listing']) {
-						$html .= '<option value="list">' . Base::lang('base.list') . '</option>';
+						$html .= '<option value="list"'.($parameter == 'list' ? ' selected' : '').'>' . Base::lang('base.list') . '</option>';
 					}
 
 					if ($moduleDetail['routes']['detail']) {
 
 						if (! $widget) {
-							$html .= '<option value="list">' . Base::lang('base.list_as_dropdown') . '</option>';
+							$html .= '<option value="list_as_dropdown"'.($parameter == 'list_as_dropdown' ? ' selected' : '').'>' . Base::lang('base.list_as_dropdown') . '</option>';
 						}
 
 						$contents = (new ContentController($this->get()))->getModuleDatas($module);
@@ -150,7 +157,7 @@ final class MenuController extends Controller {
 								} else {
 									$text = $val;
 								}
-								$html .= '<option value="' . $val . '">' . $text . '</option>';
+								$html .= '<option value="' . $val . '"'.($parameter==$val ? ' selected' : '').'>' . $text . '</option>';
 							}
 							$html .= '</optgroup>';
 						}
@@ -166,18 +173,25 @@ final class MenuController extends Controller {
 
 		}
 
-		$arguments['manipulation'] = [
-			$target => [
-				'html'  => $html
-			]
-		];
+		
 
-		return [
-			'status' => true,
-			'statusCode' => 200,
-			'arguments' => $arguments,
-			'view' => null
-		];
+		if (isset($returnDirect) !== false) {
+			$return = $html;
+		} else {
+			$arguments['manipulation'] = [
+				$target => [
+					'html'  => $html
+				]
+			];
+			$return = [
+				'status' => true,
+				'statusCode' => 200,
+				'arguments' => $arguments,
+				'view' => null
+			];
+		}
+
+		return $return;
 
 	}
 
@@ -364,32 +378,6 @@ final class MenuController extends Controller {
 				'message' => Base::lang('base.form_cannot_empty')
 			];
 
-			$arguments['manipulation'] = [];
-
-			if ($email) {
-				$arguments['manipulation']['#userAdd [name="email"]'] = [
-					'class' => ['is-invalid'],
-				];
-			}
-
-			if ($u_name) {
-				$arguments['manipulation']['#userAdd [name="u_name"]'] = [
-					'class' => ['is-invalid'],
-				];
-			}
-
-			if ($role_id) {
-				$arguments['manipulation']['#userAdd [name="role_id"]'] = [
-					'class' => ['is-invalid'],
-				];
-			}
-
-			if ($password) {
-				$arguments['manipulation']['#userAdd [name="password"]'] = [
-					'class' => ['is-invalid'],
-				];
-			}
-
 		}
 
 		return [
@@ -463,7 +451,10 @@ final class MenuController extends Controller {
 		$getMenu = $model->select('id, menu_key, items')->where('id', $id)->get();
 		if (! empty($getMenu)) {
 
-			//$menuContent = HTML::menu
+			$getMenu->items = json_decode($getMenu->items);
+			$menuContent = HTML::menuUrlWidgetList(
+				$getMenu->items
+			);
 
 			$arguments['modal_open'] = ['#editModal'];
 			$arguments['manipulation'] = [
@@ -474,7 +465,7 @@ final class MenuController extends Controller {
 					'attribute' => ['value' => $getMenu->menu_key],
 				],
 				'#editModal #menuItems' => [
-					'html' => 'test',
+					'html' => $menuContent,
 				],
 			];
 
@@ -497,7 +488,100 @@ final class MenuController extends Controller {
 	}
 
 
-	public function userUpdate() {
+	public function menuUpdate() {
+
+		$id = (int)$this->get('request')->attributes['id'];
+
+		extract(Base::input([
+			'menu_key' => 'nulled_text',
+			'items' => 'nulled_text'
+		], $this->get('request')->params));
+
+		$alerts = [];
+		$arguments = [];
+
+		$model = new Menus();
+		$getMenu = $model->select('id, menu_key, items')->where('id', $id)->get();
+		if (! empty($getMenu)) {
+
+			if ($menu_key AND $items) {
+
+				$keyCheck = $model->count('id', 'total')->where('menu_key', $menu_key)->notWhere('id', $id)->get();
+				if ((int)$keyCheck->total === 0) {
+
+					$items = htmlspecialchars_decode($items);
+					$itemsObj = @json_decode($items);
+					$update = $this->menuIntegrityCheck($itemsObj);
+
+					if ($update) {
+
+						$update = [
+							'menu_key' => $menu_key,
+							'items' => $items
+						];
+
+						$update = $model->where('id', $id)->update($update);
+						if ($update) {
+
+							$alerts[] = [
+								'status' => 'success',
+								'message' => Base::lang('base.menu_successfully_updated')
+							];
+							$arguments['modal_close'] = '#editModal';
+							$arguments['table_reset'] = 'menusTable';
+
+						} else {
+
+							$alerts[] = [
+								'status' => 'error',
+								'message' => Base::lang('base.menu_update_problem')
+							];
+						}
+
+					} else {
+
+						$alerts[] = [
+							'status' => 'warning',
+							'message' => Base::lang('base.menu_integrity_problem')
+						];
+					}
+
+				} else {
+
+					$alerts[] = [
+						'status' => 'warning',
+						'message' => Base::lang('base.key_is_already_used')
+					];
+					$arguments['manipulation'] = [
+						'#editModal [name="key"]' => [
+							'class' => ['is-invalid'],
+						]
+					];
+				}
+
+			} else {
+
+				$alerts[] = [
+					'status' => 'warning',
+					'message' => Base::lang('base.form_cannot_empty')
+				];
+
+			}
+		} else {
+			$alerts[] = [
+				'status' => 'warning',
+				'message' => Base::lang('base.record_not_found')
+			];
+		}
+
+		return [
+			'status' => true,
+			'statusCode' => 200,
+			'arguments' => $arguments,
+			'alerts' => $alerts,
+			'view' => null
+		];
+
 
 		extract(Base::input([
 			'email' => 'nulled_text',

@@ -175,7 +175,7 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 			
 			// Append Datas
 			let data = null ;
-			if (dom.getAttribute('action').includes('/management/menus/add')) {
+			if (dom.getAttribute('action').includes('/management/menus/') && (dom.getAttribute('action').includes('/add') || dom.getAttribute('action').includes('/edit'))) {
 				data = new FormData();
 				const items = multidimensionalMenuForm(dom);
 				data.append('menu_key', dom.querySelector('[name="menu_key"]').value);
@@ -563,7 +563,6 @@ function responseFormatter(response, dom = null) {
 				if (data.html_append !== undefined && data.html_append) {
 					const currentHtml = dom.querySelector(selector).innerHTML;
 					if (data.html_append_dynamic !== undefined && data.html_append_dynamic) {
-
 						let dynamicId = 0;
 						const div = document.createElement('div');
 						div.innerHTML = data.html_append;

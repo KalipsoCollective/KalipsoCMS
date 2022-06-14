@@ -12,12 +12,19 @@ namespace KN\Helpers;
 class HTML {
 
     /**
-     * Url Widget
-     * @param any $value
-     * @param boolean $exit
-     * @return void
+     * Menu Module Url Widget
+     * @param array $parameters;
+     * kn_drag -> boolean: for multi menu support 
+     * name -> string: specific input name( default: links )
+     * label -> string: title for direct using
+     * menu_options -> string: menu module list as string option
+     * multi_ready -> boolean: multi dimension layout
+     * values -> object: current values 
+     * @return string
      */
     public static function menuModuleUrlWidget($parameters = []) {
+
+        $values = null;
 
         $drag = false;
         if (isset($parameters['kn_drag']) !== false AND $parameters['kn_drag']) 
@@ -26,6 +33,9 @@ class HTML {
         $name = 'links';
         if (isset($parameters['name']) !== false) 
             $name = $parameters['name'];
+
+        if (isset($parameters['values']) !== false)
+            $values = $parameters['values'];
 
 
         $languages = Base::config('app.available_languages');
@@ -42,7 +52,7 @@ class HTML {
                     $tabContents .= '
                     <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="name-'.$lang.'(DYNAMIC_ID)" role="tabpanel" aria-labelledby="name-tab-'.$lang.'(DYNAMIC_ID)">
                         <div class="form-floating">
-                            <input type="text" class="form-control" name="' . $name . '[name][' . $lang . ']" id="menuName' . $lang . '(DYNAMIC_ID)" placeholder="'.Base::lang('base.name').'">
+                            <input type="text" class="form-control" name="' . $name . '[name][' . $lang . ']" id="menuName' . $lang . '(DYNAMIC_ID)" placeholder="'.Base::lang('base.name').'"'.(isset($values->name->{$lang}) !== false ? ' value="'.$values->name->{$lang}.'"' : '').'>
                             <label for="menuName' . $lang . '">'.Base::lang('base.name').'</label>
                         </div>
                     </div>';
@@ -66,7 +76,7 @@ class HTML {
                         </div>
                         <div class="col-12">
                             <div class="form-floating">
-                                <input type="url" class="form-control form-control-sm" name="' . $name . '[direct_link]" placeholder="' . Base::lang('base.direct_link').'">
+                                <input type="url" class="form-control form-control-sm" name="' . $name . '[direct_link]" placeholder="' . Base::lang('base.direct_link').'"'.(isset($values->direct_link) !== false ? ' value="'.$values->direct_link.'"' : '').'>
                                 <label>' . Base::lang('base.direct_link').'</label>
                             </div>
                         </div>
@@ -82,7 +92,8 @@ class HTML {
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-floating">
-                                        <select class="form-select form-select-sm" id="menuParameter(DYNAMIC_ID)" name="' . $name . '[dynamic_link][parameter]" aria-label="' . \KN\Helpers\Base::lang('base.parameter').'">
+                                        <select class="form-select form-select-sm" id="menuParameter(DYNAMIC_ID)" name="' . $name . '[dynamic_link][parameter]" aria-label="' . Base::lang('base.parameter').'">
+                                            ' . (isset($parameters['module_parameters']) !== false ? $parameters['module_parameters'] : '') . '
                                         </select>
                                         <label>' . Base::lang('base.parameter').'</label>
                                     </div>
@@ -101,7 +112,7 @@ class HTML {
                             <i class="ti ti-drag-drop"></i>
                         </button>
                         ' : '').'
-                        <input type="checkbox" name="' . $name . '[blank]" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off">
+                        <input type="checkbox" name="' . $name . '[blank]" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off"'.(isset($values->blank) !== false ? ($values->blank ? ' checked' : '') : '').'>
                         <label class="btn btn-outline-primary btn-sm" for="targetBlank(DYNAMIC_ID)">
                             <i class="ti ti-external-link"></i>
                         </label><br>
@@ -116,6 +127,42 @@ class HTML {
 
         }
 
+        return $return;
+
+    }
+
+    /**
+     * Menu URL Widget List
+     * @param object $items
+     * @return string
+     **/
+    public static function menuUrlWidgetList($items) {
+
+        $return = '';
+        $menuController = (new \KN\Controllers\MenuController((object)['request'=>'']));
+        if (count((array) $items)) {
+            foreach ($items as $item) {
+                
+                $dynamicId = Base::tokenGenerator(8);
+                $moduleName = isset($item->dynamic_link->module) !== false? $item->dynamic_link->module : null;
+                $widget = self::menuModuleUrlWidget([
+                    'menu_options' => $menuController->menuOptionsAsHTML($moduleName),
+                    'values' => $items,
+                    'kn_drag' => true,
+                    'module_parameters' => $menuController->getMenuParameters($item->dynamic_link->module, $item->dynamic_link->parameter),
+                    'values' => $item
+                ]);
+                $widget = str_replace('(DYNAMIC_ID)', $dynamicId, $widget);
+
+                if (isset($item->sub) !== false) {
+                    $sub = self::menuUrlWidgetList($item->sub);
+                    $widget = rtrim($widget, '</div>') . $sub . '</div>';
+                }
+
+                $return .= $widget;
+
+            }
+        }
         return $return;
 
     }
