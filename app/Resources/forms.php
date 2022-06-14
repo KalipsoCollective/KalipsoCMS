@@ -6,6 +6,7 @@ return [
 
 	'contact-form' => [
 		'name' => Base::lang('base.contact'),
+		'description' => Base::lang('base.contact_message'),
 		'icon' => 'ti ti-file-phone', 
 		'inputs' => [
 			'name' => [
@@ -47,6 +48,7 @@ return [
 	],
 	'information-request-form' => [
 		'name' => Base::lang('base.information_request_form'),
+		'description' => Base::lang('base.information_request_form_message'),
 		'icon' => 'ti ti-file-info', 
 		'inputs' => [
 			'name' => [

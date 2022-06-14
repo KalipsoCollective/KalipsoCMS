@@ -27,27 +27,27 @@ final class FormController extends Controller {
 
     public function forms() {
 
-        $title = Base::lang('base.contents');
-        $description = Base::lang('base.contents_message');
+        $title = Base::lang('base.forms');
+        $description = Base::lang('base.forms_message');
 
-        if (isset($this->modules[$this->module]) !== false) {
+        if (isset($this->forms[$this->form]) !== false) {
 
-            $module = $this->modules[$this->module];
-            $moduleName = Base::lang($module['name']);
-            $title = $moduleName . ' | ' . $title;
-            $description = Base::lang($module['description']);
-            $icon = isset($module['icon']) !== false ? $module['icon'] : 'ti ti-folders';
+            $form = $this->forms[$this->form];
+            $formName = Base::lang($form['name']);
+            $title = $formName . ' | ' . $title;
+            $description = Base::lang($form['description']);
+            $icon = isset($form['icon']) !== false ? $form['icon'] : 'ti ti-file-phone';
 
             $arguments = [
                 'title' => $title,
-                'moduleName' => $moduleName,
-                'moduleDatas' => $module,
+                'formName' => $formName,
+                'formDatas' => $form,
                 'icon' => $icon,
                 'description' => $description,
-                'module' => $this->module,
-                'modules' => $this->modules,
+                'form' => $this->form,
+                'forms' => $this->forms,
                 'languages' => Base::config('app.available_languages'),
-                'moduleForm' => $this->prepareModuleForm($module['inputs']),
+                'moduleForm' => $this->prepareForm($module['form']),
             ];
 
             return [
