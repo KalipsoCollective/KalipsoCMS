@@ -190,7 +190,6 @@ final class MenuController extends Controller {
 					if (! $return)
 						break;
 				}
-
 			}
 		} else {
 			$return = false;
@@ -199,81 +198,52 @@ final class MenuController extends Controller {
 
 	}
 
-	public function userList() {
+	public function menuList() {
 
 		$container = $this->get();
 
 		$tableOp = (new KalipsoTable())
-			->db((new Users)->pdo)
+			->db((new Menus)->pdo)
 			->from('(SELECT 
 					x.id, 
-					x.u_name, 
-					x.f_name,
-					x.l_name,
-					x.email, 
-					IFNULL(FROM_UNIXTIME(x.b_date, "%Y.%m.%d"), "-") AS birth_date,
-					IFNULL((SELECT name FROM user_roles WHERE status = "active" AND id = x.role_id), "-") AS role,
+					x.menu_key, 
+					x.items,
 					FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
-					IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated,
-					x.status
-				FROM `users` x WHERE status != "deleted") AS raw')
+					IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+				FROM `menus` x) AS raw')
 			->process([
 				'id' => [
 					'primary' => true,
 				],
-				'u_name' => [],
-				'name' => [
+				'menu_key' => [],
+				'item_count' => [
 					'exclude' => true,
 					'formatter' => function($row) {
 
-						$name = trim($row->f_name . ' ' . $row->l_name);
-						return $name == '' ? '-' : $name;
+						$total = array_sum(array_map('count', json_decode($row->items, true)));
+						return $total;
 					}
 				],
-				'email' => [],
-				'birth_date' => [],
-				'role' => [],
 				'created' => [],
 				'updated' => [],
-				'status' => [
-					'formatter' => function ($row) {
-
-						switch ($row->status) {
-							case 'deleted':
-								$status = 'text-danger';
-								break;
-
-							case 'passive':
-								$status = 'text-warning';
-								break;
-								
-							default:
-								$status = 'text-success';
-								break;
-						}
-
-						return '<span class="' . $status . '">' . Base::lang('base.' . $row->status) . '</span>';
-
-					}
-				],
 				'action' => [
 					'exclude' => true,
 					'formatter' => function($row) use ($container) {
 
 						$buttons = '';
-						if ($container->authority('management/users/:id')) {
+						if ($container->authority('management/menus/:id')) {
 							$buttons .= '
 							<button type="button" class="btn btn-light" 
-								data-kn-action="'.$this->get()->url('/management/users/' . $row->id ).'">
+								data-kn-action="'.$this->get()->url('/management/menus/' . $row->id ).'">
 								' . Base::lang('base.view') . '
 							</button>';
 						}
 
-						if ($container->authority('management/users/:id/delete')) {
+						if ($container->authority('management/menus/:id/delete')) {
 							$buttons .= '
 							<button type="button" class="btn btn-danger" 
 								data-kn-again="'.Base::lang('base.are_you_sure').'" 
-								data-kn-action="'.$this->get()->url('/management/users/' . $row->id . '/delete').'">
+								data-kn-action="'.$this->get()->url('/management/menus/' . $row->id . '/delete').'">
 								' . Base::lang('base.delete') . '
 							</button>';
 						}
@@ -288,9 +258,6 @@ final class MenuController extends Controller {
 				],
 			])
 			->output();
-
-
-		//$arguments = (new KalipsoTable()->);
 
 		return [
 			'status' => true,

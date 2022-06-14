@@ -29,6 +29,76 @@
 				}
 
 				let tableVariables = {
+					menusTable: {
+						selector: "#menusTable",
+						language: "<?php echo \KN\Helpers\Base::lang('lang.code'); ?>",
+						server: true,
+						source: '<?php echo $this->url('/management/menus/list') ?>',
+						columns: [ 
+							{
+								"searchable": {
+									"type": "number",
+									"min": 1,
+									"max": 999
+								},
+								"orderable": true,
+								"title": "#",
+								"key": "id"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.key'); ?>",
+								"key": "menu_key"
+							},
+							{
+								"searchable": false,
+								"orderable": false,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.links'); ?>",
+								"key": "item_count"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.created_at'); ?>",
+								"key": "created"
+							},
+							{
+								"searchable": {
+									"type": "text",
+									"maxlength": 50
+								},
+								"orderable": true,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.updated_at'); ?>",
+								"key": "updated"
+							},
+							{
+								"searchable": false,
+								"orderable": false,
+								"title": "<?php echo \KN\Helpers\Base::lang('base.action'); ?>",
+								"key": "action"
+							}
+						],
+						customize: {
+							tableWrapClass: "table-responsive",
+							tableClass: "table table-bordered",
+							inputClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
+						},
+						tableHeader: {
+							searchBar: true
+						},
+						tableFooter: {
+							visible: true,
+							searchBar: true
+						}
+					},
 					mediasTable: {
 						selector: "#mediasTable",
 						language: "<?php echo \KN\Helpers\Base::lang('lang.code'); ?>",
