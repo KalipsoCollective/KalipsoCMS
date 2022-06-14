@@ -40,7 +40,7 @@
 								</div>
 								<div class="col-12 col-md-11">
 									<div class="form-floating">
-										<input type="text" class="form-control" required name="key" id="menuKey" placeholder="<?php echo \KN\Helpers\Base::lang('base.key'); ?>">
+										<input type="text" class="form-control" required name="menu_key" id="menuKey" placeholder="<?php echo \KN\Helpers\Base::lang('base.key'); ?>">
 										<label for="menuKey"><?php echo \KN\Helpers\Base::lang('base.key'); ?></label>
 									</div>
 								</div>

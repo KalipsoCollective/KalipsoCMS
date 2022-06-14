@@ -383,7 +383,15 @@ return [
         'key' => 'Anahtar',
         'basic' => 'Temel',
         'list' => 'Liste',
-        'list_as_dropdown' => 'Açılır Menü Olarak İçerikler'
+        'list_as_dropdown' => 'Açılır Menü Olarak İçerikler',
+        'key_is_already_used' => 'Anahtar zaten kullanılıyor.',
+        'menu_successfully_added' => 'Menu başarıyla eklendi.',
+        'menu_add_problem' => 'Menu eklenirken bir sorun oluştu.',
+        'menu_successfully_deleted' => 'Menu başarıyla silindi.',
+        'menu_delete_problem' => 'Menu silinirken bir sorun oluştu.',
+        'menu_successfully_updated' => 'Menu başarıyla güncellendi.',
+        'menu_update_problem' => 'Menu güncellenirken bir sorun oluştu.',
+        'menu_integrity_problem' => 'Menü veri bütünlüğünde bir sorun görünüyor, eksik alan kalmaması için kontrol etmelisiniz.',
     ],
     'app' => [
         

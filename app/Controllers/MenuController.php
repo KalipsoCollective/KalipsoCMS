@@ -79,6 +79,126 @@ final class MenuController extends Controller {
 		return $options;
 	}
 
+	public function getMenuParameters($module = null) {
+
+		if (is_null($module)) {
+			extract(Base::input([
+				'module'  => 'nulled_text',
+				'target'  => 'nulled_text',
+			], $this->get('request')->params));
+		}
+
+		
+		$arguments = [];
+		$html = ' ';
+
+		if (! is_null($module) AND strpos($module, '_') !== false) {
+
+			$module = explode('_', $module, 2);
+			if ($module[0] === 'modules') {
+				
+				if (isset($this->modules[$module[1]]) !== false) {
+					$module = $module[1];
+					$moduleDetail = $this->modules[$module];
+					if ($moduleDetail['routes']['listing']) {
+						$html .= '<option value="list">' . Base::lang('base.list') . '</option>';
+					}
+
+					if ($moduleDetail['routes']['detail']) {
+						$html .= '<option value="list">' . Base::lang('base.list_as_dropdown') . '</option>';
+
+						$contents = (new ContentController($this->get()))->getModuleDatas($module);
+
+						if (count($contents)) {
+							$html .= '<optgroup label="' . Base::lang('base.contents') . '">';
+							foreach ($contents as $content) {
+								$contentDetails = json_decode($content->input);
+								$val = $content->id;
+								if (isset($contentDetails->title) AND 
+									(
+										is_string($contentDetails->title) OR 
+										isset($contentDetails->title->{Base::lang('lang.code')}) !== false
+									)
+								) {
+
+									$text = is_string($contentDetails->title) ? $contentDetails->title : $contentDetails->title->{Base::lang('lang.code')};
+
+								} elseif (isset($contentDetails->name) AND 
+									(
+										is_string($contentDetails->name) OR 
+										isset($contentDetails->name->{Base::lang('lang.code')}) !== false
+									)
+								) {
+
+									$text = is_string($contentDetails->name) ? $contentDetails->name : $contentDetails->name->{Base::lang('lang.code')};
+
+								} else {
+									$text = $val;
+								}
+								$html .= '<option value="' . $val . '">' . $text . '</option>';
+							}
+							$html .= '</optgroup>';
+						}
+					}
+
+				}
+
+			} elseif ($module[0] === 'forms') {
+	
+
+
+			}
+
+		}
+
+		$arguments['manipulation'] = [
+			$target => [
+				'html'  => $html
+			]
+		];
+
+		return [
+			'status' => true,
+			'statusCode' => 200,
+			'arguments' => $arguments,
+			'view' => null
+		];
+
+	}
+
+	public function menuIntegrityCheck($items) {
+
+		$return = true;
+		$availableLangs = Base::config('app.available_languages');
+		if (count((array)$items)) {
+			foreach ($items as $detail) {
+				
+				if ($detail->direct_link === '' AND $detail->dynamic_link->module === '') {
+					$return = false;
+					break;
+				}
+
+				foreach ($availableLangs as $lang) {
+					if (isset($detail->name->{$lang}) === false OR $detail->name->{$lang} === '') {
+						$return = false;
+						break;
+					}
+				}
+
+				if (isset($detail->sub) !== false) {
+					$return = $this->menuIntegrityCheck($detail->sub);
+					if (! $return)
+						break;
+				}
+
+			}
+		} else {
+			$return = false;
+		}
+		return $return;
+
+	}
+
 	public function userList() {
 
 		$container = $this->get();
@@ -181,145 +301,50 @@ final class MenuController extends Controller {
 
 	}
 
-	public function getMenuParameters($module = null) {
-
-		if (is_null($module)) {
-			extract(Base::input([
-				'module'  => 'nulled_text',
-				'target'  => 'nulled_text',
-			], $this->get('request')->params));
-		}
-
-		
-		$arguments = [];
-		$html = ' ';
-
-		if (! is_null($module) AND strpos($module, '_') !== false) {
-
-			$module = explode('_', $module, 2);
-			if ($module[0] === 'modules') {
-				
-				if (isset($this->modules[$module[1]]) !== false) {
-					$module = $module[1];
-					$moduleDetail = $this->modules[$module];
-					if ($moduleDetail['routes']['listing']) {
-						$html .= '<option value="list">' . Base::lang('base.list') . '</option>';
-					}
-
-					if ($moduleDetail['routes']['detail']) {
-						$html .= '<option value="list">' . Base::lang('base.list_as_dropdown') . '</option>';
-
-						$contents = (new ContentController($this->get()))->getModuleDatas($module);
-
-						if (count($contents)) {
-							$html .= '<optgroup label="' . Base::lang('base.contents') . '">';
-							foreach ($contents as $content) {
-								$contentDetails = json_decode($content->input);
-								$val = $content->id;
-								if (isset($contentDetails->title) AND 
-									(
-										is_string($contentDetails->title) OR 
-										isset($contentDetails->title->{Base::lang('lang.code')}) !== false
-									)
-								) {
-
-									$text = is_string($contentDetails->title) ? $contentDetails->title : $contentDetails->title->{Base::lang('lang.code')};
-
-								} elseif (isset($contentDetails->name) AND 
-									(
-										is_string($contentDetails->name) OR 
-										isset($contentDetails->name->{Base::lang('lang.code')}) !== false
-									)
-								) {
-
-									$text = is_string($contentDetails->name) ? $contentDetails->name : $contentDetails->name->{Base::lang('lang.code')};
-
-								} else {
-									$text = $val;
-								}
-								$html .= '<option value="' . $val . '">' . $text . '</option>';
-							}
-							$html .= '</optgroup>';
-						}
-					}
-
-				}
-
-			} elseif ($module[0] === 'forms') {
-	
-
-
-			}
-
-		}
-
-		$arguments['manipulation'] = [
-			$target => [
-				'html'  => $html
-			]
-		];
-
-		return [
-			'status' => true,
-			'statusCode' => 200,
-			'arguments' => $arguments,
-			'view' => null
-		];
-
-	}
-
-	public function userAdd() {
+	public function menuAdd() {
 
 		extract(Base::input([
-			'email' => 'nulled_text',
-			'u_name' => 'nulled_text',
-			'f_name' => 'nulled_text',
-			'l_name' => 'nulled_text',
-			'role_id' => 'nulled_int',
-			'password' => 'nulled_password'
+			'menu_key' => 'nulled_text',
+			'items' => 'nulled_text'
 		], $this->get('request')->params));
 
 		$alerts = [];
 		$arguments = [];
 
-		$model = new Users();
+		$model = new Menus();
 		
-		if ($email AND $u_name AND $role_id AND $password) {
+		if ($menu_key AND $items) {
 
-			$userNameCheck = $model->count('id', 'total')->where('u_name', $u_name)->get();
-			if ((int)$userNameCheck->total === 0) {
+			$keyCheck = $model->count('id', 'total')->where('menu_key', $menu_key)->get();
+			if ((int)$keyCheck->total === 0) {
 
-				$userEmailCheck = $model->count('id', 'total')->where('email', $email)->get();
-				if ((int)$userEmailCheck->total === 0) {
+				$items = htmlspecialchars_decode($items);
+				$itemsObj = @json_decode($items);
+				$insert = $this->menuIntegrityCheck($itemsObj);
+
+				if ($insert) {
 
 					$insert = [
-						'email' => $email,
-						'u_name' => $u_name,
-						'f_name' => $f_name,
-						'l_name' => $l_name,
-						'role_id' => $role_id,
-						'password' => $password,
-						'token' => Base::tokenGenerator(80),
-						'status' => 'active'
+						'menu_key' => $menu_key,
+						'items' => $items
 					];
 
 					$insert = $model->insert($insert);
-
 					if ($insert) {
 
 						$alerts[] = [
 							'status' => 'success',
-							'message' => Base::lang('base.user_successfully_added')
+							'message' => Base::lang('base.menu_successfully_added')
 						];
 						$arguments['form_reset'] = true;
 						$arguments['modal_close'] = '#addModal';
-						$arguments['table_reset'] = 'usersTable';
+						$arguments['table_reset'] = 'menusTable';
 
 					} else {
 
 						$alerts[] = [
 							'status' => 'error',
-							'message' => Base::lang('base.user_add_problem')
+							'message' => Base::lang('base.menu_add_problem')
 						];
 					}
 
@@ -327,24 +352,18 @@ final class MenuController extends Controller {
 
 					$alerts[] = [
 						'status' => 'warning',
-						'message' => Base::lang('base.email_is_already_used')
+						'message' => Base::lang('base.menu_integrity_problem')
 					];
-					$arguments['manipulation'] = [
-						'#userAdd [name="email"]' => [
-							'class' => ['is-invalid'],
-						]
-					];
-
 				}
 
 			} else {
 
 				$alerts[] = [
 					'status' => 'warning',
-					'message' => Base::lang('base.username_is_already_used')
+					'message' => Base::lang('base.key_is_already_used')
 				];
 				$arguments['manipulation'] = [
-					'#userAdd [name="u_name"]' => [
+					'#addModal [name="key"]' => [
 						'class' => ['is-invalid'],
 					]
 				];

@@ -172,16 +172,13 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 				el.classList.remove('border-1');
 				el.classList.remove('border-danger');
 			})
-
-			// ;
 			
-
 			// Append Datas
 			let data = null ;
 			if (dom.getAttribute('action').includes('/management/menus/add')) {
 				data = new FormData();
 				const items = multidimensionalMenuForm(dom);
-				data.append('key', dom.querySelector('[name="key"]').value);
+				data.append('menu_key', dom.querySelector('[name="menu_key"]').value);
 				data.append('items', JSON.stringify(items));
 
 			} else {
@@ -383,7 +380,7 @@ function multidimensionalMenuForm(dom = null) {
 
 								// put values
 								let value = input.value;
-								if (input.checked !== undefined) {
+								if (input.getAttribute('type') === 'checkbox') {
 									value = input.checked;
 								}
 
@@ -511,7 +508,7 @@ function responseFormatter(response, dom = null) {
 		}, timeOut);
 	}
 
-	if (response.table_reset !== undefined && window[response.table_reset] !== undefined) {
+	if (response.table_reset !== undefined && window[response.table_reset] !== undefined && window[response.table_reset].version !== undefined) {
 		window[response.table_reset].reset();
 	}
 

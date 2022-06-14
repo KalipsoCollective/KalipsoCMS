@@ -547,7 +547,7 @@ return [
 					'type_values'   => 11,
 					'index'         => 'PRIMARY'
 				],
-				'key' => [
+				'menu_key' => [
 					'type'          => 'varchar',
 					'type_values'   => 255,
 					'index'         => 'UNIQUE'

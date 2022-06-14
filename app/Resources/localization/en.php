@@ -383,7 +383,15 @@ return [
         'key' => 'Key',
         'basic' => 'Basic',
         'list' => 'List',
-        'list_as_dropdown' => 'List as Dropdown'
+        'list_as_dropdown' => 'List as Dropdown',
+        'key_is_already_used' => 'The key is already in use.',
+        'menu_successfully_added' => 'The menu has been successfully added.',
+        'menu_add_problem' => 'There was a problem adding the menu.',
+        'menu_successfully_deleted' => 'Menu deleted successfully.',
+        'menu_delete_problem' => 'There was a problem deleting the menu.',
+        'menu_successfully_updated' => 'The menu has been successfully updated.',
+        'menu_update_problem' => 'There was a problem updating the menu.',
+        'menu_integrity_problem' => 'There seems to be a problem with the menu data integrity, you should check to make sure there are no missing fields.',
     ],
     'app' => [
         
