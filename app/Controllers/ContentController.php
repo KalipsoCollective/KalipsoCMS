@@ -171,11 +171,23 @@ final class ContentController extends Controller {
                 if ($input['type'] === 'url_widget') { // URL Widget
 
                     $menuController = new MenuController($this->get());
-                    $moduleForm .= HTML::menuModuleUrlWidget([
-                        'menu_options' => $menuController->menuOptionsAsHTML(),
+                    $menuWidgetData = [
+                        'menu_options' => $menuController->menuOptionsAsHTML(
+                            (isset($fillDatas->{$name}->dynamic_link->module) !== false ? $fillDatas->{$name}->dynamic_link->module : null)
+                        ),
                         'name' => $name,
                         'label' => Base::lang($input['label']),
-                    ]);
+                        'values' => (isset($fillDatas->{$name}) !== false ? $fillDatas->{$name} : [])
+                    ];
+                    if (isset($fillDatas->{$name}->dynamic_link->module) !== false AND isset($fillDatas->{$name}->dynamic_link->parameter) !== false) {
+                        $menuWidgetData['module_parameters'] = $menuController->getMenuParameters(
+                            $fillDatas->{$name}->dynamic_link->module, 
+                            $fillDatas->{$name}->dynamic_link->parameter
+                        );
+                    }
+                    
+                    
+                    $moduleForm .= HTML::menuModuleUrlWidget($menuWidgetData);
 
                 } else {
 
