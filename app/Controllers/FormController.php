@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace KN\Controllers;
 
 use KN\Core\Controller;
-use KN\Model\Contents;
+use KN\Model\Forms;
 use KN\Helpers\Base;
 use KN\Helpers\HTML;
 use KN\Helpers\KalipsoTable;
@@ -334,33 +334,33 @@ final class FormController extends Controller {
 
     }
 
-    public function contentList() {
+    public function formList() {
 
         $container = $this->get();
-        $moduleName = $this->module;
-        if (isset($this->modules[$moduleName]) !== false) {
+        $formName = $this->form;
+        if (isset($this->forms[$formName]) !== false) {
 
-            $module = $this->modules[$moduleName];
+            $form = $this->forms[$formName];
 
-            $tables = $module['table'];
+            $tables = $form['table'];
             $tables['action'] = [
                 'exclude' => true,
-                'formatter' => function($row) use ($container, $moduleName) {
+                'formatter' => function($row) use ($container, $formName) {
 
                     $buttons = '';
-                    if ($container->authority('management/:module/:id')) {
+                    if ($container->authority('management/forms/:form/:id')) {
                         $buttons .= '
                         <button type="button" class="btn btn-light" 
-                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id ).'">
+                            data-kn-action="'.$this->get()->url('/management/forms/' . $formName . '/' . $row->id ).'">
                             ' . Base::lang('base.view') . '
                         </button>';
                     }
 
-                    if ($container->authority('management/:module/:id/delete')) {
+                    if ($container->authority('management/forms/:form/:id/delete')) {
                         $buttons .= '
                         <button type="button" class="btn btn-danger" 
                             data-kn-again="'.Base::lang('base.are_you_sure').'" 
-                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id . '/delete').'">
+                            data-kn-action="'.$this->get()->url('/management/forms/' . $formName . '/' . $row->id . '/delete').'">
                             ' . Base::lang('base.delete') . '
                         </button>';
                     }
@@ -372,8 +372,8 @@ final class FormController extends Controller {
                 }
             ];
             $tableOp = (new KalipsoTable())
-                ->db((new Contents)->pdo)
-                ->from($module['from'])
+                ->db((new Forms)->pdo)
+                ->from($form['from'])
                 ->process($tables)
                 ->output();
 
@@ -402,7 +402,7 @@ final class FormController extends Controller {
 
     }
 
-    public function contentAdd() {
+    public function formAdd() {
 
         $alerts = [];
         $arguments = [];
@@ -414,12 +414,13 @@ final class FormController extends Controller {
             'areas' => [], 
             'files' => []
         ];
-        if (isset($this->modules[$this->module]) !== false) {
 
-            $module = $this->modules[$this->module];
+        if (isset($this->forms[$this->form]) !== false) {
+
+            $form = $this->forms[$this->form];
 
             // Input area check
-            foreach ($module['inputs'] as $name => $detail) {
+            foreach ($form['inputs'] as $name => $detail) {
 
                 if ($name === 'widget') {
 
@@ -434,7 +435,7 @@ final class FormController extends Controller {
 
                 } else {
 
-                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'email' OR $detail['type'] === 'tel' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
 
                         $inputAreas[$name] = 'nulled_text';
 
@@ -468,46 +469,18 @@ final class FormController extends Controller {
             // Filter all inputs
             foreach ($inputAreas as $inputName => $inputType) {
                 
-                if (is_array($$inputName)) { // multilingual
-
-                    foreach ($$inputName as $lang => $inputVar) {
-
-                        if (
-                            isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)
-                        ) {
-
-                            $insert[$inputName][$lang] = $inputVar;
-
-                        } else {
-
-                            if ($inputType === 'nulled_html') {
-
-                                $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '[' . $lang . ']"]'] = [
-                                    'class' => ['border', 'border-1', 'border-danger'],
-                                ];
-
-                            } else {
-
-                                $arguments['manipulation']['#contentAdd [name="' . $inputName . '[' . $lang . ']"]'] = [
-                                    'class' => ['is-invalid'],
-                                ];
-
-                            }
-                        }
-                    }
-
-                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)) {
+                if (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($$inputName)) {
 
                     $insert[$inputName] = $$inputName;
 
                 } else {
 
                     if ($inputType === 'nulled_html') {
-                        $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '"]'] = [
+                        $arguments['manipulation']['#formAdd [data-name="' . $inputName . '"]'] = [
                             'class' => ['border', 'border-1', 'border-danger'],
                         ];
                     } else {
-                        $arguments['manipulation']['#contentAdd [name="' . $inputName . '"]'] = [
+                        $arguments['manipulation']['#formAdd [name="' . $inputName . '"]'] = [
                             'class' => ['is-invalid'],
                         ];
                     }
@@ -560,7 +533,7 @@ final class FormController extends Controller {
 
                                 $upload = $fileController
                                     ->directUpload(
-                                        $this->module, 
+                                        $this->form, 
                                         $this->get('request')->files[$fileName], 
                                         $uploadParameters
                                     );
@@ -584,7 +557,7 @@ final class FormController extends Controller {
                                         'message' => Base::lang('base.file_upload_problem') 
                                         . ' (' . Base::lang($fileDetails['label']) . ')'
                                     ];
-                                    $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                    $arguments['manipulation']['#formAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
                                         'class' => ['is-invalid'],
                                     ];
                                 }
@@ -595,7 +568,7 @@ final class FormController extends Controller {
                                     'status' => 'warning',
                                     'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
                                 ];
-                                $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                $arguments['manipulation']['#formAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
                                     'class' => ['is-invalid'],
                                 ];
 
@@ -609,9 +582,9 @@ final class FormController extends Controller {
 
                 if (! count($files) OR isset($arguments['manipulation']) === false) {
 
-                    $model = new Contents;
+                    $model = new Forms;
                     $insert = $model->insert([
-                        'module' => $this->module,
+                        'form' => $this->form,
                         'input' => json_encode($insert),
                     ]);
 
@@ -619,18 +592,18 @@ final class FormController extends Controller {
 
                         $alerts[] = [
                             'status' => 'success',
-                            'message' => Base::lang('base.content_successfully_added')
+                            'message' => Base::lang('base.form_successfully_added')
                         ];
                         $arguments['form_reset'] = true;
                         $arguments['modal_close'] = '#addModal';
-                        $arguments['table_reset'] = 'contentsTable';
+                        // $arguments['table_reset'] = 'contentsTable';
                         $rollBack = [];
 
                     } else {
 
                         $alerts[] = [
                             'status' => 'error',
-                            'message' => Base::lang('base.content_add_problem')
+                            'message' => Base::lang('base.form_add_problem')
                         ];
                     }
 
@@ -751,7 +724,7 @@ final class FormController extends Controller {
 
                 } else {
 
-                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'email' OR $detail['type'] === 'tel' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
 
                         $inputAreas[$name] = 'nulled_text';
 
