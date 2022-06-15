@@ -56,7 +56,7 @@ return [
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.message\')), "-") AS message,
 						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
 						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
-					FROM `contents` x WHERE x.form = "contact-form") AS raw',
+					FROM `forms` x WHERE x.form = "contact-form" AND x.status != "deleted") AS raw',
 		'table' => [
 			'id' => [
 				'primary' => true,
