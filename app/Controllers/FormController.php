@@ -16,6 +16,7 @@ use KN\Helpers\HTML;
 use KN\Helpers\KalipsoTable;
 use \Verot\Upload\Upload;
 use KN\Controllers\FileController;
+use KN\Core\Notification;
 
 
 final class FormController extends Controller {

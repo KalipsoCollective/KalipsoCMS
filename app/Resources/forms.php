@@ -54,6 +54,7 @@ return [
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.phone\')), "-") AS phone,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.subject\')), "-") AS subject,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.message\')), "-") AS message,
+						x.status,
 						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
 						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
 					FROM `forms` x WHERE x.form = "contact-form" AND x.status != "deleted") AS raw',
@@ -74,6 +75,24 @@ return [
 			],
 			'created' => [],
 			'updated' => [],
+			'status' => [
+				'formatter' => function($row) {
+
+					switch ($row->status) {
+						case 'completed':
+							$class = 'bg-success';
+							break;
+
+						case 'in_action':
+							$class = 'bg-primary';
+							break;
+						
+						default:
+							$class = 'bg-warning';
+					}
+					return '<span class="badge '.$class.'">' . Base::lang('base.' . $row->status) . '</span>';
+				}
+			],
 		],
 		'columns' => [
 			[
@@ -148,6 +167,19 @@ return [
 				"orderable" => true,
 				"title" => Base::lang('base.updated_at'),
 				"key" => "updated"
+			],
+			[
+				"searchable" => [
+					"type" => "select",
+					"datas" => [
+						['value' => 'pending', 'name' => Base::lang('base.pending')],
+						['value' => 'in_action', 'name' => Base::lang('base.in_action')],
+						['value' => 'completed', 'name' => Base::lang('base.completed')]
+					]
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.status'),
+				"key" => "status"
 			],
 			[
 				"searchable" => false,
