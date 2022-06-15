@@ -411,6 +411,9 @@ return [
         'form_successfully_updated' => 'The form has been successfully updated.',
         'form_update_problem' => 'There was a problem updating the form.',
         'detail' => 'Detail',
+        'pending' => 'Pending',
+        'in_action' => 'In Action',
+        'completed' => 'Completed',
     ],
     'app' => [
     ]

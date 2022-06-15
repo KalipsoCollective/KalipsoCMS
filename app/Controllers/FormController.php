@@ -103,7 +103,7 @@ final class FormController extends Controller {
 
         $idPrefix = 'form_add';
         if (! is_null($fill)) {
-            $fillDatas = json_decode($fill->form);
+            $fillDatas = json_decode($fill->input);
             $id = $fill->id;
             $idPrefix = 'form_edit';
             $fileController = new FileController($this->get());
@@ -317,8 +317,25 @@ final class FormController extends Controller {
             }
         }
 
+        if (! is_null($fill)) {
+            $statusOptions = '';
+            foreach (['pending', 'in_action', 'completed'] as $status) {
+                $statusOptions .= '<option value="' . $status . '"'.($fill->status === $status ? ' selected' : '').'>' . Base::lang('base.' . $status) . '</option>';
+            }
+
+            $form .= '
+            <div class="col-12 col-md-3 ms-auto">
+                <div class="form-floating">
+                    <select class="form-select" required name="status" id="' . $idPrefix . '_status">
+                        ' . $statusOptions . '
+                    </select>
+                    <label for="' . $idPrefix . '_status">' . Base::lang('base.status') . '</label>
+                </div>
+            </div>';
+        }
+
         $form = '
-        <form class="row g-2" data-kn-form id="' . (isset($id) !== false ? 'formEdit' : 'formAdd') . '" method="post" action="'.$this->get()->url('form/' . $this->form . '/' . (isset($id) !== false ? $id . '/update' : 'add')).'">
+        <form class="row g-2" data-kn-form id="' . (isset($id) !== false ? 'formEdit' : 'formAdd') . '" method="post" action="'.$this->get()->url((isset($id) !== false ? 'management/forms/' : 'form/') . $this->form . '/' . (isset($id) !== false ? $id . '/update' : 'add')).'">
             <div class="form-loader">
                 <div class="spinner-border text-light" role="status">
                     <span class="visually-hidden">'.Base::lang('base.loading').'</span>
@@ -641,7 +658,7 @@ final class FormController extends Controller {
 
     }
 
-    public function contentDetail() {
+    public function formDetail() {
 
         $id = (int)$this->get('request')->attributes['id'];
 
@@ -649,13 +666,13 @@ final class FormController extends Controller {
         $alerts = [];
         $arguments = [];
 
-        if (isset($this->modules[$this->module]) !== false) {
+        if (isset($this->forms[$this->form]) !== false) {
 
-            $model = new Contents();
-            $getContent = $model->select('id, module, input')->where('id', $id)->where('module', $this->module)->get();
+            $model = new Forms();
+            $getContent = $model->select('id, form, input, status')->where('id', $id)->where('form', $this->form)->get();
             if (! empty($getContent)) {
 
-                $form = $this->prepareModuleForm($this->modules[$this->module]['inputs'], $getContent);
+                $form = $this->prepareForm($this->forms[$this->form]['inputs'], $getContent);
                 $arguments['modal_open'] = ['#editModal'];
                 $arguments['init'] = '#editModal';
                 $arguments['manipulation'] = [
@@ -690,7 +707,7 @@ final class FormController extends Controller {
 
     }
 
-    public function contentUpdate() {
+    public function formUpdate() {
 
         $alerts = [];
         $arguments = [];
@@ -704,12 +721,12 @@ final class FormController extends Controller {
             'areas' => [], 
             'files' => []
         ];
-        if (isset($this->modules[$this->module]) !== false) {
+        if (isset($this->forms[$this->form]) !== false) {
 
-            $module = $this->modules[$this->module];
+            $form = $this->forms[$this->form];
 
             // Input area check
-            foreach ($module['inputs'] as $name => $detail) {
+            foreach ($form['inputs'] as $name => $detail) {
 
                 if ($name === 'widget') {
 
@@ -755,52 +772,25 @@ final class FormController extends Controller {
                 }
             }
 
+            $inputAreas['status'] = 'nulled_text';
             extract(Base::input($inputAreas, $this->get('request')->params));
 
             $update = [];
             // Filter all inputs
             foreach ($inputAreas as $inputName => $inputType) {
                 
-                if (is_array($$inputName)) { // multilingual
-
-                    foreach ($$inputName as $lang => $inputVar) {
-
-                        if (
-                            isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)
-                        ) {
-
-                            $update[$inputName][$lang] = $inputVar;
-
-                        } else {
-
-                            if ($inputType === 'nulled_html') {
-
-                                $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '[' . $lang . ']"]'] = [
-                                    'class' => ['border', 'border-1', 'border-danger'],
-                                ];
-
-                            } else {
-
-                                $arguments['manipulation']['#contentAdd [name="' . $inputName . '[' . $lang . ']"]'] = [
-                                    'class' => ['is-invalid'],
-                                ];
-
-                            }
-                        }
-                    }
-
-                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)) {
+                if (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($$inputName)) {
 
                     $update[$inputName] = $$inputName;
 
                 } else {
 
                     if ($inputType === 'nulled_html') {
-                        $arguments['manipulation']['#contentAdd [data-name="' . $inputName . '"]'] = [
+                        $arguments['manipulation']['#formEdit [data-name="' . $inputName . '"]'] = [
                             'class' => ['border', 'border-1', 'border-danger'],
                         ];
                     } else {
-                        $arguments['manipulation']['#contentAdd [name="' . $inputName . '"]'] = [
+                        $arguments['manipulation']['#formEdit [name="' . $inputName . '"]'] = [
                             'class' => ['is-invalid'],
                         ];
                     }
@@ -875,7 +865,7 @@ final class FormController extends Controller {
                                     'message' => Base::lang('base.file_upload_problem') 
                                     . ' (' . Base::lang($fileDetails['label']) . ')'
                                 ];
-                                $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                $arguments['manipulation']['#formEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
                                     'class' => ['is-invalid'],
                                 ];
                             }
@@ -893,7 +883,7 @@ final class FormController extends Controller {
                                 'status' => 'warning',
                                 'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
                             ];
-                            $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                            $arguments['manipulation']['#formEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
                                 'class' => ['is-invalid'],
                             ];
 
@@ -929,26 +919,27 @@ final class FormController extends Controller {
 
                 if (! count($files) OR isset($arguments['manipulation']) === false) {
 
-                    $model = new Contents;
+                    $model = new Forms;
                     $update = $model->where('id', $id)->update([
                         'input' => json_encode($update),
+                        'status' => $status,
                     ]);
 
                     if ($update) {
 
                         $alerts[] = [
                             'status' => 'success',
-                            'message' => Base::lang('base.content_successfully_updated')
+                            'message' => Base::lang('base.form_successfully_updated')
                         ];
                         $arguments['modal_close'] = '#editModal';
-                        $arguments['table_reset'] = 'contentsTable';
+                        $arguments['table_reset'] = 'formsTable';
                         $rollBack = [];
 
                     } else {
 
                         $alerts[] = [
                             'status' => 'error',
-                            'message' => Base::lang('base.content_update_problem')
+                            'message' => Base::lang('base.form_update_problem')
                         ];
                     }
 
@@ -987,33 +978,33 @@ final class FormController extends Controller {
 
     }
 
-    public function contentDelete() {
+    public function formDelete() {
 
         $alerts = [];
         $arguments = [];
 
         $id = (int)$this->get('request')->attributes['id'];
-        if (isset($this->modules[$this->module]) !== false) {
+        if (isset($this->forms[$this->form]) !== false) {
 
-            $model = new Contents();
-            $getContent = $model->select('id')->where('id', $id)->where('module', $this->module)->get();
+            $model = new forms();
+            $getContent = $model->select('id')->where('id', $id)->where('form', $this->form)->get();
             if (! empty($getContent)) {
 
-                $delete = $model->where('id', $id)->delete();
+                $delete = $model->where('id', $id)->update(['status' => 'deleted']);
 
                 if ($delete) {
 
                     $alerts[] = [
                         'status' => 'success',
-                        'message' => Base::lang('base.content_successfully_deleted')
+                        'message' => Base::lang('base.form_successfully_deleted')
                     ];
-                    $arguments['table_reset'] = 'contentsTable';
+                    $arguments['table_reset'] = 'formsTable';
 
                 } else {
 
                     $alerts[] = [
                         'status' => 'error',
-                        'message' => Base::lang('base.content_delete_problem')
+                        'message' => Base::lang('base.form_delete_problem')
                     ];
                 }
 

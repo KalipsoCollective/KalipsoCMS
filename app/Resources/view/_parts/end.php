@@ -28,6 +28,17 @@
 					}
 				}
 
+				let formListSource = null;
+				let formListColumns = null;
+				if (document.querySelector('#formsTable')) {
+					const el = document.querySelector('#formsTable');
+					formListSource = el.getAttribute('data-source');
+					formListColumns = el.getAttribute('data-columns');
+					if (formListColumns) {
+						formListColumns = JSON.parse(el.getAttribute('data-columns'))
+					}
+				}
+
 				let tableVariables = {
 					menusTable: {
 						selector: "#menusTable",
@@ -590,6 +601,26 @@
 						server: true,
 						source: contentListSource,
 						columns: contentListColumns,
+						customize: {
+							tableWrapClass: "table-responsive",
+							tableClass: "table table-bordered",
+							inputClass: "form-control form-control-sm",
+							selectClass: "form-select form-select-sm",
+						},
+						tableHeader: {
+							searchBar: true
+						},
+						tableFooter: {
+							visible: true,
+							searchBar: true
+						}
+					},
+					formsTable: {
+						selector: "#formsTable",
+						language: "<?php echo \KN\Helpers\Base::lang('lang.code'); ?>",
+						server: true,
+						source: formListSource,
+						columns: formListColumns,
 						customize: {
 							tableWrapClass: "table-responsive",
 							tableClass: "table table-bordered",

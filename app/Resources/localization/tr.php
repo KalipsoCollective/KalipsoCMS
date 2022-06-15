@@ -411,6 +411,9 @@ return [
         'form_successfully_updated' => 'Form başarıyla güncellendi.',
         'form_update_problem' => 'Form güncellenirken bir sorun oluştu.',
         'detail' => 'Detay',
+        'pending' => 'Beklemede',
+        'in_action' => 'İşlemde',
+        'completed' => 'Tamamlandı',
     ],
     'app' => [
     ]
