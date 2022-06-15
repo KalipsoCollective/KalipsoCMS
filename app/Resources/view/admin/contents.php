@@ -61,7 +61,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo \KN\Helpers\Base::lang('base.close'); ?></button>
 							<?php
-							if ($this->authority('management/roles/:id/update')) {
+							if ($this->authority('management/:module/:id/update')) {
 							?>
 								<button type="submit" form="contentEdit" class="btn btn-primary"><?php echo \KN\Helpers\Base::lang('base.edit'); ?></button>
 							<?php
