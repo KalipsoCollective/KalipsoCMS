@@ -141,9 +141,6 @@ return [
         'maintenance_mode_desc' => 'Bakım Modu Mesajı',
         'maintenance_mode_desc_info' => 'Bakım modu karşılama sayfasında ziyaretçilere gösterilecek mesajdır.',
     ],
-    'slugs' => [
-        'contact' => 'iletisim',
-    ],
     'base' => [
         'byte' => 'Bayt',
         'sandbox' => 'Geliştirici Araçları',
@@ -399,6 +396,9 @@ return [
         'link' => 'Bağlantı',
         'order' => 'Sıra',
         'links' => 'Bağlantılar',
+        'phone' => 'Telefon',
+        'subject' => 'Konu',
+        'message' => 'Mesaj',
     ],
     'app' => [
         

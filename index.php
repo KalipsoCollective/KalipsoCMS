@@ -105,7 +105,6 @@ try {
 
     // Single route
     $app->route('GET', '/', 'AppController@index', ['Auth@verifyAccount']);
-    $app->route('GET', '/{slugs.contact}', 'AppController@contact');
 
     // Please do not remove for KN to work properly.
     $app->route('GET,POST', '/cron', 'AppController@cronJobs');

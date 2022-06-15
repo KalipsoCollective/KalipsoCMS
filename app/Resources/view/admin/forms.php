@@ -24,28 +24,6 @@
 			</div>
 		</div>
 		<?php
-		if ($this->authority('management/forms/:form/add')) {
-
-			?>
-			<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered modal-xl modal-xxl">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="addModalLabel"><?php echo \KN\Helpers\Base::lang('base.add_new'); ?></h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo \KN\Helpers\Base::lang('base.close'); ?>"></button>
-						</div>
-						<div class="modal-body">
-							<?php echo $moduleForm; ?>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo \KN\Helpers\Base::lang('base.close'); ?></button>
-							<button type="submit" form="contentAdd" class="btn btn-success"><?php echo \KN\Helpers\Base::lang('base.add'); ?></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php
-		}
 		if ($this->authority('management/forms/:form/:id')) {
 		?>
 			<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">

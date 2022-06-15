@@ -49,65 +49,27 @@ return [
 		],
 		'from' => '(SELECT 
 						x.id,
-						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
-						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.slug.'.Base::lang('lang.code').'\')), "-") AS slug,
-						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.description.'.Base::lang('lang.code').'\')), "-") AS description,
-						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content,
-						REPLACE(
-							REPLACE(
-								REPLACE(
-									REPLACE(
-										IFNULL(JSON_EXTRACT(x.input, \'$.header_image\'), ""),
-										" ",
-										""
-									),
-									"\"",
-									""
-								),
-								"]",
-								""
-							),
-							"[",
-							""
-						) AS header_image,
-						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, header_image)) AS header_image_src,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.name\')), "-") AS name,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.email\')), "-") AS email,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.phone\')), "-") AS phone,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.subject\')), "-") AS subject,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.message\')), "-") AS message,
 						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
 						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
-					FROM `contents` x WHERE x.module = "pages") AS raw',
+					FROM `contents` x WHERE x.form = "contact-form") AS raw',
 		'table' => [
 			'id' => [
 				'primary' => true,
 			],
-			'title' => [],
-			'description' => [
+			'name' => [],
+			'email' => [],
+			'phone' => [],
+			'subject' => [],
+			'message' => [
 				'formatter' => function($row) {
 
-					$description = Base::stringShortener($row->description, 100);
-					return $description == '' ? '-' : $description;
-				}
-			],
-			'content' => [
-				'formatter' => function($row) {
-
-					$content = Base::stringShortener(trim(strip_tags(htmlspecialchars_decode($row->content))), 100);
-					return $content == '' ? '-' : $content;
-				}
-			],
-			'header_image_src' => [
-				'formatter' => function($row) {
-					$return = '';
-					if ($row->header_image_src AND $srcset = @json_decode($row->header_image_src)) {
-						$return = '<div class="image-group">';
-						foreach ($srcset as $src) {
-							$href = Base::base('upload/' . $src->original);
-							$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
-							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
-						}
-						$return .= '</div>';
-					} else {
-						$return = '-';
-					}
-					return $return;
+					$message = Base::stringShortener($row->message, 100);
+					return $message == '' ? '-' : $message;
 				}
 			],
 			'created' => [],
@@ -130,8 +92,8 @@ return [
 					"maxlength" => 50
 				],
 				"orderable" => true,
-				"title" => Base::lang('base.title'),
-				"key" => "title"
+				"title" => Base::lang('base.name'),
+				"key" => "name"
 			],
 			[
 				"searchable" => [
@@ -139,8 +101,8 @@ return [
 					"maxlength" => 50
 				],
 				"orderable" => true,
-				"title" => Base::lang('base.description'),
-				"key" => "description"
+				"title" => Base::lang('base.email'),
+				"key" => "email"
 			],
 			[
 				"searchable" => [
@@ -148,14 +110,26 @@ return [
 					"maxlength" => 50
 				],
 				"orderable" => true,
-				"title" => Base::lang('base.content'),
-				"key" => "content"
+				"title" => Base::lang('base.phone'),
+				"key" => "phone"
 			],
 			[
-				"searchable" => false,
-				"orderable" => false,
-				"title" => Base::lang('base.header_image'),
-				"key" => "header_image_src"
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.subject'),
+				"key" => "subject"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.message'),
+				"key" => "message"
 			],
 			[
 				"searchable" => [
@@ -185,14 +159,14 @@ return [
 		'routes' => [ // method - route - controller@method - middlewares as array (like route definition in index.php)
 			'listing' => false,
 			'detail' => [
-				'en' => ['GET,POST', '/pages/:slug', 'ContentController@contentDetailPage', []],
-				'tr' => ['GET,POST', '/sayfalar/:slug', 'ContentController@contentDetailPage', []]
+				'en' => ['GET,POST', '/contact', 'FormController@formPage', []],
+				'tr' => ['GET,POST', '/iletisim', 'FormController@formPage', []]
 			],
 			'view' => [
-				'detail' => 'contents.page_detail',
+				'detail' => 'forms.contact',
 			],
 			'description' => [
-				'detail' => 'base.page_detail',
+				'detail' => 'base.contact_detail',
 			]
 		],
 	],

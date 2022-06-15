@@ -363,6 +363,27 @@ final class Factory
             }
         }
 
+        // Include form routes
+        if (file_exists($formFile = Base::path('app/Resources/forms.php'))) {
+
+            $form = require $formFile;
+            if ($form AND is_array($form)) {
+                foreach ($form as $formKey => $formDetail) {
+
+                    // listing route
+                    if (isset($formDetail['routes']['listing'][$this->lang]) !== false) {
+                        $this->route(...$formDetail['routes']['listing'][$this->lang]);
+                    }
+
+                    // detail route
+                    if (isset($formDetail['routes']['detail'][$this->lang]) !== false) {
+                        $this->route(...$formDetail['routes']['detail'][$this->lang]);
+                    }
+                }
+                $this->route('POST', '/form/:form', 'FormController@formAdd', []);
+            }
+        }
+
         // Route slug converter
         foreach ($this->routes as $route => $routeDetail) {
 
@@ -845,6 +866,7 @@ final class Factory
 
     public function view($file = null, $arguments = [], $layout = 'app') {
 
+        Base::dump($this->routes, true);
 
         /**
          * 

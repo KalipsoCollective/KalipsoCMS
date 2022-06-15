@@ -142,9 +142,6 @@ return [
         'maintenance_mode_desc' => 'Maintenance Mode Message',
         'maintenance_mode_desc_info' => 'It is the message that will be shown to the visitors on the maintenance mode welcome page.',
     ],
-    'slugs' => [
-        'contact' => 'contact',
-    ],
     'base' => [
         'sandbox' => 'Sandbox',
         'sandbox_message' => 'You can access all the tools that will help you in the development process from this screen.',
@@ -399,6 +396,9 @@ return [
         'link' => 'Link',
         'order' => 'Order',
         'links' => 'Links',
+        'phone' => 'Phone',
+        'subject' => 'Subject',
+        'message' => 'Message',
     ],
     'app' => [
         
