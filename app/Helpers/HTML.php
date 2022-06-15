@@ -167,4 +167,83 @@ class HTML {
 
     }
 
+    /**
+     * Menu Generator
+     * @param string $menuKey
+     * @param array $parameters
+     * @param int $level
+     * @return string
+     **/
+    public static function generateMenu($menuKey, $parameters = [], $level = 1, $container = null) {
+
+        $return = '';
+        $urls = is_string($menuKey) 
+            ? (new \KN\Controllers\MenuController((object)['request' => '']))->getMenuDetails($menuKey)
+            : $menuKey;
+        if (count($urls)) {
+
+            $ulClass = '';
+            if (isset($parameters['ul_class']) !== false) {
+                $ulClass = $parameters['ul_class'];
+            }
+
+            if ($level > 1 AND isset($parameters['ul_dropdown_class']) !== false) {
+                $ulClass = $parameters['ul_dropdown_class'];
+            }
+
+            $return .= '
+            <ul'.($ulClass != '' ? ' class="' . $ulClass . '"' : '').'>';
+            foreach ($urls as $url) {
+
+                $liClass = '';
+                if (isset($parameters['li_class']) !== false) {
+                    $liClass = $parameters['li_class'];
+                }
+                if (isset($url['sub']) !== false AND isset($parameters['dropdown_li_class']) !== false) {
+                    $liClass = $parameters['dropdown_li_class'];
+                }
+
+                $aClass = '';
+                if (isset($parameters['a_class']) !== false) {
+                    $aClass = $parameters['a_class'];
+                }
+                if ($level > 1 AND isset($parameters['dropdown_a_class']) !== false) {
+                    $aClass = $parameters['dropdown_a_class'];
+                }
+                $aAttr = '';
+                if (isset($url['sub']) !== false) {
+                    if (isset($parameters['a_dropdown_class']) !== false) {
+                        $aClass = $parameters['a_dropdown_class'];
+                    }
+                    if (isset($parameters['li_dropdown_class']) !== false) {
+                        $liClass = $parameters['li_dropdown_class'];
+                    }
+                    if (isset($parameters['a_dropdown_attributes']) !== false) {
+                        $aAttr = $parameters['a_dropdown_attributes'];
+                    }
+                }
+
+                $return .= '
+                <li'.($liClass != '' ? ' class="' . $liClass . '"' : '').'>
+                    <a'.($aClass != '' ? ' class="' . $aClass . '"' : '').' 
+                        href="' . $url['link'] . '"
+                        '.($url['blank'] ? ' target="_blank"' : '')
+                        . ($aAttr != '' ? ' ' . $aAttr : '') . '>
+                        ' . $url['name'] . '
+                    </a>';
+
+                if (isset($url['sub']) !== false) {
+                    $return .= self::generateMenu($url['sub'], $parameters, ($level+1));
+                }
+                $return .= '
+                </li>';
+            }
+            $return .= '
+            </ul>';
+
+        }
+        return $return;
+
+    }
+
 }

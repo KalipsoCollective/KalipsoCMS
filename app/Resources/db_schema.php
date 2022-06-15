@@ -615,5 +615,13 @@ return [
 				'created_by'            => 1
 			]
 		],
+		'menus' => [
+			[
+				'menu_key'              => 'top',
+				'items'                => '[{"name":{"en":"Home","tr":"Anasayfa"},"blank":false,"direct_link":"","dynamic_link":{"module":"basic_home","parameter":""}},{"name":{"en":"Login","tr":"Giriş"},"blank":false,"direct_link":"","dynamic_link":{"module":"basic_login","parameter":""}},{"name":{"en":"Services","tr":"Hizmetler"},"blank":false,"direct_link":"","dynamic_link":{"module":"modules_services","parameter":"list_as_dropdown"}},{"name":{"en":"Contact","tr":"İletişim"},"blank":false,"direct_link":"","dynamic_link":{"module":"forms_contact-form","parameter":"detail"}},{"name":{"en":"New Page","tr":"Yeni Sayfa"},"blank":true,"direct_link":"","dynamic_link":{"module":"forms_contact-form","parameter":"detail"}}]',
+				'created_at'            => time(),
+				'created_by'            => 1
+			]
+		],
 	],
 ];

@@ -1422,6 +1422,11 @@ final class ContentController extends Controller {
 
                     $contentDetails = $contentDetails->getAll();
 
+                    $return = [
+                        'content_details' => null,
+                        'module_detail' => $moduleDetail,
+                        'module_key' => $moduleKey,
+                    ];
                     if (! empty($contentDetails)) {
                         // Extract files as object
                         $contentDetails = $this->fillFileLinks($contentDetails);
@@ -1450,11 +1455,7 @@ final class ContentController extends Controller {
                             }
                         }
 
-                        $return = [
-                            'content_details' => $contentDetails,
-                            'module_detail' => $moduleDetail,
-                            'module_key' => $moduleKey,
-                        ];
+                        $return['content_details'] = $contentDetails;
                     }
                     break;
                 }
@@ -1472,7 +1473,7 @@ final class ContentController extends Controller {
 
                 if (strpos($col, '_src') !== false) {
 
-                    $data->{$col} = @json_decode($data->{$col});
+                    $data->{$col} = is_string($data->{$col}) ? json_decode($data->{$col}) : null;
                     if (is_array($data->{$col})) {
 
                         foreach ($data->{$col} as $fileIndex => $fileDetail) {

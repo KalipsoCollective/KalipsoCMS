@@ -129,6 +129,10 @@ a {
     background-color: var(--bs-gray-200);
 }
 
+.dropdown:hover > .dropdown-menu {
+  display: block;
+}
+
 .navbar .navbar-nav .nav-item .nav-link {
     border-radius: 0.4rem;
 }

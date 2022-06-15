@@ -11,7 +11,6 @@ namespace KN\Controllers;
 
 use KN\Core\Controller;
 use KN\Model\Forms;
-use KN\Model\Contents;
 use KN\Helpers\Base;
 use KN\Helpers\HTML;
 use KN\Helpers\KalipsoTable;
@@ -76,6 +75,7 @@ final class FormController extends Controller {
                 'view' => null
             ];
         }
+
     }
 
     public function getFormDatas($form = null) {
@@ -89,6 +89,7 @@ final class FormController extends Controller {
     public function getModuleDatas($module = null) {
 
         return (new ContentController($this->get()))->getModuleDatas($module);
+
     }
 
     public function getForm($id = 0) {
@@ -105,7 +106,7 @@ final class FormController extends Controller {
 
         $return = null;
         if ($id) {
-            $return = (new Contents())->where('id', $id)->get();
+            $return = (new ContentController($this->get()))->getContent($id);
         }
         return $return;
 
@@ -1415,6 +1416,7 @@ final class FormController extends Controller {
                 ],
                 'view' => ['error', 'error']
             ];
+
         }
 
     }

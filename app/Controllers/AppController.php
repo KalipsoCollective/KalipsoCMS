@@ -36,20 +36,6 @@ final class AppController extends Controller {
 
     }
 
-    public function contact() {
-
-        return [
-            'status' => true,
-            'statusCode' => 200,
-            'arguments' => [
-                'title' => Base::lang('base.contact'),
-                'description' => Base::lang('base.contact_message')
-            ],
-            'view' => 'contact'
-        ];
-
-    }
-
     /**
      * It prepares the project files and database, 
      * it is also used for your debugging operations.

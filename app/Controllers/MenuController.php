@@ -149,31 +149,15 @@ final class MenuController extends Controller {
 						if (
 							$data['routes']['listing'] AND 
 							isset($data['routes']['listing'][$lang]) !== false AND 
-							($parameter === 'list' OR $parameter === 'list_as_dropdown') OR is_null($parameter)) 
+							($parameter === 'list' OR $parameter === 'list_as_dropdown')) 
 						{
 							$return = $data['routes']['listing'][$lang][1];
 
 						} elseif ($data['routes']['detail'] AND 
 							isset($data['routes']['detail'][$lang]) !== false AND 
-							(int)$parameter 
+							($parameter === 'detail')
 						) {
-							
-							$content = ( new ContentController( $this->get() ) )
-								->getContent((int)$parameter);
-
-							if ($content) {
-
-								$content->input = json_decode($content->input);
-								if (isset($content->input->slug->{$lang}) !== false) {
-
-									$return = Base::dynamicURL(
-										$data['routes']['detail'][$lang][1], 
-										['slug' => $content->input->slug->{$lang}]
-									);
-
-								}
-
-							}
+							$return = $data['routes']['detail'][$lang][1];
 						}
 					}
 				}
@@ -282,7 +266,7 @@ final class MenuController extends Controller {
 					}
 
 					if ($moduleDetail['routes']['detail']) {
-						$html .= '<option value="list"'.($parameter == 'detail' ? ' selected' : '').'>' . Base::lang('base.detail') . '</option>';
+						$html .= '<option value="detail"'.($parameter == 'detail' ? ' selected' : '').'>' . Base::lang('base.detail') . '</option>';
 					}
 
 				}
@@ -573,6 +557,7 @@ final class MenuController extends Controller {
 			);
 
 			$arguments['modal_open'] = ['#editModal'];
+			$arguments['dragger'] = true;
 			$arguments['manipulation'] = [
 				'#menuUpdate' => [
 					'attribute' => ['action' => $this->get()->url('management/menus/' . $id . '/update')],
@@ -696,6 +681,94 @@ final class MenuController extends Controller {
 			'alerts' => $alerts,
 			'view' => null
 		];
+
+	}
+
+	public function getMenuDetails($menuKey) {
+
+		$return = [];
+		$lang = Base::lang('lang.code');
+
+		if (is_string($menuKey)) {
+
+			$model = new Menus();
+			$getMenu = $model->select('items')->where('menu_key', $menuKey)->get();
+			$getMenu = isset($getMenu->items) !== false ? json_decode($getMenu->items, true) : null;
+
+		} else {
+			$getMenu = $menuKey;
+		}
+		
+		if (! empty($getMenu)) {
+
+			foreach ($getMenu as $key => $value) {
+				
+				$link = '#';
+				if (! empty($value['direct_link'])) {
+					$link = $value['direct_link'];
+				} else {
+
+					$module = strpos($value['dynamic_link']['module'], '_') !== false ? explode('_', $value['dynamic_link']['module'], 2) : ['basic', 'home'];
+					$link = $this->urlGenerator($module[0], $module[1], $value['dynamic_link']['parameter']);
+
+					if ($value['dynamic_link']['parameter'] === 'list_as_dropdown' AND $module[0] === 'modules') {
+
+						
+
+						$getContents = (new ContentController($this->get()))
+							->getModuleDatas($module[1]);
+
+						if (! empty($getContents)) {
+
+							if (isset($value['sub']) === false)
+								$value['sub'] = [];
+
+							$baseRoute = '/';
+							if (isset($this->modules[$module[1]]['routes']['detail'][$lang][1]) !== false)
+								$baseRoute = $this->modules[$module[1]]['routes']['detail'][$lang][1];
+
+							foreach ($getContents as $content) {
+								$content->input = json_decode($content->input);
+								$contentLink = Base::dynamicURL(
+									$baseRoute, 
+									['slug' => $content->input->slug->{$lang}]
+								);
+
+								$contentName = $content->id;
+								if (isset($content->input->name->{$lang}) !== false) {
+									$contentName = $content->input->name->{$lang};
+								} elseif (isset($content->input->name) !== false) {
+									$contentName = $content->input->name;
+								} elseif (isset($content->input->title->{$lang}) !== false) {
+									$contentName = $content->input->title->{$lang};
+								} elseif (isset($content->input->title) !== false) {
+									$contentName = $content->input->title;
+								}
+
+								$value['sub'][] = [
+									'direct_link' => $contentLink,
+									'name' => [$lang => $contentName],
+									'blank' => false,
+ 								];
+							}
+
+						}
+
+					}
+				}
+
+				$return[$key]['name'] = $value['name'][$lang];
+				$return[$key]['blank'] = $value['blank'];
+				$return[$key]['link'] = Base::base($link);
+				if (isset($value['sub']) !== false) {
+					$return[$key]['sub'] = $this->getMenuDetails($value['sub']);
+				}
+
+			}
+
+		}
+
+		return $return;
 
 	}
 

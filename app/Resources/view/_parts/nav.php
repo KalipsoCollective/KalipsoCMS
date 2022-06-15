@@ -7,6 +7,8 @@
                     <span class="menu-btn"><span></span></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
+                    <?php
+                    /*
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link<?php echo $this->currentLink('/'); ?>" href="<?php echo $this->url('/'); ?>">
@@ -14,6 +16,19 @@
                             </a>
                         </li>
                     </ul>
+                    */
+                    echo KN\Helpers\HTML::generateMenu('top', [
+                        'ul_class' => 'navbar-nav',
+                        'ul_dropdown_class' => 'dropdown-menu',
+                        'li_class' => 'nav-item',
+                        'li_dropdown_class' => 'nav-item dropdown',
+                        'dropdown_li_class' => 'nav-item dropdown',
+                        'a_class' => 'nav-link',
+                        'a_dropdown_class' => 'nav-link dropdown-toggle',
+                        'a_dropdown_attributes' => 'role="button" data-bs-toggle="dropdown" aria-expanded="false"',
+                        'dropdown_a_class' => 'dropdown-item',
+                    ], 1, $this);
+                    ?>
                     <ul class="navbar-nav ms-auto">
                         <?php
                         if (! KN\Helpers\Base::isAuth()) {
