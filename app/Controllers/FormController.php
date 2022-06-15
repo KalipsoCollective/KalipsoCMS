@@ -600,6 +600,11 @@ final class FormController extends Controller {
 
                 if (! count($files) OR isset($arguments['manipulation']) === false) {
 
+                    $body = '';
+                    foreach ($insert as $k => $v) {
+                        $body .= '<strong>' . Base::lang('base.' . $k) . ':</strong> '. $v .'<br>' . PHP_EOL;
+                    }
+
                     $model = new Forms;
                     $insert = $model->insert([
                         'form' => $this->form,
@@ -616,6 +621,14 @@ final class FormController extends Controller {
                         $arguments['modal_close'] = '#addModal';
                         // $arguments['table_reset'] = 'contentsTable';
                         $rollBack = [];
+
+                        $email = (New Notification($this->get()))->addEmail([
+                            'title' => Base::lang('base.form_received').': '.Base::lang($form['name']),
+                            'body' => $body,
+                            'recipient' => Base::config('settings.name') . ' Admin',
+                            'recipient_email' => Base::config('settings.contact_email'),
+                            'recipient_id' => 0,
+                        ]);
 
                     } else {
 

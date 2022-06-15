@@ -414,6 +414,7 @@ return [
         'pending' => 'Pending',
         'in_action' => 'In Action',
         'completed' => 'Completed',
+        'form_received' => 'Form Received',
     ],
     'app' => [
     ]
