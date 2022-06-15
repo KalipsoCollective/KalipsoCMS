@@ -64,6 +64,7 @@ return [
         'management_roles_delete' => 'Management - Roller - Delete',
         'management_sessions' => 'Management - Sessions',
         'management_sessions_list' => 'Management - Sessions - List',
+        'management_sessions_delete' => 'Management - Sessions - Delete',
         'management_logs' => 'Management - Logs',
         'management_logs_list' => 'Management - Logs - List',
         'management_logs_ip_block' => 'Management - Logs - IP Block',
@@ -422,6 +423,7 @@ return [
         'note' => 'Note',
         'related_service_to_be_informed' => 'The Education Service You Want to Be Informed',
         'interested_country' => 'The Country of Interest for Education',
+        'remove' => 'Remove',
     ],
     'app' => [
     ]

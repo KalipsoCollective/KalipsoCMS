@@ -64,6 +64,7 @@ return [
         'management_roles_delete' => 'Yönetim - Roller - Sil',
         'management_sessions' => 'Yönetim - Oturumlar',
         'management_sessions_list' => 'Yönetim - Oturumlar - Liste',
+        'management_sessions_delete' => 'Yönetim - Oturumlar - Sil',
         'management_logs' => 'Yönetim - Kayıtlar',
         'management_logs_list' => 'Yönetim - Kayıtlar - Liste',
         'management_logs_ip_block' => 'Yönetim - Kayıtlar - IP Bloklama',
@@ -422,6 +423,7 @@ return [
         'note' => 'Not',
         'related_service_to_be_informed' => 'Bilgi Almak İstediğiniz Eğitim Hizmeti',
         'interested_country' => 'Eğitim için İlgilenilen Ülke',
+        'remove' => 'Kaldır',
     ],
     'app' => [
     ]

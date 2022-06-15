@@ -81,6 +81,10 @@ return [
 		'default' => false,
 		'name' => 'auth.management_sessions_list',
 	],
+	'management/sessions/:id/delete' => [
+		'default' => false,
+		'name' => 'auth.management_sessions_delete',
+	],
 	'management/:module' => [
 		'default' => false,
 		'name' => 'auth.management_contents',
