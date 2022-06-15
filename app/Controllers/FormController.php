@@ -11,6 +11,7 @@ namespace KN\Controllers;
 
 use KN\Core\Controller;
 use KN\Model\Forms;
+use KN\Model\Contents;
 use KN\Helpers\Base;
 use KN\Helpers\HTML;
 use KN\Helpers\KalipsoTable;
@@ -100,6 +101,16 @@ final class FormController extends Controller {
 
     }
 
+    public function getContent($id = 0) {
+
+        $return = null;
+        if ($id) {
+            $return = (new Contents())->where('id', $id)->get();
+        }
+        return $return;
+
+    }
+
     public function prepareForm($formPart, $fill = null) {
 
         $idPrefix = 'form_add';
@@ -169,9 +180,7 @@ final class FormController extends Controller {
                     <div class="' . $col . '">
                         <div class="form-floating">
                             <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '">
-                                '.(! $requiredWidget ?
-                                 '<option value=""></option>' : 
-                                 '<option value=""'.$allSelected.'>' . Base::lang('base.all') . '</option>').'
+                                <option value=""></option>
                                 '.$options.'
                             </select>
                             <label for="' . $idPrefix . '_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
@@ -436,6 +445,7 @@ final class FormController extends Controller {
         if (isset($this->forms[$this->form]) !== false) {
 
             $form = $this->forms[$this->form];
+            $dynamicDatas = [];
 
             // Input area check
             foreach ($form['inputs'] as $name => $detail) {
@@ -445,6 +455,7 @@ final class FormController extends Controller {
                     foreach ($detail as $name => $widgetDetail) {
                         
                         $inputAreas[$name] = 'int';
+                        $dynamicDatas[$name] = $widgetDetail;
                         if (isset($detail['attributes']['required']) !== false AND $detail['attributes']['required'] === 'true') {
                             $requiredAreas['areas'][$name] = true;
                         }
@@ -602,6 +613,16 @@ final class FormController extends Controller {
 
                     $body = '';
                     foreach ($insert as $k => $v) {
+
+                        if (isset($dynamicDatas[$k]) !== false) { // Dynamic value for selectable widgets
+                            $content = $this->getContent($v);
+                            if ($content) {
+                                $content->input = json_decode($content->input);
+                                $v = isset($content->input->{$dynamicDatas[$k]['use_for_view']}->{Base::lang('lang.code')}) !== false ?
+                                   $content->input->{$dynamicDatas[$k]['use_for_view']}->{Base::lang('lang.code')} : 
+                                   $content->input->{$dynamicDatas[$k]['use_for_view']} ;
+                            }
+                        }
                         $body .= '<strong>' . Base::lang('base.' . $k) . ':</strong> '. $v .'<br>' . PHP_EOL;
                     }
 

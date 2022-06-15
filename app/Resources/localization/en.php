@@ -420,6 +420,8 @@ return [
         'service' => 'Service',
         'country' => 'Country',
         'note' => 'Note',
+        'related_service_to_be_informed' => 'The Education Service You Want to Be Informed',
+        'interested_country' => 'The Country of Interest for Education',
     ],
     'app' => [
     ]

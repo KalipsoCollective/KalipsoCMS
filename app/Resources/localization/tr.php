@@ -420,6 +420,8 @@ return [
         'service' => 'Hizmet',
         'country' => 'Ülke',
         'note' => 'Not',
+        'related_service_to_be_informed' => 'Bilgi Almak İstediğiniz Eğitim Hizmeti',
+        'interested_country' => 'Eğitim için İlgilenilen Ülke',
     ],
     'app' => [
     ]

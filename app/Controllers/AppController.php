@@ -20,12 +20,16 @@ final class AppController extends Controller {
 
     public function index() {
 
+        $container = $this->get();
+        $container->form = 'information-request-form';
         return [
             'status' => true,
             'statusCode' => 200,
             'arguments' => [
                 'title' => Base::lang('base.welcome'),
-                'output' => Base::lang('base.welcome_message')
+                'output' => Base::lang('base.welcome_message'),
+                'prepareForm' => (new FormController($container))
+                    ->prepareForm($this->forms[$container->form]['inputs']),
             ],
             'view' => 'index'
         ];

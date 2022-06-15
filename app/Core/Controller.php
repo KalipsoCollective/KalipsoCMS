@@ -27,9 +27,9 @@ class Controller {
     public function __construct($container) {
 
         $this->container = $container;
-        $this->module = isset($this->get('request')->attributes['module']) !== false ? $this->get('request')->attributes['module'] : 'general';
+        $this->module = isset($this->get('request')->attributes['module']) !== false ? $this->get('request')->attributes['module'] : (isset($container->module) === false ? 'general' : $container->module);
         $this->modules = file_exists($file = Base::path('app/Resources/modules.php')) ? require $file : [];
-        $this->form = isset($this->get('request')->attributes['form']) !== false ? $this->get('request')->attributes['form'] : 'general';
+        $this->form = isset($this->get('request')->attributes['form']) !== false ? $this->get('request')->attributes['form'] : (isset($container->form) === false ? 'general' : $container->form);
         $this->forms = file_exists($file = Base::path('app/Resources/forms.php')) ? require $file : [];
 
     }

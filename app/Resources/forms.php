@@ -225,7 +225,7 @@ return [
 			],
 			'phone' => [
 				'label' => 'base.phone',
-				'type' => 'text',
+				'type' => 'tel',
 				'col' => 'col-12 col-md-4',
 				'attributes' => [
 					'required' => 'true'
@@ -233,7 +233,7 @@ return [
 			],
 			'last_studied_program' => [
 				'label' => 'base.last_studied_program',
-				'type' => 'text',
+				'type' => 'input',
 				'col' => 'col-12 col-md-8',
 				'attributes' => [
 					'required' => 'true'
