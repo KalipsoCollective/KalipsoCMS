@@ -173,6 +173,14 @@ return [
 		'default' => false,
 		'name' => 'auth.management_forms_list',
 	],
+	'management/forms/:form/:id' => [
+		'default' => false,
+		'name' => 'auth.management_forms_detail',
+	],
+	'management/forms/:form/:id/update' => [
+		'default' => false,
+		'name' => 'auth.management_forms_update',
+	],
 
 	'management/logs' => [
 		'default' => false,
