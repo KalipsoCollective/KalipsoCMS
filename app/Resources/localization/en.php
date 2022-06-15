@@ -81,6 +81,7 @@ return [
         'management_forms_list' => 'Management - Forms - List',
         'management_forms_detail' => 'Management - Forms - Detail',
         'management_forms_update' => 'Management - Forms - Update',
+        'management_forms_delete' => 'Management - Forms - Delete',
         'management_media' =>  'Management - Media',
         'management_media_list' =>  'Management - Media - List',
         'management_media_add' =>  'Management - Media - Add',
@@ -403,6 +404,12 @@ return [
         'first_name_last_name' => 'First Name – Last Name',
         'telephone_number' => 'Telephone Number',
         'submit' => 'Submit',
+        'form_successfully_added' => 'The form has been successfully submitted.',
+        'form_add_problem' => 'There was a problem submitting the form.',
+        'form_successfully_deleted' => 'The form has been successfully deleted.',
+        'form_delete_problem' => 'There was a problem deleting the form.',
+        'form_successfully_updated' => 'The form has been successfully updated.',
+        'form_update_problem' => 'There was a problem updating the form.',
     ],
     'app' => [
     ]

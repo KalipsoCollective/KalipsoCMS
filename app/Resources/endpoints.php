@@ -181,7 +181,10 @@ return [
 		'default' => false,
 		'name' => 'auth.management_forms_update',
 	],
-
+	'management/forms/:form/:id/delete' => [
+		'default' => false,
+		'name' => 'auth.management_forms_delete',
+	],
 	'management/logs' => [
 		'default' => false,
 		'name' => 'auth.management_logs',
