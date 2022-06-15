@@ -410,6 +410,7 @@ return [
         'form_delete_problem' => 'Form silinirken bir sorun oluştu.',
         'form_successfully_updated' => 'Form başarıyla güncellendi.',
         'form_update_problem' => 'Form güncellenirken bir sorun oluştu.',
+        'detail' => 'Detay',
     ],
     'app' => [
     ]

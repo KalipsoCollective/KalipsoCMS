@@ -71,7 +71,8 @@ final class MenuController extends Controller {
 		}
 
 		foreach ($this->forms as $key => $data) {
-			$options['forms'][$key] = Base::lang($data['name']);
+			if ($data['routes']['listing'] OR $data['routes']['detail']) 
+				$options['forms'][$key] = Base::lang($data['name']);
 		}
 
 		return $options;
@@ -141,32 +142,34 @@ final class MenuController extends Controller {
 				break;
 			
 			case 'forms':
-				/*
 				$lang = Base::lang('lang.code');
-				foreach ($this->modules as $key => $data) {
+				foreach ($this->forms as $key => $data) {
 					if ($data['routes']['listing'] OR $data['routes']['detail'] AND $key === $area) {
 						
 						if (
 							$data['routes']['listing'] AND 
-							isset($data['routes']['listing'][]) !== false AND 
+							isset($data['routes']['listing'][$lang]) !== false AND 
 							($parameter === 'list' OR $parameter === 'list_as_dropdown') OR is_null($parameter)) 
 						{
-							$return = $data['routes']['listing'][$lang];
+							$return = $data['routes']['listing'][$lang][1];
 
 						} elseif ($data['routes']['detail'] AND 
 							isset($data['routes']['detail'][$lang]) !== false AND 
 							(int)$parameter 
 						) {
 							
-							$data = ( new ContentController( $this->get() ) )
+							$content = ( new ContentController( $this->get() ) )
 								->getContent((int)$parameter);
 
-							if ($data) {
+							if ($content) {
 
-								$data->input = @json_decode($data->input);
-								if (isset($data->input->slug->{$lang}) !== false) {
+								$content->input = json_decode($content->input);
+								if (isset($content->input->slug->{$lang}) !== false) {
 
-									$return = $this->get()->dynamicUrl($data['routes']['detail'][$lang], ['slug' => $data->input->slug->{$lang}]);
+									$return = Base::dynamicURL(
+										$data['routes']['detail'][$lang][1], 
+										['slug' => $content->input->slug->{$lang}]
+									);
 
 								}
 
@@ -174,7 +177,6 @@ final class MenuController extends Controller {
 						}
 					}
 				}
-				*/
 				break;
 		}
 		return $return;
@@ -271,7 +273,19 @@ final class MenuController extends Controller {
 
 			} elseif ($module[0] === 'forms') {
 	
+				if (isset($this->forms[$module[1]]) !== false) {
 
+					$module = $module[1];
+					$moduleDetail = $this->forms[$module];
+					if ($moduleDetail['routes']['listing']) {
+						$html .= '<option value="list"'.($parameter == 'list' ? ' selected' : '').'>' . Base::lang('base.list') . '</option>';
+					}
+
+					if ($moduleDetail['routes']['detail']) {
+						$html .= '<option value="list"'.($parameter == 'detail' ? ' selected' : '').'>' . Base::lang('base.detail') . '</option>';
+					}
+
+				}
 
 			}
 

@@ -410,6 +410,7 @@ return [
         'form_delete_problem' => 'There was a problem deleting the form.',
         'form_successfully_updated' => 'The form has been successfully updated.',
         'form_update_problem' => 'There was a problem updating the form.',
+        'detail' => 'Detail',
     ],
     'app' => [
     ]
