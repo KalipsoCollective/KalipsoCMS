@@ -415,6 +415,11 @@ return [
         'in_action' => 'İşlemde',
         'completed' => 'Tamamlandı',
         'form_received' => 'Form Alındı',
+        'information_request_form_message' => 'Bilgi talep formlarını yönetebileceğiniz sayfadır.',
+        'last_studied_program' => 'En Son Eğitim Aldığınız / Mezun Olduğunuz Okul ve Bölüm',
+        'service' => 'Hizmet',
+        'country' => 'Ülke',
+        'note' => 'Not',
     ],
     'app' => [
     ]

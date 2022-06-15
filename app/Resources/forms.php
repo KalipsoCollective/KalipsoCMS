@@ -232,7 +232,7 @@ return [
 				],
 			],
 			'last_studied_program' => [
-				'label' => 'app.last_studied_program',
+				'label' => 'base.last_studied_program',
 				'type' => 'text',
 				'col' => 'col-12 col-md-8',
 				'attributes' => [
@@ -241,7 +241,7 @@ return [
 			],
 			'widget' => [
 				'service' => [
-					'label' => 'app.related_service_to_be_informed',
+					'label' => 'base.related_service_to_be_informed',
 					'type' => 'select',
 					'source' => ['getModuleDatas', ['services']],
 					'col' => 'col-12 col-md-6',
@@ -249,7 +249,7 @@ return [
 					'attributes' => ['required' => 'true'],
 				],
 				'country' => [
-					'label' => 'app.interested_country',
+					'label' => 'base.interested_country',
 					'type' => 'select',
 					'source' => ['getModuleDatas', ['countries']],
 					'col' => 'col-12 col-md-6',
@@ -269,13 +269,15 @@ return [
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.email\')), "-") AS email,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.phone\')), "-") AS phone,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.last_studied_program\')), "-") AS last_studied_program,
-						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.service\')), "-") AS service,
-						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.country\')), "-") AS country,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.service\')), "0") AS service_id,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.country\')), "0") AS country_id,
+						(SELECT IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "0") FROM contents WHERE id = service_id) AS service,
+						(SELECT IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "0") FROM contents WHERE id = country_id) AS country,
 						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.note\')), "-") AS note,
 						x.status,
 						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
 						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
-					FROM `forms` x WHERE x.form = "contact-form" AND x.status != "deleted") AS raw',
+					FROM `forms` x WHERE x.form = "information-request-form" AND x.status != "deleted") AS raw',
 		'table' => [
 			'id' => [
 				'primary' => true,
@@ -283,12 +285,14 @@ return [
 			'name' => [],
 			'email' => [],
 			'phone' => [],
-			'subject' => [],
-			'message' => [
+			'last_studied_program' => [],
+			'service' => [],
+			'country' => [],
+			'note' => [
 				'formatter' => function($row) {
 
-					$message = Base::stringShortener($row->message, 100);
-					return $message == '' ? '-' : $message;
+					$note = Base::stringShortener($row->note, 100);
+					return $note == '' ? '-' : $note;
 				}
 			],
 			'created' => [],
@@ -356,8 +360,8 @@ return [
 					"maxlength" => 50
 				],
 				"orderable" => true,
-				"title" => Base::lang('base.subject'),
-				"key" => "subject"
+				"title" => Base::lang('base.last_studied_program'),
+				"key" => "last_studied_program"
 			],
 			[
 				"searchable" => [
@@ -365,8 +369,26 @@ return [
 					"maxlength" => 50
 				],
 				"orderable" => true,
-				"title" => Base::lang('base.message'),
-				"key" => "message"
+				"title" => Base::lang('base.service'),
+				"key" => "service"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.country'),
+				"key" => "country"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.note'),
+				"key" => "note"
 			],
 			[
 				"searchable" => [
@@ -408,16 +430,7 @@ return [
 		],
 		'routes' => [ // method - route - controller@method - middlewares as array (like route definition in index.php)
 			'listing' => false,
-			'detail' => [
-				'en' => ['GET,POST', '/contact', 'FormController@formPage', []],
-				'tr' => ['GET,POST', '/iletisim', 'FormController@formPage', []]
-			],
-			'view' => [
-				'detail' => 'forms.contact',
-			],
-			'description' => [
-				'detail' => 'base.contact_detail',
-			]
+			'detail' => false
 		],
 	]
 ];

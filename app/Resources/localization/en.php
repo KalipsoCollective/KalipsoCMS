@@ -415,6 +415,11 @@ return [
         'in_action' => 'In Action',
         'completed' => 'Completed',
         'form_received' => 'Form Received',
+        'information_request_form_message' => 'This is the page where you can manage information request forms.',
+        'last_studied_program' => 'The Last Studied/Graduated School and Program',
+        'service' => 'Service',
+        'country' => 'Country',
+        'note' => 'Note',
     ],
     'app' => [
     ]
