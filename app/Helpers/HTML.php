@@ -223,6 +223,10 @@ class HTML {
                     }
                 }
 
+                if (! is_null($container)) {
+                    $aClass .= $container->currentLink($url['link']);
+                }
+
                 $return .= '
                 <li'.($liClass != '' ? ' class="' . $liClass . '"' : '').'>
                     <a'.($aClass != '' ? ' class="' . $aClass . '"' : '').' 
@@ -233,7 +237,7 @@ class HTML {
                     </a>';
 
                 if (isset($url['sub']) !== false) {
-                    $return .= self::generateMenu($url['sub'], $parameters, ($level+1));
+                    $return .= self::generateMenu($url['sub'], $parameters, ($level+1), $container);
                 }
                 $return .= '
                 </li>';

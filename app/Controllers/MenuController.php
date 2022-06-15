@@ -713,8 +713,6 @@ final class MenuController extends Controller {
 
 					if ($value['dynamic_link']['parameter'] === 'list_as_dropdown' AND $module[0] === 'modules') {
 
-						
-
 						$getContents = (new ContentController($this->get()))
 							->getModuleDatas($module[1]);
 
@@ -759,7 +757,7 @@ final class MenuController extends Controller {
 
 				$return[$key]['name'] = $value['name'][$lang];
 				$return[$key]['blank'] = $value['blank'];
-				$return[$key]['link'] = Base::base($link);
+				$return[$key]['link'] = $link;
 				if (isset($value['sub']) !== false) {
 					$return[$key]['sub'] = $this->getMenuDetails($value['sub']);
 				}
