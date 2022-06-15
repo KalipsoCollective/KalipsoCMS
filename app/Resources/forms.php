@@ -202,10 +202,9 @@ return [
 			]
 		],
 	],
-	/*
 	'information-request-form' => [
-		'name' => Base::lang('base.information_request_form'),
-		'description' => Base::lang('base.information_request_form_message'),
+		'name' => 'base.information_request_form',
+		'description' => 'base.information_request_form_message',
 		'icon' => 'ti ti-file-info', 
 		'inputs' => [
 			'name' => [
@@ -263,6 +262,162 @@ return [
 				'col' => 'col-12',
 				'type' => 'textarea',
 			]
-		]
-	] */
+		],
+		'from' => '(SELECT 
+						x.id,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.name\')), "-") AS name,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.email\')), "-") AS email,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.phone\')), "-") AS phone,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.last_studied_program\')), "-") AS last_studied_program,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.service\')), "-") AS service,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.country\')), "-") AS country,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.note\')), "-") AS note,
+						x.status,
+						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+					FROM `forms` x WHERE x.form = "contact-form" AND x.status != "deleted") AS raw',
+		'table' => [
+			'id' => [
+				'primary' => true,
+			],
+			'name' => [],
+			'email' => [],
+			'phone' => [],
+			'subject' => [],
+			'message' => [
+				'formatter' => function($row) {
+
+					$message = Base::stringShortener($row->message, 100);
+					return $message == '' ? '-' : $message;
+				}
+			],
+			'created' => [],
+			'updated' => [],
+			'status' => [
+				'formatter' => function($row) {
+
+					switch ($row->status) {
+						case 'completed':
+							$class = 'bg-success';
+							break;
+
+						case 'in_action':
+							$class = 'bg-primary';
+							break;
+						
+						default:
+							$class = 'bg-warning';
+					}
+					return '<span class="badge '.$class.'">' . Base::lang('base.' . $row->status) . '</span>';
+				}
+			],
+		],
+		'columns' => [
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.name'),
+				"key" => "name"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.email'),
+				"key" => "email"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.phone'),
+				"key" => "phone"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.subject'),
+				"key" => "subject"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.message'),
+				"key" => "message"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => [
+					"type" => "select",
+					"datas" => [
+						['value' => 'pending', 'name' => Base::lang('base.pending')],
+						['value' => 'in_action', 'name' => Base::lang('base.in_action')],
+						['value' => 'completed', 'name' => Base::lang('base.completed')]
+					]
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.status'),
+				"key" => "status"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
+		],
+		'routes' => [ // method - route - controller@method - middlewares as array (like route definition in index.php)
+			'listing' => false,
+			'detail' => [
+				'en' => ['GET,POST', '/contact', 'FormController@formPage', []],
+				'tr' => ['GET,POST', '/iletisim', 'FormController@formPage', []]
+			],
+			'view' => [
+				'detail' => 'forms.contact',
+			],
+			'description' => [
+				'detail' => 'base.contact_detail',
+			]
+		],
+	]
 ];
