@@ -28,35 +28,35 @@ final class FormController extends Controller {
 
     public function forms() {
 
-        $title = Base::lang('base.contents');
-        $description = Base::lang('base.contents_message');
+        $title = Base::lang('base.forms');
+        $description = Base::lang('base.forms_message');
 
-        if (isset($this->modules[$this->module]) !== false) {
+        if (isset($this->forms[$this->form]) !== false) {
 
-            $module = $this->modules[$this->module];
-            $moduleName = Base::lang($module['name']);
-            $title = $moduleName . ' | ' . $title;
-            $description = Base::lang($module['description']);
-            $icon = isset($module['icon']) !== false ? $module['icon'] : 'ti ti-folders';
+            $form = $this->forms[$this->form];
+            $formName = Base::lang($form['name']);
+            $title = $formName . ' | ' . $title;
+            $description = Base::lang($form['description']);
+            $icon = isset($form['icon']) !== false ? $form['icon'] : 'ti ti-folders';
 
             $arguments = [
                 'title' => $title,
-                'moduleName' => $moduleName,
-                'moduleDatas' => $module,
+                'formName' => $formName,
+                'formDatas' => $form,
                 'icon' => $icon,
                 'description' => $description,
-                'module' => $this->module,
-                'modules' => $this->modules,
+                'form' => $this->form,
                 'forms' => $this->forms,
+                'modules' => $this->modules,
                 'languages' => Base::config('app.available_languages'),
-                'moduleForm' => $this->prepareModuleForm($module['inputs']),
+                'prepareForm' => $this->prepareForm($form['inputs']),
             ];
 
             return [
                 'status' => true,
                 'statusCode' => 200,
                 'arguments' => $arguments,
-                'view' => ['admin.contents', 'admin']
+                'view' => ['admin.forms', 'admin']
             ];
 
         } else {
@@ -76,38 +76,43 @@ final class FormController extends Controller {
         }
     }
 
-    public function getModuleDatas($module = null) {
+    public function getFormDatas($form = null) {
 
-        $model = (new Contents())->where('module', $module);
+        $model = (new Forms())->where('form', $form);
 
         return $model->getAll();
 
     }
 
-    public function getContent($id = 0) {
+    public function getModuleDatas($module = null) {
+
+        return (new ContentController($this->get()))->getModuleDatas($module);
+    }
+
+    public function getForm($id = 0) {
 
         $return = null;
         if ($id) {
-            $return = (new Contents())->where('id', $id)->get();
+            $return = (new Forms())->where('id', $id)->get();
         }
         return $return;
 
     }
 
-    public function prepareModuleForm($module, $fill = null) {
+    public function prepareForm($form, $fill = null) {
 
-        $idPrefix = 'content_add';
+        $idPrefix = 'form_add';
         if (! is_null($fill)) {
             $fillDatas = json_decode($fill->input);
             $id = $fill->id;
-            $idPrefix = 'content_edit';
+            $idPrefix = 'form_edit';
             $fileController = new FileController($this->get());
         }
 
         $moduleForm = '';
         $languages = Base::config('app.available_languages');
         $multilanguage = false;
-        foreach ($module as $name => $input) {
+        foreach ($form as $name => $input) {
 
             $col = isset($input['col']) !== false ? $input['col'] : 'col-12 col-md-6';
 
