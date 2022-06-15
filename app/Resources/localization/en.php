@@ -399,8 +399,11 @@ return [
         'phone' => 'Phone',
         'subject' => 'Subject',
         'message' => 'Message',
+        'contact_detail' => 'You can reach us by filling out the contact form on this page or by using our contact information.',
+        'first_name_last_name' => 'First Name – Last Name',
+        'telephone_number' => 'Telephone Number',
+        'submit' => 'Submit',
     ],
     'app' => [
-        
     ]
 ];

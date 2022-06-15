@@ -380,7 +380,7 @@ final class Factory
                         $this->route(...$formDetail['routes']['detail'][$this->lang]);
                     }
                 }
-                $this->route('POST', '/form/:form', 'FormController@formAdd', []);
+                $this->route('POST', '/form/:form/add', 'FormController@formAdd', []);
             }
         }
 
@@ -865,8 +865,6 @@ final class Factory
      **/
 
     public function view($file = null, $arguments = [], $layout = 'app') {
-
-        Base::dump($this->routes, true);
 
         /**
          * 

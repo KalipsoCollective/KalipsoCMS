@@ -399,8 +399,11 @@ return [
         'phone' => 'Telefon',
         'subject' => 'Konu',
         'message' => 'Mesaj',
+        'contact_detail' => 'Bu sayfadan iletişim formu doldurarak ya da iletişim bilgilerimiz ile bize ulaşabilirsiniz.',
+        'first_name_last_name' => 'Adınız – Soyadınız',
+        'telephone_number' => 'Telefon Numarası',
+        'submit' => 'Gönder',
     ],
     'app' => [
-        
     ]
 ];

@@ -28,11 +28,11 @@ return [
 			'phone' => [
 				'label' => 'base.telephone_number',
 				'col' => 'col-12 col-md-6',
-				'type' => 'text',
+				'type' => 'tel',
 			],
 			'subject' => [
 				'label' => 'base.subject',
-				'type' => 'text',
+				'type' => 'input',
 				'col' => 'col-12 col-md-6',
 				'attributes' => [
 					'required' => 'true'
@@ -40,7 +40,7 @@ return [
 			],
 			'message' => [
 				'label' => 'base.message',
-				'type' => 'text',
+				'type' => 'textarea',
 				'col' => 'col-12',
 				'attributes' => [
 					'required' => 'true'
@@ -170,6 +170,7 @@ return [
 			]
 		],
 	],
+	/*
 	'information-request-form' => [
 		'name' => Base::lang('base.information_request_form'),
 		'description' => Base::lang('base.information_request_form_message'),
@@ -231,5 +232,5 @@ return [
 				'type' => 'textarea',
 			]
 		]
-	]
+	] */
 ];

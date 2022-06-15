@@ -265,6 +265,8 @@ final class ContentController extends Controller {
                             case 'input':
                             case 'color':
                             case 'number':
+                            case 'email':
+                            case 'tel':
 
                                 if (! is_null($currentVal)) {
                                     $attributes .= 'value="'.$currentVal.'" ';
