@@ -638,8 +638,8 @@ img.table-image {
 
 .kn-menu-item {
     background: rgb(0 0 0 / 10%);
-    /* padding: 0.2rem; */
     border-radius: 0.2rem;
+    border: 1px solid rgb(0 0 0 / 35%);
 }
 
 .kn-menu-item + .kn-menu-item {
@@ -656,6 +656,10 @@ img.table-image {
 
 .kn-menu-item .kn-menu-item {
     margin-left: 1rem;
+}
+
+.kn-menu-item .card {
+    margin-right: 0.5rem;
 }
 
 .kn-menu-item .kn-multilang-content-switch .nav .nav-link {
