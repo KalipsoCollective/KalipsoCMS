@@ -84,6 +84,18 @@ final class ContentController extends Controller {
 
     }
 
+    public function getModuleData($module = null, $id = null) {
+
+        $model = (new Contents())->where('module', $module);
+        if ($id) {
+            $model->where('id', $id);
+        }
+        
+
+        return $model->orderBy('id', 'desc')->get();
+
+    }
+
     public function getContent($id = 0) {
 
         $return = null;
