@@ -1036,12 +1036,12 @@ class Base {
 
             case 'uppercasewords':
             case 'ucw':
-                $data = Transliterator::create("Any-Title")->transliterate($data);
+                $data = \Transliterator::create("Any-Title")->transliterate($data);
                 break;
 
             case 'uppercasefirst':
             case 'ucf':
-                $data = Transliterator::create("Any-Title")->transliterate($data);
+                $data = \Transliterator::create("Any-Title")->transliterate($data);
                 $data = explode(' ', $data);
                 if (count($data)>1) {
 
@@ -1062,12 +1062,12 @@ class Base {
 
             case 'lowercase':
             case 'l':
-                $data = Transliterator::create("Any-Lower")->transliterate($data);
+                $data = \Transliterator::create("Any-Lower")->transliterate($data);
                 break;
 
             case 'uppercase':
             case 'u':
-                $data = Transliterator::create("Any-Upper")->transliterate($data);
+                $data = \Transliterator::create("Any-Upper")->transliterate($data);
                 break;
         }
 
