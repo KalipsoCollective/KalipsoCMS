@@ -367,7 +367,7 @@ return [
         'pages' => 'Pages',
         'pages_message' => 'It is the page where you can manage the pages.',
         'page_detail' => 'View the relevant page.',
-        'media' => 'Medya Ortamı',
+        'media' => 'Media',
         'media_message' => 'You can manage the media contents here.',
         'module' => 'Module',
         'preview' => 'Preview',
