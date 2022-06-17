@@ -396,12 +396,17 @@ function multidimensionalMenuForm(dom = null, level = 1) {
 			if (child.nodeName !== '#text') {
 				if (child.classList.contains('kn-menu-item')) {
 					items[index] = {};
-					if (child.querySelector('.row')) {
+
+					const regex = /\[(.*?)\]/gm;
+					if (child.querySelector('.row') && child.querySelector('.card-header')) {
 
 						const inputs = child.querySelector('.row').querySelectorAll('[name]');
-						[...inputs].map((input) => {
+						let headerElements = child.querySelector('.card-header').querySelectorAll('[name]');
 
-							const regex = /\[(.*?)\]/gm;
+						const nodes = [...inputs, ...headerElements];
+
+						[...nodes].map((input) => {
+
 							const matches = input.getAttribute('name').match(regex);
 							if (matches !== null) {
 								let keys = [];
