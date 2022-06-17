@@ -167,7 +167,8 @@ final class ContentController extends Controller {
                             <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '">
                                 '.(! $requiredWidget ?
                                  '<option value=""></option>' : 
-                                 '<option value=""'.$allSelected.'>' . Base::lang('base.all') . '</option>').'
+                                 '').'
+                                <option value=""'.$allSelected.'>' . Base::lang('base.all') . '</option>
                                 '.$options.'
                             </select>
                             <label for="' . $idPrefix . '_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>

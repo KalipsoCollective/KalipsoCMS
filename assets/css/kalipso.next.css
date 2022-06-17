@@ -677,6 +677,11 @@ i.ti {
     pointer-events: none;
 }
 
+.kalipso-table td i.ti {
+    font-size: 1.5rem;
+}
+
+
 @media (max-width: 1200px) {
     nav.navbar-side {
         left: -16rem;

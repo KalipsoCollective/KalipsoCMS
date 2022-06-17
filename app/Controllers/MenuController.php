@@ -322,9 +322,12 @@ final class MenuController extends Controller {
 						break;
 				}
 			}
-		} else {
+		}
+		/*
+		else {
 			$return = false;
 		}
+		*/
 		return $return;
 
 	}

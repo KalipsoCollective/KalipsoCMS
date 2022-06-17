@@ -5,10 +5,6 @@
  * Released under the MIT License
  */
 
-/*!
- * formToObject.js
- * Copyright (c) 2013-2014 Serban Ghita
- */
 async function kalipsoFetch(url = null, method = 'POST', data = {}) {
 
 	url = url ?? window.location.href;
@@ -290,7 +286,6 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
 				
-				console.log()
 				if (e.target.getAttribute('data-kn-change')) {
 					
 					e.preventDefault();
@@ -350,18 +345,15 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 	
 }
 
-function multidimensionalMenuForm(dom = null) {
+function multidimensionalMenuForm(dom = null, level = 1) {
 
 	let items = [];
-	let index = -1;
-
-	if (dom.querySelector('.kn-menu-drag').childNodes.length) {
-		let item = {};
-		[...dom.querySelector('.kn-menu-drag').childNodes].map((child) => {
-
+	let root = level === 1 ? dom.querySelector('.kn-menu-drag') : dom;
+	if (root && root.childNodes.length) {
+		let index = 0;
+		[...root.childNodes].map((child) => {
 			if (child.nodeName !== '#text') {
 				if (child.classList.contains('kn-menu-item')) {
-					index++;
 					items[index] = {};
 					if (child.querySelector('.row')) {
 
@@ -385,7 +377,9 @@ function multidimensionalMenuForm(dom = null) {
 								}
 
 								if (keys[1] !== undefined) {
-									items[index][keys[0]] = items[index][keys[0]] === undefined ? {} : items[index][keys[0]];
+									items[index][keys[0]] = items[index][keys[0]] === undefined 
+									? {} 
+									: items[index][keys[0]];
 									items[index][keys[0]][keys[1]] = value;
 								} else {
 									items[index][keys[0]] = value;
@@ -393,17 +387,18 @@ function multidimensionalMenuForm(dom = null) {
 
 							}
 						})
+
 					}
 
-					if (child.querySelector('.kn-menu-drag')) {
-						items[index]['sub'] = multidimensionalMenuForm(child.parentElement);
+					if (child.querySelectorAll('.kn-menu-drag').length) {
+						items[index]['sub'] = multidimensionalMenuForm(child, (level+1));
 					}
+
+					index++;
 				}
 			}
 		});
-
 	}
-
 	return items;
 
 }
