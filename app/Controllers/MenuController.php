@@ -759,7 +759,7 @@ final class MenuController extends Controller {
 				}
 
 				$return[$key]['name'] = $value['name'][$lang];
-				$return[$key]['blank'] = $value['blank'];
+				$return[$key]['blank'] = isset($value['blank']) !== false ? $value['blank'] : false;
 				$return[$key]['link'] = $link;
 				if (isset($value['sub']) !== false) {
 					$return[$key]['sub'] = $this->getMenuDetails($value['sub']);
