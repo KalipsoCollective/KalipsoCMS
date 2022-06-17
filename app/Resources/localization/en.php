@@ -1,8 +1,8 @@
 <?php
 
 /**
- * 	KalipsoNext - Localization File
- * 	English(en)
+ *  KalipsoNext - Localization File
+ *  English(en)
  **/
 
 return [
@@ -424,6 +424,11 @@ return [
         'related_service_to_be_informed' => 'The Education Service You Want to Be Informed',
         'interested_country' => 'The Country of Interest for Education',
         'remove' => 'Remove',
+        'subhead' => 'Subhead',
+        'home_contents' => 'Homepage Contents',
+        'home_contents_message' => 'You can manage homepage contents from this page.',
+        'target_blank' => 'Open in New Tab',
+        'move' => 'Move',
     ],
     'app' => [
     ]

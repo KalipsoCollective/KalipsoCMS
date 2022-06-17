@@ -1,8 +1,8 @@
 <?php
 
 /**
- * 	KalipsoNext - Localization File
- * 	Turkish(tr)
+ *  KalipsoNext - Localization File
+ *  Turkish(tr)
  **/
 
 return [
@@ -424,6 +424,11 @@ return [
         'related_service_to_be_informed' => 'Bilgi Almak İstediğiniz Eğitim Hizmeti',
         'interested_country' => 'Eğitim için İlgilenilen Ülke',
         'remove' => 'Kaldır',
+        'subhead' => 'Alt Başlık',
+        'home_contents' => 'Ana sayfa İçerikleri',
+        'home_contents_message' => 'Ana sayfa içeriklerini bu sayfadan yönetebilirsiniz.',
+        'target_blank' => 'Yeni Sekmede Aç',
+        'move' => 'Taşı',
     ],
     'app' => [
     ]
