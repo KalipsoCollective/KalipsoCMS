@@ -130,7 +130,7 @@ a {
 }
 
 .dropdown:hover > .dropdown-menu {
-  display: block;
+    display: block;
 }
 
 .navbar .navbar-nav .nav-item .nav-link {
@@ -638,7 +638,7 @@ img.table-image {
 
 .kn-menu-item {
     background: rgb(0 0 0 / 10%);
-    padding: 0.2rem;
+    /* padding: 0.2rem; */
     border-radius: 0.2rem;
 }
 
@@ -672,7 +672,6 @@ img.table-image {
     background: #686868
 }
 
-
 i.ti {
     pointer-events: none;
 }
@@ -680,7 +679,6 @@ i.ti {
 .kalipso-table td i.ti {
     font-size: 1.5rem;
 }
-
 
 @media (max-width: 1200px) {
     nav.navbar-side {

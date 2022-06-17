@@ -37,9 +37,11 @@ class HTML {
         if (isset($parameters['values']) !== false)
             $values = $parameters['values'];
 
-
+        $currentLang = Base::lang('lang.code');
+        $currentName = '';
         $languages = Base::config('app.available_languages');
         $tabContents = '';
+
         $nameArea = '
         <div class="col-12 kn-multilang-content">
             <div class="kn-multilang-content-switch">
@@ -52,10 +54,14 @@ class HTML {
                     $tabContents .= '
                     <div class="tab-pane fade'.($i === 0 ? ' show active' : '').'" id="name-'.$lang.'(DYNAMIC_ID)" role="tabpanel" aria-labelledby="name-tab-'.$lang.'(DYNAMIC_ID)">
                         <div class="form-floating">
-                            <input type="text" class="form-control" name="' . $name . '[name][' . $lang . ']" id="menuName' . $lang . '(DYNAMIC_ID)" placeholder="'.Base::lang('base.name').'"'.(isset($values->name->{$lang}) !== false ? ' value="'.$values->name->{$lang}.'"' : '').'>
+                            <input'.($currentLang === $lang ? ' data-kn-input="link_name"' : '').' type="text" class="form-control" name="' . $name . '[name][' . $lang . ']" id="menuName' . $lang . '(DYNAMIC_ID)" placeholder="'.Base::lang('base.name').'"'.(isset($values->name->{$lang}) !== false ? ' value="'.$values->name->{$lang}.'"' : '').'>
                             <label for="menuName' . $lang . '">'.Base::lang('base.name').'</label>
                         </div>
                     </div>';
+
+                    if ($currentLang === $lang AND isset($values->name->{$lang}) !== false) {
+                        $currentName = $values->name->{$lang};
+                    }
                 }
         $nameArea .= '
                 </div>
@@ -66,56 +72,68 @@ class HTML {
         </div>';
 
         $return = '
-        <div class="' . (!$drag ? 'col-12 border border-1 rounded p-2 shadow-sm' : 'kn-menu-drag kn-menu-item') . '">
-            <div class="row g-1">
-                ' . (isset($parameters['label']) !== false ? '<p class="m-0 p-0 ps-1 pt-1">' . $parameters['label'] . '</p>' : '') . '
-                <div class="col-12 col-md-11">
+        <div class="card px-0'.($drag ? ' kn-menu-drag kn-menu-item' : '').'">
+            <div class="card-header d-flex">
+                <button class="btn btn btn-light btn-sm shadow-none text-nowrap overflow-hidden" type="button" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="menuCollapseBody(DYNAMIC_ID)" data-bs-target="#menuCollapseBody(DYNAMIC_ID)">
+                    ' . (isset($parameters['label']) !== false ? $parameters['label'] : Base::lang('base.link')) . ': 
+                    <span class="link_name">
+                        ' . $currentName . '
+                    </span>
+                </button >
+                '.($drag ? '
+                <button class="ms-auto btn btn-danger btn-sm" type="button" data-kn-action="remove" data-kn-parent=".kn-menu-item">
+                    <i class="ti ti-circle-minus"></i>
+                </button>
+                <button class="ms-1 btn btn-dark btn-sm kn-menu-item-dragger" type="button">
+                    <i class="ti ti-drag-drop"></i>
+                </button>
+                ' : '').'
+            </div>
+            <div class="collapse" id="menuCollapseBody(DYNAMIC_ID)">
+                <div class="card-body">
                     <div class="row g-1">
-                        <div class="col-12">
-                            ' . $nameArea . '
-                        </div>
-                        <div class="col-12">
-                            <div class="form-floating">
-                                <input type="url" class="form-control form-control-sm" name="' . $name . '[direct_link]" placeholder="' . Base::lang('base.direct_link').'"'.(isset($values->direct_link) !== false ? ' value="'.$values->direct_link.'"' : '').'>
-                                <label>' . Base::lang('base.direct_link').'</label>
-                            </div>
-                        </div>
-                        <div class="col-12">
+                        <div class="col-12 col-md-11">
                             <div class="row g-1">
-                                <div class="col-sm-8">
+                                <div class="col-12">
+                                    ' . $nameArea . '
+                                </div>
+                                <div class="col-12">
                                     <div class="form-floating">
-                                        <select data-kn-change="'.Base::base('management/menus/get-menu-params').($drag ? '' : '?widget=on').'" data-kn-target="#menuParameter(DYNAMIC_ID)" class="form-select form-select-sm" name="' . $name . '[dynamic_link][module]" aria-label="' . Base::lang('base.module').'">
-                                            '.$parameters['menu_options'].'
-                                        </select>
-                                        <label>' . Base::lang('base.module').'</label>
+                                        <input type="url" class="form-control form-control-sm" name="' . $name . '[direct_link]" placeholder="' . Base::lang('base.direct_link').'"'.(isset($values->direct_link) !== false ? ' value="'.$values->direct_link.'"' : '').'>
+                                        <label>' . Base::lang('base.direct_link').'</label>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    <div class="form-floating">
-                                        <select class="form-select form-select-sm" id="menuParameter(DYNAMIC_ID)" name="' . $name . '[dynamic_link][parameter]" aria-label="' . Base::lang('base.parameter').'">
-                                            ' . (isset($parameters['module_parameters']) !== false ? $parameters['module_parameters'] : '') . '
-                                        </select>
-                                        <label>' . Base::lang('base.parameter').'</label>
+                                <div class="col-12">
+                                    <div class="row g-1">
+                                        <div class="col-sm-8">
+                                            <div class="form-floating">
+                                                <select data-kn-change="'.Base::base('management/menus/get-menu-params').($drag ? '' : '?widget=on').'" data-kn-target="#menuParameter(DYNAMIC_ID)" class="form-select form-select-sm" name="' . $name . '[dynamic_link][module]" aria-label="' . Base::lang('base.module').'">
+                                                    '.$parameters['menu_options'].'
+                                                </select>
+                                                <label>' . Base::lang('base.module').'</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" id="menuParameter(DYNAMIC_ID)" name="' . $name . '[dynamic_link][parameter]" aria-label="' . Base::lang('base.parameter').'">
+                                                    ' . (isset($parameters['module_parameters']) !== false ? $parameters['module_parameters'] : '') . '
+                                                </select>
+                                                <label>' . Base::lang('base.parameter').'</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-1">
-                    <div class="d-grid gap-2">
-                        '.($drag ? '
-                        <button class="btn btn-danger btn-sm" type="button" data-kn-action="remove" data-kn-parent=".kn-menu-item">
-                            <i class="ti ti-circle-minus"></i>
-                        </button>
-                        <button class="btn btn-dark btn-sm kn-menu-item-dragger" type="button">
-                            <i class="ti ti-drag-drop"></i>
-                        </button>
-                        ' : '').'
-                        <input type="checkbox" name="' . $name . '[blank]" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off"'.(isset($values->blank) !== false ? ($values->blank ? ' checked' : '') : '').'>
-                        <label class="btn btn-outline-primary btn-sm" for="targetBlank(DYNAMIC_ID)">
-                            <i class="ti ti-external-link"></i>
-                        </label><br>
+                        <div class="col-12 col-md-1">
+                            <div class="d-grid gap-2">
+                                
+                                <input type="checkbox" name="' . $name . '[blank]" class="btn-check" id="targetBlank(DYNAMIC_ID)" autocomplete="off"'.(isset($values->blank) !== false ? ($values->blank ? ' checked' : '') : '').'>
+                                <label class="btn btn-outline-primary btn-sm" for="targetBlank(DYNAMIC_ID)">
+                                    <i class="ti ti-external-link"></i>
+                                </label><br>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

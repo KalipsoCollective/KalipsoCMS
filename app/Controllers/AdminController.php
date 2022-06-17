@@ -26,7 +26,6 @@ final class AdminController extends Controller {
 
 	} 
 
-
 	public function dashboard() {
 
 		$users = (new Users)->count('id', 'total')->notWhere('status', 'deleted')->cache(60)->get();

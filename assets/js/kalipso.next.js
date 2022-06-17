@@ -317,7 +317,12 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 					} else if (e.target.getAttribute('data-kn-change').indexOf('/menus/get-menu-params') !== -1) {
 						options.append('module', e.target.value);
 						options.append('target',e.target.getAttribute('data-kn-target'));
-					} /* else {
+					} else if (e.target.getAttribute('data-kn-change') === 'link_name') {
+						keep = true;
+						e.target.closest('.kn-menu-drag').querySelector('.card-header .link_name').innerText = e.target.value;
+					}
+
+					 /* else {
 						keep = true;
 					}*/
 
@@ -327,6 +332,42 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 						NProgress.start();
 						response = await kalipsoFetch(
 							e.target.getAttribute('data-kn-change'),
+							'POST',
+							options
+						);
+
+						if (response !== undefined) {
+							responseFormatter(response);
+						}
+						setTimeout(() => {
+							NProgress.done();
+						}, 500);
+					}
+				}
+			}
+		});
+
+		document.addEventListener("input", async function(e) {
+			// Async. Action Buttons
+			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
+				
+				if (e.target.getAttribute('data-kn-input')) {
+					
+					e.preventDefault();
+
+					let keep = false;
+					let options = new FormData;
+					if (e.target.getAttribute('data-kn-input') === 'link_name') {
+						keep = true;
+						e.target.closest('.kn-menu-drag').querySelector('.card-header .link_name').innerText = e.target.value;
+					}
+
+					if (! keep) {
+
+						let url = e.target.getAttribute('data-kn-input');
+						NProgress.start();
+						response = await kalipsoFetch(
+							e.target.getAttribute('data-kn-input'),
 							'POST',
 							options
 						);
