@@ -106,7 +106,7 @@ final class MenuController extends Controller {
 			case 'modules':
 				$lang = Base::lang('lang.code');
 				foreach ($this->modules as $key => $data) {
-					if ($data['routes']['listing'] OR $data['routes']['detail'] AND $key === $area) {
+					if (($data['routes']['listing'] OR $data['routes']['detail']) AND $key === $area) {
 						
 						if (
 							$data['routes']['listing'] AND 
