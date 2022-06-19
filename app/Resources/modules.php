@@ -744,6 +744,158 @@ return [
 			],
 		]
 	],*/
+	'header-images' => [
+		'name' => 'base.header_images',
+		'description' => 'base.header_images_message',
+		'icon' => 'ti ti-layout-distribute-horizontal',
+		'from' => '(SELECT 
+						x.id, 
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.endpoint\')), "-") AS endpoint,
+						REPLACE(
+							REPLACE(
+								REPLACE(
+									REPLACE(
+										IFNULL(JSON_EXTRACT(x.input, \'$.image\'), ""),
+										" ",
+										""
+									),
+									"\"",
+									""
+								),
+								"]",
+								""
+							),
+							"[",
+							""
+						) AS image,
+						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, image)) AS image_src,
+						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+					FROM `contents` x WHERE x.module = "header-images") AS raw',
+		'table' => [
+			'id' => [
+				'primary' => true,
+			],
+			'endpoint' => [],
+			'title' => [],
+			'image_src' => [
+				'formatter' => function($row) {
+					$return = '';
+					if ($row->image_src AND $srcset = @json_decode($row->image_src)) {
+						$return = '<div class="image-group">';
+						foreach ($srcset as $src) {
+							$href = Base::base('upload/' . $src->original);
+							$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
+							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
+						}
+						$return .= '</div>';
+					} else {
+						$return = '-';
+					}
+					return $return;
+				}
+			],
+			'created' => [],
+			'updated' => [],
+		],
+		'columns' => [
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => Base::lang('base.key'),
+				"key" => "endpoint"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.title'),
+				"key" => "title"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.image'),
+				"key" => "image_src"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
+		],
+		'routes' => [
+			'listing' => false,
+			'detail' => false
+		],
+		'inputs' => [
+			'endpoint' => [
+				'label' => 'base.key',
+				'type' => 'input',
+				'col' => 'col-12 col-md-6 pt-4',
+			],
+			'title' => [
+				'multilanguage' => true,
+				'label' => 'base.title',
+				'type' => 'input',
+				'col' => 'col-12 col-md-6',
+				'default' => 0,
+				'attributes' => [
+					'required' => 'true',
+				],
+			],
+			'image' => [
+				'label' => 'base.image',
+				'type' => 'file',
+				'col' => 'col-12',
+				'attributes' => [
+					'accept' => 'image/*',
+					'required' => 'true',
+				],
+				'external_parameters' => [
+					'size' => [
+						'original' => [1920, 400],
+					],
+				]
+			],
+		]
+	],
 	'sliders' => [
 		'name' => 'base.sliders',
 		'description' => 'base.sliders_message',

@@ -429,6 +429,10 @@ return [
         'home_contents_message' => 'Ana sayfa içeriklerini bu sayfadan yönetebilirsiniz.',
         'target_blank' => 'Yeni Sekmede Aç',
         'move' => 'Taşı',
+        'our_services' => 'Hizmetlerimiz',
+        'explore_our_services' => 'Hizmetlerimizi Keşfedin',
+        'header_images' => 'Başlık Görselleri',
+        'header_images_message' => 'Başlık görsellerini bu sayfadan yönetebilirsiniz.',
     ],
     'app' => [
     ]

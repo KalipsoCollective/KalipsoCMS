@@ -429,6 +429,10 @@ return [
         'home_contents_message' => 'You can manage homepage contents from this page.',
         'target_blank' => 'Open in New Tab',
         'move' => 'Move',
+        'our_services' => 'Our Services',
+        'explore_our_services' => 'Explore Our Services',
+        'header_images' => 'Header Images',
+        'header_images_message' => 'You can manage header images from this page.',
     ],
     'app' => [
     ]
