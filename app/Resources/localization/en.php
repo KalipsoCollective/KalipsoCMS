@@ -325,7 +325,7 @@ return [
         'services_message' => 'This is the page where you can manage the services.',
         'other_services' => 'Other Services',
         'other_services_message' => 'You can manage other services here.',
-        'countries' => 'Contries',
+        'countries' => 'Countries',
         'countries_message' => 'You can edit countries here.',
         'all' => 'All',
         'description' => 'Description',
