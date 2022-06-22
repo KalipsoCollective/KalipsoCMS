@@ -3,6 +3,219 @@
 use KN\Helpers\Base;
 
 return [
+	'test' => [
+		'name' => 'base.test',
+		'description' => 'base.test_message',
+		'icon' => 'ti ti-align-justified',
+		'from' => '(SELECT 
+						x.id,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") AS title,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.slug.'.Base::lang('lang.code').'\')), "-") AS slug,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.description.'.Base::lang('lang.code').'\')), "-") AS description,
+						IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.content.'.Base::lang('lang.code').'\')), "-") AS content,
+						REPLACE(
+							REPLACE(
+								REPLACE(
+									REPLACE(
+										IFNULL(JSON_EXTRACT(x.input, \'$.header_image\'), ""),
+										" ",
+										""
+									),
+									"\"",
+									""
+								),
+								"]",
+								""
+							),
+							"[",
+							""
+						) AS header_image,
+						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, header_image)) AS header_image_src,
+						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
+						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
+					FROM `contents` x WHERE x.module = "test") AS raw',
+		'table' => [
+			'id' => [
+				'primary' => true,
+			],
+			'title' => [],
+			'description' => [
+				'formatter' => function($row) {
+
+					$description = Base::stringShortener($row->description, 100);
+					return $description == '' ? '-' : $description;
+				}
+			],
+			'content' => [
+				'formatter' => function($row) {
+
+					$content = Base::stringShortener(trim(strip_tags(htmlspecialchars_decode($row->content))), 100);
+					return $content == '' ? '-' : $content;
+				}
+			],
+			'header_image_src' => [
+				'formatter' => function($row) {
+					$return = '';
+					if ($row->header_image_src AND $srcset = @json_decode($row->header_image_src)) {
+						$return = '<div class="image-group">';
+						foreach ($srcset as $src) {
+							$href = Base::base('upload/' . $src->original);
+							$src = Base::base('upload/' . (isset($src->sm) !== false ? $src->sm : $src->original));
+							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
+						}
+						$return .= '</div>';
+					} else {
+						$return = '-';
+					}
+					return $return;
+				}
+			],
+			'created' => [],
+			'updated' => [],
+		],
+		'columns' => [
+			[
+				"searchable" => [
+					"type" => "number",
+					"min" => 1,
+					"max" => 999
+				],
+				"orderable"=> true,
+				"title" => "#",
+				"key" => "id"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.title'),
+				"key" => "title"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.description'),
+				"key" => "description"
+			],
+			[
+				"searchable" => [
+					"type" => "text",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.content'),
+				"key" => "content"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.header_image'),
+				"key" => "header_image_src"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.created_at'),
+				"key" => "created"
+			],
+			[
+				"searchable" => [
+					"type" => "date",
+					"maxlength" => 50
+				],
+				"orderable" => true,
+				"title" => Base::lang('base.updated_at'),
+				"key" => "updated"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.action'),
+				"key" => "action"
+			]
+		],
+		'routes' => [ // method - route - controller@method - middlewares as array (like route definition in index.php)
+			'listing' => false,
+			'detail' => [
+				'en' => ['GET,POST', '/test/:category/:slug', 'ContentController@contentDetailPage', []],
+				'tr' => ['GET,POST', '/test/:category/:slug', 'ContentController@contentDetailPage', []]
+			],
+			'view' => [
+				'detail' => 'contents.page_detail',
+			],
+			'description' => [
+				'detail' => 'base.page_detail',
+			]
+		],
+		'inputs' => [
+			'title' => [
+				'col' => 'col-12 col-md-4',
+				'multilanguage' => true,
+				'label' => 'base.title',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-change' => Base::base('/management/blog/slug')
+				],
+			],
+			'slug' => [
+				'col' => 'col-12 col-md-4',
+				'multilanguage' => true,
+				'label' => 'base.slug',
+				'type' => 'input',
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-change' => Base::base('/management/blog/slug')
+				],
+			],
+			'description' => [
+				'col' => 'col-12 col-md-4',
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'input',
+				'attributes' => ['required' => 'true'],
+			],
+			'content' => [
+				'col' => 'col-12 col-lg-10',
+				'multilanguage' => true,
+				'label' => 'base.description',
+				'type' => 'editor',
+				'attributes' => ['required' => 'true'],
+			],
+			'widget' => [
+				'category' => [
+					'label' => 'base.categories',
+					'type' => 'select',
+					'source' => ['getModuleDatas', ['categories']],
+					'col' => 'col-12 col-lg-2 pt-4',
+					'use_for_view' => 'title',
+					'attributes' => ['required' => 'true'],
+				]
+			],
+			'header_image' => [
+				'label' => 'base.header_image',
+				'type' => 'file',
+				'col' => 'col-12',
+				'attributes' => [
+					'accept' => 'image/*',
+				],
+				'external_parameters' => [
+					'size' => [
+						'original' => [1920, 400]
+					],
+				]
+			],
+			
+		]
+	],
 	'pages' => [
 		'name' => 'base.pages',
 		'description' => 'base.pages_message',
@@ -561,6 +774,17 @@ return [
 				'col' => 'col-12 col-md-6',
 				'attributes' => [
 					'required' => 'true',
+					'data-kn-change' => Base::base('/management/categories/slug')
+				],
+			],
+			'slug' => [
+				'multilanguage' => true,
+				'label' => 'base.slug',
+				'type' => 'input',
+				'col' => 'col-12 col-md-4',
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-change' => Base::base('/management/categories/slug')
 				],
 			],
 			'color' => [

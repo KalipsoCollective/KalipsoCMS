@@ -1374,13 +1374,17 @@ final class ContentController extends Controller {
                     $this->module = $moduleKey;
                     $selectColumns = [];
                     $externalColumns = [];
+                    $relationalFields = [];
                     foreach ($moduleDetail['inputs'] as $selectCol => $colAttributes) {
 
                         if ($selectCol === 'widget') {
 
-                            foreach ($colAttributes as $moduleName => $moduleDetails) {
+                            foreach ($colAttributes as $moduleName => $colDetails) {
                                 $externalColumns[] = $moduleName;
                                 $selectColumns[] = '(JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$moduleName.'\'))) AS ' . $moduleName;
+                                $selectColumns[] = '(
+                                SELECT input FROM contents WHERE id = '.$moduleName.') AS ' . $moduleName . '_data';
+                                $relationalFields[] = $moduleName;
                             }
 
                         } else {
@@ -1425,15 +1429,51 @@ final class ContentController extends Controller {
 
                     foreach ($attributes as $column => $columnVal) {
 
-                        $multilanguage = false;
-                        if (isset($moduleDetail['inputs'][$column]['multilanguage']) !== false AND $moduleDetail['inputs'][$column]['multilanguage']) {
-                            $multilanguage = true;
+                        if (! in_array($column, $relationalFields)) {
+
+                            $multilanguage = false;
+                            if (isset($moduleDetail['inputs'][$column]['multilanguage']) !== false AND $moduleDetail['inputs'][$column]['multilanguage']) {
+                                $multilanguage = true;
+                            }
+                            $contentDetails
+                                ->where('JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$column.($multilanguage ? '.'.Base::lang('lang.code') : '').'\'))', $columnVal);
                         }
-                        $contentDetails
-                            ->where('JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$column.($multilanguage ? '.'.Base::lang('lang.code') : '').'\'))', $columnVal);
                     }
 
                     $contentDetails = $contentDetails->getAll();
+
+                    // Module relations
+                    if (! empty($contentDetails) AND count($relationalFields)) {
+
+                        foreach ($relationalFields as $field) {
+                            
+                            foreach ($contentDetails as $contentKey => $contentDetail) {
+                                
+                                if (isset($contentDetail->{$field . '_data'}) !== false) {
+
+                                    $contentDetail->{$field . '_data'} = ($fieldAsObj = json_decode($contentDetail->{$field . '_data'}));
+                                    
+                                    if (isset(
+                                        $fieldAsObj->slug->{Base::lang('lang.code')}
+                                    ) === false OR $fieldAsObj->slug->{Base::lang('lang.code')} !== $attributes[$field]) {
+
+                                        $dynamicUrlParams = $attributes;
+                                        $dynamicUrlParams[$field] = $fieldAsObj->slug->{Base::lang('lang.code')};
+                                        $newUrl = $this->get()->dynamicUrl($details[1], $dynamicUrlParams);
+
+                                        $contentDetails = null;
+                                        break 2;
+                                    }
+
+                                } else {
+
+                                    $contentDetails = null;
+                                    break 2;
+                                }
+                            }
+                        }
+
+                    }
 
                     $return = [
                         'content_details' => null,
@@ -1474,7 +1514,7 @@ final class ContentController extends Controller {
                 }
             }
         }
-        return $return;
+        return isset($newUrl) !== false ? $newUrl : $return;
 
     }
 
@@ -1509,7 +1549,7 @@ final class ContentController extends Controller {
 
         $extract = $this->extractContentData();
 
-        if ($extract) {
+        if ($extract AND is_array($extract)) {
 
             $arguments = [];
             $title = Base::lang($extract['module_detail']['name']);
@@ -1526,6 +1566,14 @@ final class ContentController extends Controller {
                 'statusCode' => 200,
                 'arguments' => $arguments,
                 'view' => $extract['module_detail']['routes']['view']['listing']
+            ];
+
+        } elseif (is_string($extract)) {
+
+            return [
+                'status' => false,
+                'statusCode' => 301,
+                'redirect' => $extract
             ];
 
         } else {
@@ -1547,7 +1595,7 @@ final class ContentController extends Controller {
 
         $extract = $this->extractContentData();
 
-        if ($extract) {
+        if ($extract AND is_array($extract) AND isset($extract['content_details'][0]) !== false) {
 
             $arguments = [];
             $title = Base::lang($extract['module_detail']['name']);
@@ -1574,6 +1622,14 @@ final class ContentController extends Controller {
                 'statusCode' => 200,
                 'arguments' => $arguments,
                 'view' => $extract['module_detail']['routes']['view']['detail']
+            ];
+
+        } elseif (is_string($extract)) {
+
+            return [
+                'status' => false,
+                'statusCode' => 301,
+                'redirect' => $extract
             ];
 
         } else {
