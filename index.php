@@ -14,13 +14,6 @@ try {
 
     $app = (new KN\Core\Factory);
 
-    // Multi route group
-    $app->routes([
-        ['GET,POST', '/sandbox', 'AppController@sandbox'],
-        ['GET,POST', '/sandbox/:action', 'AppController@sandbox']
-    ]);
-
-
     // Root-bound route group
     $app->routeGroup(['GET,POST', '/auth', 'UserController@account', ['Auth@with']], function () {
         return [
@@ -109,8 +102,12 @@ try {
 
     // Please do not remove for KN to work properly.
     $app->route('GET,POST', '/cron', 'AppController@cronJobs');
-    $app->route('GET,POST', '/sandbox', 'AppController@sandbox');
-    $app->route('GET,POST', '/sandbox/:action', 'AppController@sandbox');
+
+    // Multi route group
+    $app->routes([
+        ['GET,POST', '/sandbox', 'AppController@sandbox'],
+        ['GET,POST', '/sandbox/:action', 'AppController@sandbox']
+    ]);
 
     $app->excludeWhileInMaintenance([
         'auth/login'
