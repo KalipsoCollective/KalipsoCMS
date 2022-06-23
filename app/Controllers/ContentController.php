@@ -629,7 +629,7 @@ final class ContentController extends Controller {
                         }
                     }
 
-                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)) {
+                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($$inputName)) {
 
                     $insert[$inputName] = $$inputName;
 
@@ -949,7 +949,7 @@ final class ContentController extends Controller {
                         }
                     }
 
-                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($inputVar)) {
+                } elseif (isset($requiredAreas['areas'][$inputName]) === false OR ! empty($$inputName)) {
 
                     $update[$inputName] = $$inputName;
 
@@ -1449,26 +1449,29 @@ final class ContentController extends Controller {
                             
                             foreach ($contentDetails as $contentKey => $contentDetail) {
                                 
-                                if (isset($contentDetail->{$field . '_data'}) !== false) {
+                                if (isset($attributes[$field]) !== false) {
 
-                                    $contentDetail->{$field . '_data'} = ($fieldAsObj = json_decode($contentDetail->{$field . '_data'}));
-                                    
-                                    if (isset(
-                                        $fieldAsObj->slug->{Base::lang('lang.code')}
-                                    ) === false OR $fieldAsObj->slug->{Base::lang('lang.code')} !== $attributes[$field]) {
+                                    if (isset($contentDetail->{$field . '_data'}) !== false) {
 
-                                        $dynamicUrlParams = $attributes;
-                                        $dynamicUrlParams[$field] = $fieldAsObj->slug->{Base::lang('lang.code')};
-                                        $newUrl = $this->get()->dynamicUrl($details[1], $dynamicUrlParams);
+                                        $contentDetail->{$field . '_data'} = ($fieldAsObj = json_decode($contentDetail->{$field . '_data'}));
+                                        
+                                        if (isset(
+                                            $fieldAsObj->slug->{Base::lang('lang.code')}
+                                        ) === false OR $fieldAsObj->slug->{Base::lang('lang.code')} !== $attributes[$field]) {
+
+                                            $dynamicUrlParams = $attributes;
+                                            $dynamicUrlParams[$field] = $fieldAsObj->slug->{Base::lang('lang.code')};
+                                            $newUrl = $this->get()->dynamicUrl($details[1], $dynamicUrlParams);
+
+                                            $contentDetails = null;
+                                            break 2;
+                                        }
+
+                                    } else {
 
                                         $contentDetails = null;
                                         break 2;
                                     }
-
-                                } else {
-
-                                    $contentDetails = null;
-                                    break 2;
                                 }
                             }
                         }
