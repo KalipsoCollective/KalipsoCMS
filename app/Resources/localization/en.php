@@ -433,6 +433,7 @@ return [
         'explore_our_services' => 'Explore Our Services',
         'header_images' => 'Header Images',
         'header_images_message' => 'You can manage header images from this page.',
+        'file' => 'File',
     ],
     'app' => [
     ]

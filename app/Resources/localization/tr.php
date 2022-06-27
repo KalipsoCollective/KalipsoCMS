@@ -433,6 +433,7 @@ return [
         'explore_our_services' => 'Hizmetlerimizi Keşfedin',
         'header_images' => 'Başlık Görselleri',
         'header_images_message' => 'Başlık görsellerini bu sayfadan yönetebilirsiniz.',
+        'file' => 'Dosya',
     ],
     'app' => [
     ]
