@@ -92,9 +92,16 @@ final class FileController extends Controller {
                         $return = '';
                         if ($row->files AND $srcset = @json_decode($row->files)) {
                             $return = '<div class="image-group">';
-                                $href = Base::base('upload/' . $srcset->original);
-                                $src = Base::base('upload/' . (isset($srcset->sm) !== false ? $srcset->sm : $srcset->original));
-                                $return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
+                                
+                            $hrefDir = 'upload/' . $srcset->original;
+                            $srcDir = 'upload/' . (isset($srcset->sm) !== false ? $srcset->sm : $srcset->original);
+                            $href = Base::base($hrefDir);
+                            $src = Base::base($srcDir);
+                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+                                $src = Base::base('assets/img/kn/file_icon.svg');
+                            }
+                            $return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
+
                             $return .= '</div>';
                         } else {
                             $return = '-';

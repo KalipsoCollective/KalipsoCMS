@@ -251,8 +251,14 @@ final class FormController extends Controller {
                                 foreach ($getFiles as $fileIndex => $getFile) {
                                     
                                     $getFile->files = json_decode($getFile->files);
-                                    $src = Base::base('upload/' . (isset($getFile->files->sm) !== false ? $getFile->files->sm : $getFile->files->original));
-                                    $href = Base::base('upload/' . $getFile->files->original);
+                                    $hrefDir = 'upload/' . $getFile->files->original;
+                                    $srcDir = 'upload/' . (isset($getFile->files->sm) !== false ? $getFile->files->sm : $getFile->files->original);
+                                    $href = Base::base($hrefDir);
+                                    $src = Base::base($srcDir);
+                                    if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+                                        $src = Base::base('assets/img/kn/file_icon.svg');
+                                    }
+
                                     $externalBadge .= '<a href="' . $href . '" target="_blank" data-target="current_file_delete_' . $inputName . $fileIndex . '">
                                         <img class="table-image" src="' . $src . '" />
                                         <button href="javascript:;" 
