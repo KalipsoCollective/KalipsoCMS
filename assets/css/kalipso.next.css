@@ -64,7 +64,7 @@ body.management-panel {
 }
 
 .management-panel .wrap {
-    min-height: calc(100vh - 4.53rem);
+    min-height: 100vh;
     padding-top: 4rem;
 }
 
@@ -76,13 +76,7 @@ body.management-panel {
     font-family: 'Manrope', sans-serif;
 }
 
-.sandbox p,
-.sandbox h1,
-.sandbox h2,
-.sandbox h3,
-.sandbox h4,
-.sandbox h5,
-.sandbox h6 {
+.sandbox p, .sandbox h1, .sandbox h2, .sandbox h3, .sandbox h4, .sandbox h5, .sandbox h6 {
     font-family: 'Manrope', sans-serif;
 }
 
