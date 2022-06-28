@@ -25,5 +25,5 @@
 		<meta property="twitter:title" content="<?php echo $title; ?>">
 		<meta property="twitter:description" content="<?php echo $description; ?>">
 	</head>
-	<body id="wrap">
+	<body id="wrap"<?php if (strpos($this->request->uri, '/management') !== false) echo ' class="management-panel"' ; ?>>
 		<?php echo \KN\Helpers\Base::sessionStoredAlert(); ?>
