@@ -434,6 +434,7 @@ return [
         'header_images' => 'Başlık Görselleri',
         'header_images_message' => 'Başlık görsellerini bu sayfadan yönetebilirsiniz.',
         'file' => 'Dosya',
+        'year' => 'Yıl',
     ],
     'app' => [
     ]
