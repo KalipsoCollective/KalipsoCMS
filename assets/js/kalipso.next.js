@@ -1,6 +1,6 @@
 /*!
  * Kalipso Next Basic Scripts
- * Version: v1.0.0
+ * Version: v1.2.1
  * Copyright 2022, Kalipso Collective
  * Released under the MIT License
  */
@@ -142,6 +142,22 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 	if (typeof window.init === 'function') { 
 		window.init();
 	}
+
+	const historyItemList = document.querySelectorAll('.history li')
+	if (historyItemList.length) {
+		const hItemList = [...historyItemList].map((el, key) => {
+			const direction = (key % 2) === 0 ? 'right' : 'left';
+			el.addEventListener('sal:in', ({ detail }) => {
+				detail.target.classList.add('active');
+				if (detail.target.classList.contains('animated')) {
+					detail.target.classList.add('animated-fade-' + direction);
+				}
+			});
+			el.addEventListener('sal:out', ({ detail }) => {
+				detail.target.classList.remove('active');
+			});
+		})
+	}
 	
 	// Stored alert remove action
 	alertRemove();
@@ -282,108 +298,92 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 			}
 		});
 
-		document.addEventListener("change", async function(e) {
+		document.addEventListener("change", function(e) {
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
-				
-				if (e.target.getAttribute('data-kn-change')) {
-					
-					e.preventDefault();
-
-					let keep = true;
-					if (e.target.getAttribute('data-kn-again')) {
-
-						if (e.target.getAttribute('data-kn-again-check')) {
-							keep = false;
-						} else {
-							let text = e.target.innerHTML;
-							e.target.innerHTML = sanitizeHTML(e.target.getAttribute('data-kn-again'));
-							e.target.setAttribute('data-kn-again-check', true);
-							setTimeout(() => {
-								e.target.innerHTML = text;
-								e.target.removeAttribute('data-kn-again-check');
-							}, 3000);
-						}
-
-					} else {
-						keep = false;
-					}
-
-					let options = new FormData;
-					if (e.target.getAttribute('data-kn-change').indexOf('/slug') !== -1) {
-						options.append('slug', e.target.value);
-						options.append('lang', e.target.getAttribute('data-kn-lang'));
-						options.append('id', e.target.getAttribute('data-kn-id'));
-					} else if (e.target.getAttribute('data-kn-change').indexOf('/menus/get-menu-params') !== -1) {
-						options.append('module', e.target.value);
-						options.append('target',e.target.getAttribute('data-kn-target'));
-					} else if (e.target.getAttribute('data-kn-change') === 'link_name') {
-						keep = true;
-						e.target.closest('.kn-menu-drag').querySelector('.card-header .link_name').innerText = e.target.value;
-					}
-
-					 /* else {
-						keep = true;
-					}*/
-
-					if (! keep) {
-
-						let url = e.target.getAttribute('data-kn-change');
-						NProgress.start();
-						response = await kalipsoFetch(
-							e.target.getAttribute('data-kn-change'),
-							'POST',
-							options
-						);
-
-						if (response !== undefined) {
-							responseFormatter(response);
-						}
-						setTimeout(() => {
-							NProgress.done();
-						}, 500);
-					}
-				}
+				actionTrigger(e.target, "change", e);
 			}
 		});
 
-		document.addEventListener("input", async function(e) {
+		document.addEventListener("input", function(e) {
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
-				
-				if (e.target.getAttribute('data-kn-input')) {
-					
-					e.preventDefault();
-
-					let keep = false;
-					let options = new FormData;
-					if (e.target.getAttribute('data-kn-input') === 'link_name') {
-						keep = true;
-						e.target.closest('.kn-menu-drag').querySelector('.card-header .link_name').innerText = e.target.value;
-					}
-
-					if (! keep) {
-
-						let url = e.target.getAttribute('data-kn-input');
-						NProgress.start();
-						response = await kalipsoFetch(
-							e.target.getAttribute('data-kn-input'),
-							'POST',
-							options
-						);
-
-						if (response !== undefined) {
-							responseFormatter(response);
-						}
-						setTimeout(() => {
-							NProgress.done();
-						}, 500);
-					}
-				}
+				actionTrigger(e.target, "input", e);
 			}
 		});
 	}
 	
+}
+
+async function actionTrigger(el, eventType, e) {
+
+	if (el.getAttribute('data-kn-change') || el.getAttribute('data-kn-input')) {
+					
+		e.preventDefault();
+
+		const dataAttribute = el.getAttribute('data-kn-change') ?? el.getAttribute('data-kn-input');
+		let url = dataAttribute;
+
+		let keep = true;
+		if (el.getAttribute('data-kn-again')) {
+
+			if (el.getAttribute('data-kn-again-check')) {
+				keep = false;
+			} else {
+				let text = el.innerHTML;
+				el.innerHTML = sanitizeHTML(el.getAttribute('data-kn-again'));
+				el.setAttribute('data-kn-again-check', true);
+				setTimeout(() => {
+					el.innerHTML = text;
+					el.removeAttribute('data-kn-again-check');
+				}, 3000);
+			}
+
+		} else {
+			keep = false;
+		}
+
+		let options = new FormData;
+		if (dataAttribute.indexOf('/slug') !== -1) {
+			options.append('slug', el.value);
+			options.append('lang', el.getAttribute('data-kn-lang'));
+			options.append('id', el.getAttribute('data-kn-id'));
+		} else if (dataAttribute.indexOf('/menus/get-menu-params') !== -1) {
+			options.append('module', el.value);
+			options.append('target',el.getAttribute('data-kn-target'));
+		} else if (dataAttribute === 'link_name') {
+			keep = true;
+			el.closest('.kn-menu-drag').querySelector('.card-header .link_name').innerText = el.value;
+		} else if (dataAttribute === 'autocomplete') {
+			keep = true;
+			if (el.getAttribute('data-kn-autocomplete')) {
+				let parameters = el.getAttribute('data-kn-autocomplete');
+				parameters = JSON.parse(parameters);
+				options.append('module', parameters.module);
+				options.append('field', parameters.field);
+				options.append('element', el.getAttribute('id'));
+				options.append('value', el.value);
+				keep = false;
+			}
+		}
+
+		if (! keep) {
+
+			NProgress.start();
+			response = await kalipsoFetch(
+				url,
+				'POST',
+				options
+			);
+
+			if (response !== undefined) {
+				responseFormatter(response);
+			}
+			setTimeout(() => {
+				NProgress.done();
+			}, 500);
+		}
+	}
 }
 
 function multidimensionalMenuForm(dom = null, level = 1) {
