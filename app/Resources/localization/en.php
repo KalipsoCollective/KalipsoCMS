@@ -77,6 +77,7 @@ return [
         'management_contents_update' => 'Management - Contents - Edit',
         'management_contents_delete' => 'Management - Contents - Delete',
         'management_contents_slug' => 'Management - Contents - Slug Inquiry',
+        'management_contents_autocomplete' => 'Management - Contents - Auto Complete Inquiry',
         'management_content_upload_file' => 'Management - Contents - Editor File Upload',
         'management_forms' => 'Management - Forms',
         'management_forms_list' => 'Management - Forms - List',

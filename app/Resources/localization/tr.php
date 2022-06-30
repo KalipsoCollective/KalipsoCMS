@@ -77,6 +77,7 @@ return [
         'management_contents_update' => 'Yönetim - İçerikler - Düzenle',
         'management_contents_delete' => 'Yönetim - İçerikler - Sil',
         'management_contents_slug' => 'Yönetim - İçerikler - Kısa Ad Sorgulama',
+        'management_contents_autocomplete' => 'Yönetim - İçerikler - Otomatik Tamamlama Sorgusu',
         'management_content_upload_file' => 'Yönetim - İçerikler - Editör Dosya Yükleme',
         'management_forms' => 'Yönetim - Formlar',
         'management_forms_list' => 'Yönetim - Formlar - Liste',
