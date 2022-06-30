@@ -188,8 +188,8 @@ return [
 				'type' => 'input',
 				'attributes' => [
 					'required' => 'true',
-					'data-kn-input' => Base::base('/management/departments/autocomplete'),
-					'data-kn-autocomplete' => json_encode(['module' => 'pages', 'field' => 'description']),
+					'data-kn-input' => Base::base('/management/pages/autocomplete'),
+					'data-kn-autocomplete' => json_encode(['field' => 'description']),
 				],
 			],
 			'content' => [
