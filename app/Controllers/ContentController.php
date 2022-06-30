@@ -244,8 +244,11 @@ final class ContentController extends Controller {
                             foreach ($input['attributes'] as $attribute => $val) {
                                 if (in_array($attribute, ['required', 'checked', 'selected']) !== false)
                                     $attributes .= $attribute . ' ';
-                                else
-                                    $attributes .= $attribute . '="'.$val.'" ';
+                                else {
+                                    if (strpos($val, '"') !== false) $quote = '\'';
+                                    else $quote = '"';
+                                    $attributes .= $attribute . '='.$quote.$val.$quote.' ';
+                                }
                                 
                             }
                         }
