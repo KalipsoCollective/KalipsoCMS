@@ -113,6 +113,10 @@ return [
 		'default' => true,
 		'name' => 'auth.management_contents_slug',
 	],
+	'management/:module/autocomplete' => [
+		'default' => true,
+		'name' => 'auth.management_contents_autocomplete',
+	],
 	'management/content/:module/upload-file' => [
 		'default' => false,
 		'name' => 'auth.management_content_upload_file',
