@@ -178,7 +178,7 @@ return [
 				'type' => 'input',
 				'attributes' => [
 					'required' => 'true',
-					'data-kn-change' => Base::base('/management/blog/slug')
+					'data-kn-change' => Base::base('/management/blog/slug'),
 				],
 			],
 			'description' => [
@@ -186,7 +186,11 @@ return [
 				'multilanguage' => true,
 				'label' => 'base.description',
 				'type' => 'input',
-				'attributes' => ['required' => 'true'],
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-change' => 'autocomplete',
+					'data-kn-autocomplete' => '{module:"pages", field:"description"}',
+				],
 			],
 			'content' => [
 				'col' => 'col-12 col-lg-10',
