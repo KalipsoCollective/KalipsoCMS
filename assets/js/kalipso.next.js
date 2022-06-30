@@ -354,14 +354,13 @@ async function actionTrigger(el, eventType, e) {
 		} else if (dataAttribute === 'link_name') {
 			keep = true;
 			el.closest('.kn-menu-drag').querySelector('.card-header .link_name').innerText = el.value;
-		} else if (dataAttribute === 'autocomplete') {
+		} else if (dataAttribute.indexOf('/autocomplete') !== -1) {
 			keep = true;
 			if (el.getAttribute('data-kn-autocomplete')) {
 				let parameters = el.getAttribute('data-kn-autocomplete');
 				parameters = JSON.parse(parameters);
-				options.append('module', parameters.module);
 				options.append('field', parameters.field);
-				options.append('element', el.getAttribute('id'));
+				options.append('lang', el.getAttribute('data-kn-lang'));
 				options.append('value', el.value);
 				keep = false;
 			}
