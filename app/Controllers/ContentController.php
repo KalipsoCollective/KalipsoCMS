@@ -1290,6 +1290,74 @@ final class ContentController extends Controller {
 
     }
 
+    public function contentAutoCompleteInquiry() {
+
+        extract(Base::input([
+            'id'        => 'int',
+            'field'     => 'nulled_text',
+            'lang'      => 'nulled_text',
+            'value'     => 'nulled_text'
+        ], $this->get('request')->params));
+
+        
+        $alerts = [];
+        $arguments = [];
+
+        if (isset($this->modules[$this->module]) !== false) {
+
+            if (! is_null($field)) {
+
+                $html = '';
+
+                $multilanguage = $lang ? $lang : false;
+                $whereQuery = 'JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$field.($lang ? '.'.$lang : '').'\'))';
+
+                $model = new Contents();
+                $records = $model->select('id, ' . $whereQuery . ' AS ' . $field);
+                $records->where('module', $this->module);
+
+                if (! is_null($value))
+                    $records->like($whereQuery, '%' . $value . '%');
+
+                $records = $records->getAll();
+
+                foreach ($records as $record) {
+                    $html .= '<option value="'.$record->{$field}.'">';
+                }
+
+                $arguments['manipulation'] = [
+                    '#content'.($id ? 'Edit' : 'Add').' #content_'.($id ? 'edit' : 'add').'_' . $field . $lang . '_DataList' => [
+                        'html'  => $html
+                    ]
+                ];
+                
+
+            } else {
+
+                $alerts[] = [
+                    'status' => 'error',
+                    'message' => Base::lang('error.missing_or_incorrect_parameter')
+                ];
+            }
+
+        } else {
+
+            $alerts[] = [
+                'status' => 'error',
+                'message' => Base::lang('error.module_not_found')
+            ];
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
+    }
+
     public function extractWidgetData($moduleName, $moduleInputs, $ids) {
 
         $externalSelectColumns = [];
