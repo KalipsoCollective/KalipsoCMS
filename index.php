@@ -69,11 +69,15 @@ try {
             ['GET,POST', '/:module/:id', 'ContentController@contentDetail', ['Auth@with']],
             ['GET,POST', '/:module/:id/delete', 'ContentController@contentDelete', ['Auth@with']],
             ['GET,POST', '/:module/:id/update', 'ContentController@contentUpdate', ['Auth@with']],
-            ['GET,POST', '/:module/slug', 'ContentController@contentSlugInquiry', ['Auth@with']],
-            ['GET,POST', '/:module/slug/:id', 'ContentController@contentSlugInquiry', ['Auth@with']],
+            
+            // Content Autocomplete Field
+            ['GET,POST', '/:module/autocomplete', 'ContentController@contentAutoCompleteInquiry', ['Auth@with']],
+
+            // Content Image Upload in Editor(quill)
+            ['POST', '/content/:module/upload-file', 'ContentController@uploadAFile', ['Auth@with']],
 
             // Content Slug Check
-            ['POST', '/content/:module/upload-file', 'ContentController@uploadAFile', ['Auth@with']],
+            ['GET,POST', '/:module/slug', 'ContentController@contentSlugInquiry', ['Auth@with']],
 
             // Forms
             ['GET,POST', '/forms/:form', 'FormController@forms', ['Auth@with']],
