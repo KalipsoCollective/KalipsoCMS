@@ -239,6 +239,7 @@ final class ContentController extends Controller {
 
                     foreach ($nameSubfix as $i => $lang) {
                         
+                        $dataList = '';
                         $attributes = '';
                         if (isset($input['attributes']) !== false) {
                             foreach ($input['attributes'] as $attribute => $val) {
@@ -247,6 +248,13 @@ final class ContentController extends Controller {
                                 else {
                                     if (strpos($val, '"') !== false) $quote = '\'';
                                     else $quote = '"';
+
+                                    if ($attribute === 'data-kn-autocomplete') {
+                                        $dataList .= '
+                                        <datalist id="' . $idPrefix . '_' . $name . $lang . '_DataList">
+                                        </datalist>';
+                                    }
+
                                     $attributes .= $attribute . '='.$quote.$val.$quote.' ';
                                 }
                                 
@@ -293,8 +301,9 @@ final class ContentController extends Controller {
                                 $moduleForm .= '
                                 <div class="'.$col.'">
                                     <div class="form-floating">
-                                        <input type="' . ($input['type'] == 'input' ? 'text' : $input['type']) . '" class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
+                                        <input list="' . $idPrefix . '_' . $name . $lang . '_DataList" type="' . ($input['type'] == 'input' ? 'text' : $input['type']) . '" class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
                                         <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
+                                        '.$dataList.'
                                     </div>
                                 </div>';
                                 break;
