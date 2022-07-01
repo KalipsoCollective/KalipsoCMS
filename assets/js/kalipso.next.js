@@ -305,6 +305,23 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 			}
 		});
 
+		// First start for input's datalist
+		document.addEventListener("DOMContentLoaded", function(e) {
+
+			if (document.querySelectorAll('[data-kn-autocomplete]').length) {
+				[...document.querySelectorAll('[data-kn-autocomplete]')].map((el, key) => {
+					const event = document.createEvent('HTMLEvents');
+					event.initEvent(
+						(el.getAttribute('data-kn-change') ? 'change' : 'input'), 
+						true, 
+						false
+					);
+					el.dispatchEvent(event);
+				});
+			}
+
+		});
+
 		document.addEventListener("input", function(e) {
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'INPUT' || e.target.nodeName.toUpperCase() === 'SELECT' || e.target.nodeName.toUpperCase() === 'TEXTAREA') {
