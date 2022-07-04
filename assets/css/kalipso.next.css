@@ -13,21 +13,21 @@
     }
 }
 
-.management-panel::-webkit-scrollbar {
+.management-panel ::-webkit-scrollbar {
     width: 7px!important;
     height: 7px!important
 }
 
-.management-panel::-webkit-scrollbar-track {
+.management-panel ::-webkit-scrollbar-track {
     background: var(--bs-gray-300);
     border-radius: 0
 }
 
-.management-panel::-webkit-scrollbar-thumb {
+.management-panel ::-webkit-scrollbar-thumb {
     background: var(--bs-gray-900);
 }
 
-.management-panel::-webkit-scrollbar-thumb:hover {
+.management-panel ::-webkit-scrollbar-thumb:hover {
     background: var(--bs-gray-600)
 }
 
