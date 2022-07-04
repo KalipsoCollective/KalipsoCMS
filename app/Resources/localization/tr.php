@@ -437,6 +437,7 @@ return [
         'file' => 'Dosya',
         'year' => 'Yıl',
         'group' => 'Grup',
+        'sub_title' => 'Alt Başlık',
     ],
     'app' => [
     ]

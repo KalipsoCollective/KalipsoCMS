@@ -437,6 +437,7 @@ return [
         'file' => 'File',
         'year' => 'Year',
         'group' => 'Group',
+        'sub_title' => 'Sub Title',
     ],
     'app' => [
     ]
