@@ -51,15 +51,32 @@
 
                         if ($this->authority('/management/:module')) {
 
-                            echo '<li class="nav-item nav-group">' . KN\Helpers\Base::lang('base.modules') . '</li>';
+                            $moduleList = [];
+                            $baseKey = KN\Helpers\Base::lang('base.modules');
                             foreach ($modules as $name => $details) {
-                                ?>
+
+                                $li = '
                                 <li class="nav-item">
-                                    <a class="nav-link<?php echo $this->currentLink('/management/' . $name); ?>" href="<?php echo $this->url('/management/' . $name); ?>">
-                                        <i class="<?php echo $details['icon']; ?> nav-icon"></i> <?php echo KN\Helpers\Base::lang($details['name']); ?>
+                                    <a class="nav-link ' . $this->currentLink('/management/' . $name) . '" href="' . $this->url('/management/' . $name). '">
+                                        <i class="'. $details['icon']. ' nav-icon"></i> ' . KN\Helpers\Base::lang($details['name']) . '
                                     </a>
-                                </li>
-                                <?php
+                                </li>';
+                                if (isset($details['group']) !== false) {
+                                    $listKey = KN\Helpers\Base::lang($details['group']);
+                                    $moduleList[$listKey] = (isset($moduleList[$listKey])) !== false ? $moduleList[$listKey] . $li : $li;
+                                } else {
+                                    $moduleList[$baseKey] = (isset($moduleList[$baseKey])) !== false ? $moduleList[$baseKey] . $li : $li;
+                                }
+                            }
+
+                            foreach ($moduleList as $moduleGroup => $moduleLinks) {
+                                
+                                echo '
+                                <li class="nav-item nav-group">
+                                    ' . $moduleGroup . '
+                                </li>' .
+                                $moduleLinks;
+
                             }
                         }
 
