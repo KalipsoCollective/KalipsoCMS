@@ -594,6 +594,10 @@ final class ContentController extends Controller {
 
                         $inputAreas[$name] = 'int';
 
+                    } elseif ($detail['type'] === 'checkbox') {
+
+                        $inputAreas[$name] = 'check_as_boolean';
+
                     } elseif ($detail['type'] === 'editor') {
 
                         $inputAreas[$name] = 'nulled_html';
@@ -910,6 +914,10 @@ final class ContentController extends Controller {
                     } elseif ($detail['type'] === 'number') {
 
                         $inputAreas[$name] = 'int';
+
+                    } elseif ($detail['type'] === 'checkbox') {
+
+                        $inputAreas[$name] = 'check_as_boolean';
 
                     } elseif ($detail['type'] === 'editor') {
 
