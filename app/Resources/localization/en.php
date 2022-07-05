@@ -438,6 +438,8 @@ return [
         'year' => 'Year',
         'group' => 'Group',
         'sub_title' => 'Sub Title',
+        'birth_year' => 'Birth Year',
+        'death_year' => 'Death Year',
     ],
     'app' => [
     ]

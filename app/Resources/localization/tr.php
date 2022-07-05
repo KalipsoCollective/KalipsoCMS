@@ -438,6 +438,8 @@ return [
         'year' => 'Yıl',
         'group' => 'Grup',
         'sub_title' => 'Alt Başlık',
+        'birth_year' => 'Doğum Yılı',
+        'death_year' => 'Ölüm Yılı',
     ],
     'app' => [
     ]
