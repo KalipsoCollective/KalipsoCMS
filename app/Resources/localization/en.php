@@ -440,6 +440,9 @@ return [
         'sub_title' => 'Sub Title',
         'birth_year' => 'Birth Year',
         'death_year' => 'Death Year',
+        'filter' => 'Filter',
+        'filter_option' => 'Filter Option',
+        'filter_options' => 'Filter Options',
     ],
     'app' => [
     ]

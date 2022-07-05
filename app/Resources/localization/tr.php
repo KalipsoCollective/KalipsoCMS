@@ -440,6 +440,9 @@ return [
         'sub_title' => 'Alt Başlık',
         'birth_year' => 'Doğum Yılı',
         'death_year' => 'Ölüm Yılı',
+        'filter' => 'Filtre',
+        'filter_option' => 'Filtre Ayarı',
+        'filter_options' => 'Filtre Ayarları',
     ],
     'app' => [
     ]
