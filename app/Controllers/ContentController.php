@@ -289,6 +289,7 @@ final class ContentController extends Controller {
                             case 'input':
                             case 'color':
                             case 'number':
+                            case 'text':
                             case 'email':
                             case 'tel':
 
