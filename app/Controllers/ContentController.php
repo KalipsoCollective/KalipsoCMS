@@ -586,7 +586,7 @@ final class ContentController extends Controller {
 
                 } else {
 
-                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'email' OR $detail['type'] === 'tel' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'email' OR $detail['type'] === 'tel' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select' OR $detail['type'] === 'text') {
 
                         $inputAreas[$name] = 'nulled_text';
 
@@ -903,7 +903,7 @@ final class ContentController extends Controller {
 
                 } else {
 
-                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'email' OR $detail['type'] === 'tel' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select') {
+                    if ($detail['type'] === 'input' OR $detail['type'] === 'url_widget' OR $detail['type'] === 'email' OR $detail['type'] === 'tel' OR $detail['type'] === 'textarea' OR $detail['type'] === 'select' OR $detail['type'] === 'text') {
 
                         $inputAreas[$name] = 'nulled_text';
 
