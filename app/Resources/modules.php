@@ -445,6 +445,7 @@ return [
 				]
 			],
 			'header_image' => [
+				'multilanguage' => true,
 				'label' => 'base.header_image',
 				'type' => 'file',
 				'col' => 'col-12',
