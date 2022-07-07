@@ -240,7 +240,7 @@ return [
 							REPLACE(
 								REPLACE(
 									REPLACE(
-										IFNULL(JSON_EXTRACT(x.input, \'$.header_image\'), ""),
+										IFNULL(JSON_EXTRACT(x.input, \'$.header_image.'.Base::lang('lang.code').'\'), ""),
 										" ",
 										""
 									),
