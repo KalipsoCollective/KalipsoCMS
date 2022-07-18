@@ -60,12 +60,12 @@ return [
 						$return = '<div class="image-group">';
 						foreach ($srcset as $src) {
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
 						$return .= '</div>';
@@ -254,6 +254,24 @@ return [
 							""
 						) AS header_image,
 						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, header_image)) AS header_image_src,
+						REPLACE(
+							REPLACE(
+								REPLACE(
+									REPLACE(
+										IFNULL(JSON_EXTRACT(x.input, \'$.single_image\'), ""),
+										" ",
+										""
+									),
+									"\"",
+									""
+								),
+								"]",
+								""
+							),
+							"[",
+							""
+						) AS single_image,
+						(SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, single_image)) AS single_image_src,
 						(SELECT IFNULL(JSON_UNQUOTE(JSON_EXTRACT(x.input, \'$.title.'.Base::lang('lang.code').'\')), "-") FROM contents WHERE id = category) AS category_name,
 						FROM_UNIXTIME(x.created_at, "%Y.%m.%d %H:%i") AS created,
 						IFNULL(FROM_UNIXTIME(x.updated_at, "%Y.%m.%d"), "-") AS updated
@@ -285,12 +303,34 @@ return [
 						$return = '<div class="image-group">';
 						foreach ($srcset as $src) {
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
+							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
+						}
+						$return .= '</div>';
+					} else {
+						$return = '-';
+					}
+					return $return;
+				}
+			],
+			'single_image_src' => [
+				'formatter' => function($row) {
+					$return = '';
+					if ($row->single_image_src AND $srcset = @json_decode($row->single_image_src)) {
+						$return = '<div class="image-group">';
+						foreach ($srcset as $src) {
+							$hrefDir = 'upload/' . $src->original;
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
 						$return .= '</div>';
@@ -355,6 +395,12 @@ return [
 				"orderable" => false,
 				"title" => Base::lang('base.header_image'),
 				"key" => "header_image_src"
+			],
+			[
+				"searchable" => false,
+				"orderable" => false,
+				"title" => Base::lang('base.single_image'),
+				"key" => "single_image_src"
 			],
 			[
 				"searchable" => [
@@ -451,6 +497,21 @@ return [
 				'col' => 'col-12',
 				'attributes' => [
 					'accept' => 'image/*',
+					'multiple' => true,
+				],
+				'external_parameters' => [
+					'size' => [
+						'original' => [1920, 400]
+					],
+				]
+			],
+			'single_image' => [
+				'label' => 'base.single_image',
+				'type' => 'file',
+				'col' => 'col-12',
+				'attributes' => [
+					'accept' => 'image/*',
+					'multiple' => true,
 				],
 				'external_parameters' => [
 					'size' => [
@@ -645,12 +706,12 @@ return [
 						$return = '<div class="image-group">';
 						foreach ($srcset as $src) {
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
 						$return .= '</div>';
@@ -806,12 +867,12 @@ return [
 						$return = '<div class="image-group">';
 						foreach ($srcset as $src) {
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
 						$return .= '</div>';
@@ -992,12 +1053,12 @@ return [
 						$return = '<div class="image-group">';
 						foreach ($srcset as $src) {
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
 						$return .= '</div>';
@@ -1199,12 +1260,12 @@ return [
 						$return = '<div class="image-group">';
 						foreach ($srcset as $src) {
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
 						$return .= '</div>';
@@ -1566,12 +1627,12 @@ return [
 						foreach ($srcset as $src) {
 
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
@@ -1590,12 +1651,12 @@ return [
 						foreach ($srcset as $src) {
 
 							$hrefDir = 'upload/' . $src->original;
-                            $srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
-                            $href = Base::base($hrefDir);
-                            $src = Base::base($srcDir);
-                            if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
-                                $src = Base::base('assets/img/kn/file_icon.svg');
-                            }
+							$srcDir = 'upload/' . (isset($src->sm) !== false ? $src->sm : $src->original);
+							$href = Base::base($hrefDir);
+							$src = Base::base($srcDir);
+							if (strpos(mime_content_type(Base::path($srcDir)), 'image') === false) {
+								$src = Base::base('assets/img/kn/file_icon.svg');
+							}
 							$return .= '<a href="' . $href . '" target="_blank"><img class="table-image" src="' . $src . '" /></a>';
 						}
 						$return .= '</div>';

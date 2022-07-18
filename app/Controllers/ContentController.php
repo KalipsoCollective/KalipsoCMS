@@ -246,6 +246,9 @@ final class ContentController extends Controller {
                                 if (in_array($attribute, ['required', 'checked', 'selected']) !== false)
                                     $attributes .= $attribute . ' ';
                                 else {
+
+                                    $val = is_bool($val) ? (string)$val : $val;
+
                                     if (strpos($val, '"') !== false) $quote = '\'';
                                     else $quote = '"';
 
@@ -1041,6 +1044,10 @@ final class ContentController extends Controller {
                             $multipleFile = true;
                         }
 
+                        if (isset($fileDetails['multilanguage']) !== false AND $fileDetails['multilanguage']) {
+                            $multiLanguage = true;
+                        }
+
                         if (isset($this->get('request')->files[$fileName]) !== false) {
 
                             $uploadParameters = [];
@@ -1080,6 +1087,8 @@ final class ContentController extends Controller {
                                     );
 
                                 if (count($upload)) {
+
+                                    Base::dump($upload);
 
                                     foreach ($upload as $uploadId => $uploadDetails) {
 
@@ -1164,6 +1173,8 @@ final class ContentController extends Controller {
                         unset($arguments['manipulation']);
 
                 }
+
+                Base::dump($update, true);
 
                 if (! count($files) OR isset($arguments['manipulation']) === false) {
 

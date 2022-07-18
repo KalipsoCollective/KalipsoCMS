@@ -134,23 +134,39 @@ final class Factory
         }
 
         /**
-         * Clean FILES parameters
+         * Clean FILES parameters with multilanguage support
          **/ 
 
         if (isset($_FILES) !== false AND count($_FILES)) {
             $files = [];
             foreach ($_FILES as $name => $data) {
 
-                if ($data['error'] === 4) // not uploaded
-                    continue;
-
                 if (is_array($data['name'])) { // multiple upload
+
                     $files[$name] = [];
                     foreach ($data as $k => $l) {
+
                         foreach ($l as $i => $v) {
-                            if (!array_key_exists($i, $files[$name]))
-                                $files[$name][$i] = [];
-                            $files[$name][$i][$k] = $v;
+
+                            if (is_string($i)) {
+
+                                foreach ($v as $i2 => $v2) { // multilanguage support
+                                    if (!array_key_exists($i, $files[$name]))
+                                        $files[$name][$i] = [];
+
+                                    if (!array_key_exists($i2, $files[$name][$i]))
+                                        $files[$name][$i][$i2] = [];
+
+                                    $files[$name][$i][$i2][$k] = $v2;
+                                }
+
+                            } else {
+
+                                if (!array_key_exists($i, $files[$name]))
+                                    $files[$name][$i] = [];
+
+                                $files[$name][$i][$k] = $v;
+                            }
                         }
                     }
                 } else { // single upload
