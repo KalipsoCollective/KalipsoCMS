@@ -153,6 +153,10 @@ body.management-panel {
     color: #878787;
 }
 
+.management-panel .navbar:not(.navbar-side) .navbar-nav .nav-item .nav-link {
+    color: #fff;
+}
+
 .management-panel .navbar.navbar-side .navbar-nav .nav-item .nav-link {
     position: relative;
     font-size: 0.9rem;
