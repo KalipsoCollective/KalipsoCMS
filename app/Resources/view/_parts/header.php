@@ -10,6 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('libs/quill/quill.snow.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/kalipso.libs.css'); ?>">
 		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/kalipso.next.css'); ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo KN\Helpers\Base::assets('css/app.css'); ?>">
 		<link rel="canonical" href="<?php echo $this->url($this->request->uri); ?>" />
 		<meta name="copyright" content="<?php echo KN\Helpers\Base::config('settings.name'); ?>">
 		<meta name="generator" content="<?php echo KN\Helpers\Base::config('app.name') . ' v' . KN_VERSION; ?>" />

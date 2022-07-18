@@ -651,6 +651,7 @@
 
 			}
 		</script>
+		<script src="<?php echo KN\Helpers\Base::assets('js/app.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('js/kalipso.next.js'); ?>"></script>
 	</body>
 </html>

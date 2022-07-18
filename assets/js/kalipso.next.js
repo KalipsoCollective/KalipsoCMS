@@ -1,6 +1,6 @@
 /*!
  * Kalipso Next Basic Scripts
- * Version: v1.2.1
+ * Version: v1.3.1
  * Copyright 2022, Kalipso Collective
  * Released under the MIT License
  */
@@ -141,6 +141,10 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 
 	if (typeof window.init === 'function') { 
 		window.init();
+	}
+
+	if (typeof window.frontInit === 'function') { 
+		window.frontInit();
 	}
 
 	const historyItemList = document.querySelectorAll('.history li')
