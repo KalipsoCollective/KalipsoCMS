@@ -146,11 +146,16 @@ final class Factory
                     $files[$name] = [];
                     foreach ($data as $k => $l) {
 
+                        /*
+                        if ($data['error'] === 4) // not uploaded
+                        continue; */
+
                         foreach ($l as $i => $v) {
 
                             if (is_string($i)) {
 
                                 foreach ($v as $i2 => $v2) { // multilanguage support
+
                                     if (!array_key_exists($i, $files[$name]))
                                         $files[$name][$i] = [];
 
@@ -158,6 +163,7 @@ final class Factory
                                         $files[$name][$i][$i2] = [];
 
                                     $files[$name][$i][$i2][$k] = $v2;
+
                                 }
 
                             } else {
@@ -170,11 +176,12 @@ final class Factory
                         }
                     }
                 } else { // single upload
+
                     $files[$name][] = $data;
                 }
             }
 
-            $this->request->files = $files;
+            $this->request->files = $this->filterUploadedFiles($files);
         }
 
         /**
@@ -1011,6 +1018,41 @@ final class Factory
     public function url($route) {
 
         return Base::base($route);
+
+    }
+
+    /**
+     *  Clear Empty Files
+     *  @param array $files
+     *  @return array $files
+     **/
+    public function filterUploadedFiles($files) {
+
+        
+        foreach ($files as $name => $val) {
+            
+            if (isset($val['error']) !== false) {
+
+                if ($val['error'] === 4) {
+                    unset($files[$name]);
+                }
+
+
+            } else {
+
+                $files[$name] = $this->filterUploadedFiles($files[$name]);
+                if (is_null($files[$name]))
+                    unset($files[$name]);
+
+            }
+
+        }
+
+        if (!count($files)) {
+            $files = null;
+        }
+
+        return $files;
 
     }
 

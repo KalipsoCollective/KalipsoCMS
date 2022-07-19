@@ -498,6 +498,7 @@ return [
 				'attributes' => [
 					'accept' => 'image/*',
 					'multiple' => true,
+					'required' => 'true'
 				],
 				'external_parameters' => [
 					'size' => [
@@ -512,6 +513,7 @@ return [
 				'attributes' => [
 					'accept' => 'image/*',
 					'multiple' => true,
+					'required' => 'true'
 				],
 				'external_parameters' => [
 					'size' => [

@@ -763,9 +763,10 @@ final class ContentController extends Controller {
                                         $alerts[] = [
                                             'status' => 'error',
                                             'message' => Base::lang('base.file_upload_problem') 
-                                            . ' (' . Base::lang($fileDetails['label']) . ')'
+                                            . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
                                         ];
-                                        $arguments['manipulation']['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+
+                                        $arguments['manipulation']['#contentAdd [name="' . $fileName . (! is_null($fileLanguage) ? '['.$fileLanguage.']' : '') . ($multipleFile ? '[]' : '') . '"]'] = [
                                             'class' => ['is-invalid'],
                                         ];
                                     }
@@ -1088,8 +1089,6 @@ final class ContentController extends Controller {
 
                                 if (count($upload)) {
 
-                                    Base::dump($upload);
-
                                     foreach ($upload as $uploadId => $uploadDetails) {
 
                                         if (! is_null($fileLanguage)) {
@@ -1111,9 +1110,9 @@ final class ContentController extends Controller {
                                     $alerts[] = [
                                         'status' => 'error',
                                         'message' => Base::lang('base.file_upload_problem') 
-                                        . ' (' . Base::lang($fileDetails['label']) . ')'
+                                        . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
                                     ];
-                                    $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                                    $arguments['manipulation']['#contentEdit [name="' . $fileName . (! is_null($fileLanguage) ? '['.$fileLanguage.']' : '') . ($multipleFile ? '[]' : '') . '"]'] = [
                                         'class' => ['is-invalid'],
                                     ];
                                 }
@@ -1121,7 +1120,7 @@ final class ContentController extends Controller {
                                 if ($multipleFile AND is_array(${'current_file_'.$fileName})) {
                                     if (! is_null($fileLanguage)) {
                                         $update[$fileName][$fileLanguage] = array_merge(
-                                            ${'current_file_'.$fileName}, 
+                                            ${'current_file_'.$fileName}[$fileLanguage], 
                                             (isset($update[$fileName][$fileLanguage]) !== false ? $update[$fileName][$fileLanguage] : [])
                                         );
                                     } else {
@@ -1163,7 +1162,8 @@ final class ContentController extends Controller {
 
                                 if (isset(${'current_file_'.$fileNameKey}) !== false AND ${'current_file_'.$fileNameKey}) {
                                     unset($arguments['manipulation'][$manipulationSelector]);
-                                    $update[$fileNameKey] = ${'current_file_'.$fileNameKey};
+                                    if (isset($update[$fileNameKey]) === false OR !count($update[$fileNameKey])) 
+                                        $update[$fileNameKey] = ${'current_file_'.$fileNameKey};
                                 }
                             }
                         }
@@ -1173,8 +1173,6 @@ final class ContentController extends Controller {
                         unset($arguments['manipulation']);
 
                 }
-
-                Base::dump($update, true);
 
                 if (! count($files) OR isset($arguments['manipulation']) === false) {
 
