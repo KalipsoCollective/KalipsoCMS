@@ -696,6 +696,7 @@ final class ContentController extends Controller {
 
                 }
 
+                
                 if (isset($arguments['manipulation']) === false) {
 
                     $model = new Contents;
@@ -1762,6 +1763,7 @@ final class ContentController extends Controller {
         $manipulation = [];
         $alerts = [];
 
+        /*
         $fileController = new FileController($this->get());
 
         foreach ($files as $fileName => $detail) {
@@ -1896,13 +1898,14 @@ final class ContentController extends Controller {
                 }
             }
         }
+        */
 
         $return['row'] = $row;
-        $return['manipulation'] = $row;
+        $return['manipulation'] = $manipulation;
         $return['alerts'] = $alerts;
 
-        Base::dump($row);
-        exit;
+        // Base::dump($row);
+        // exit;
         return [
             'row' => $row,
             'manipulation' => $manipulation,

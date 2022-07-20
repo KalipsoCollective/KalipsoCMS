@@ -168,10 +168,14 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 
 	/* Async. Form Submit */
 	const forms = document.querySelectorAll('form[data-kn-form]');
+
+	// console.log();
+
 	for (let i = 0; i < forms.length; i++) {
 		forms[i].addEventListener("submit", async function(e) {
 			e = e || window.event;
 			e.preventDefault();
+			e.stopPropagation();
 			NProgress.start();
 
 			// Form Reset, Init
