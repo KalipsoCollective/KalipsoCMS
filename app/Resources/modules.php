@@ -4,6 +4,7 @@ use KN\Helpers\Base;
 
 return [
 	'pages' => [
+		'group' => 'base.pages',
 		'name' => 'base.pages',
 		'description' => 'base.pages_message',
 		'icon' => 'ti ti-align-justified',
