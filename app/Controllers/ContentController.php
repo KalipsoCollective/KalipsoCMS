@@ -611,7 +611,7 @@ final class ContentController extends Controller {
 
                     } elseif ($detail['type'] === 'file') {
 
-                        $files[$name][] = $detail;
+                        $files[$name] = $detail;
 
                     }
 
@@ -680,7 +680,7 @@ final class ContentController extends Controller {
                 // Files
                 if (count($files)) {
 
-                    $uploadFiles = $this->contentFileUploader($files, $requiredAreas['files'], $insert, false);
+                    $uploadFiles = $this->contentFileUploader($files, $insert, false);
 
                     if (isset($uploadFiles['manipulation']) !== false) {
                         $arguments['manipulation'] = array_merge(
@@ -865,9 +865,6 @@ final class ContentController extends Controller {
                     } elseif ($detail['type'] === 'file') {
 
                         $files[$name] = $detail;
-                        extract(Base::input([
-                            'current_file_' . $name => 'int'
-                        ], $this->get('request')->params));
 
                     }
 
@@ -934,197 +931,22 @@ final class ContentController extends Controller {
             if (isset($arguments['manipulation']) === false) {
 
                 // Files
+
                 if (count($files)) {
 
-                    $fileController = new FileController($this->get());
+                    $uploadFiles = $this->contentFileUploader($files, $update, true);
 
-                    foreach ($files as $fileName => $fileDetails) {
-                    
-                        $requiredFile = false;
-                        $multipleFile = false;
-                        $multiLanguage = false;
-
-                        if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
-                            $requiredFile = true;
-                        }
-
-                        if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
-                            $multipleFile = true;
-                        }
-
-                        if (isset($fileDetails['multilanguage']) !== false AND $fileDetails['multilanguage']) {
-                            $multiLanguage = true;
-                        }
-
-                        if (isset($this->get('request')->files[$fileName]) !== false) {
-
-                            $uploadParameters = [];
-
-                            if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
-                                $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
-                            }
-
-                            if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
-                                $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
-                            }
-
-                            if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
-                                $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
-                            }
-
-                            if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
-                                $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
-                            }
-
-                            $fileLanguages = $multiLanguage ? array_keys($this->get('request')->files[$fileName]) : [null];
-                            foreach ($fileLanguages as $fileLanguage) {
-                                    
-                                $tmpData = ! is_null($fileLanguage) 
-                                    ? $this->get('request')->files[$fileName][$fileLanguage]
-                                    : $this->get('request')->files[$fileName];
-
-                                if (isset($tmpData['tmp_name']) !== false) {
-                                    $tmpData = [$tmpData];
-                                }
-
-                                $upload = $fileController
-                                    ->directUpload(
-                                        $this->module, 
-                                        $tmpData, 
-                                        $uploadParameters
-                                    );
-
-                                if (count($upload)) {
-
-                                    foreach ($upload as $uploadId => $uploadDetails) {
-
-                                        if (! is_null($fileLanguage)) {
-                                            $update[$fileName][$fileLanguage][] = $uploadId;
-                                        } else {
-                                            $update[$fileName][] = $uploadId;
-                                        }
-                                        $rollBack[] = $uploadId;
-                                        
-                                        $alerts[] = [
-                                            'status' => 'success',
-                                            'message' => Base::lang('base.file_successfully_uploaded')
-                                        ];
-
-                                    }
-
-                                } else {
-
-                                    $alerts[] = [
-                                        'status' => 'error',
-                                        'message' => Base::lang('base.file_upload_problem') 
-                                        . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
-                                    ];
-                                    $arguments['manipulation']['#contentEdit [name="' . $fileName . (! is_null($fileLanguage) ? '['.$fileLanguage.']' : '') . ($multipleFile ? '[]' : '') . '"]'] = [
-                                        'class' => ['is-invalid'],
-                                    ];
-                                }
-
-                                if ($multipleFile AND is_array(${'current_file_'.$fileName})) {
-                                    if (! is_null($fileLanguage)) {
-                                        $update[$fileName][$fileLanguage] = array_merge(
-                                            (isset(${'current_file_'.$fileName}[$fileLanguage]) !== false ? ${'current_file_'.$fileName}[$fileLanguage] : []),
-                                            (isset($update[$fileName][$fileLanguage]) !== false ? $update[$fileName][$fileLanguage] : [])
-                                        );
-                                    } else {
-                                        $update[$fileName] = array_merge(
-                                            (isset(${'current_file_'.$fileName}) !== false ? ${'current_file_'.$fileName} : []),
-                                            (isset($update[$fileName]) !== false ? $update[$fileName] : [])
-                                        );
-                                    }
-                                }
-
-                            }
-
-                            if ($multiLanguage AND count($availableLanguages) !== count($fileLanguages)) {
-
-                                foreach ($availableLanguages as $langKey) {
-                                    if (isset($update[$fileName][$langKey]) === false) {
-                                        $alerts[] = [
-                                            'status' => 'warning',
-                                            'message' => Base::lang('base.file_not_uploaded') 
-                                            . ' (' . Base::lang($fileDetails['label']) . ' ['.$langKey.'])'
-                                        ];
-
-                                        $arguments['manipulation']['#contentEdit [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
-                                            'class' => ['is-invalid'],
-                                        ];
-                                    }
-                                }
-
-                            }
-
-                        } elseif ($requiredFile) {
-
-                            if ($multiLanguage) {
-
-                                foreach ($availableLanguages as $langKey) {
-
-                                    if (isset (${'current_file_'.$fileName}[$langKey]) === false OR !${'current_file_'.$fileName}[$langKey]) {
-
-                                        $alerts[] = [
-                                            'status' => 'warning',
-                                            'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ' ['.$langKey.'])'
-                                        ];
-
-                                        $arguments['manipulation']['#contentEdit [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
-                                            'class' => ['is-invalid'],
-                                        ];
-                                    }
-                                }
-
-                            } else {
-                                if (isset(${'current_file_'.$fileName}) === false OR !${'current_file_'.$fileName}) {
-                                    $alerts[] = [
-                                        'status' => 'warning',
-                                        'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
-                                    ];
-
-                                    $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
-                                        'class' => ['is-invalid'],
-                                    ];
-                                }
-                            }
-
-                        } else {
-
-                            $update[$fileName] = ${'current_file_'.$fileName} ? ${'current_file_'.$fileName} : [];
-                        }
-                    }
-                }
-
-                // reassign old ID.
-                if (isset($arguments['manipulation']) !== false AND count($arguments['manipulation']) AND isset($requiredAreas['files']) !== false) {
-                    
-                    foreach ($requiredAreas['files'] as $fileNameKey => $detail) {
-
-                        foreach ($arguments['manipulation'] as $manipulationSelector => $manipulationDetails) {
-                            
-                            if (strpos($manipulationSelector, $fileNameKey) !== false) {
-
-                                if (isset($detail['multilanguage']) !== false AND $detail['multilanguage']) {
-
-                                    if (count($availableLanguages) === count(${'current_file_'.$fileNameKey})) {
-                                        unset($arguments['manipulation'][$manipulationSelector]);
-                                    }
-
-                                } else {
-                                    if (isset(${'current_file_'.$fileNameKey}) !== false AND (${'current_file_'.$fileNameKey})) {
-                                        unset($arguments['manipulation'][$manipulationSelector]);
-                                        if (isset($update[$fileNameKey]) === false OR !count($update[$fileNameKey])) 
-                                            $update[$fileNameKey] = ${'current_file_'.$fileNameKey};
-                                    }
-                                }
-                            }
-                        }
+                    if (isset($uploadFiles['manipulation']) !== false) {
+                        $arguments['manipulation'] = array_merge(
+                            ( isset($arguments['manipulation']) !== false ? $arguments['manipulation'] : [] ), 
+                            $uploadFiles['manipulation']
+                        );
                     }
 
-                    if (! count($arguments['manipulation']))
-                        unset($arguments['manipulation']);
+                    if (isset($uploadFiles['alerts']) !== false) {
+                        $alerts = array_merge($alerts, $uploadFiles['alerts']);
+                    }
+                    $update = $uploadFiles['row'];
 
                 }
 
@@ -1758,159 +1580,360 @@ final class ContentController extends Controller {
         }
     }
 
-    public function contentFileUploader($files, $requiredAreas, $row, $updateStep = false) {
+    public function contentFileUploader($files, $row, $updateStep = false) {
 
         $manipulation = [];
         $alerts = [];
+        $rollBack = [];
 
-        /*
+        $uploadedFiles = $this->get('request')->files;
+
         $fileController = new FileController($this->get());
+        
+        foreach ($files as $fileName => $fileDetails) {
 
-        foreach ($files as $fileName => $detail) {
+            extract(Base::input([
+                'current_file_' . $fileName => 'int'
+            ], $this->get('request')->params));
 
-            foreach ($detail as $k => $fileDetails) {
+            $row[$fileName] = ${'current_file_' . $fileName};
 
-                $requiredFile = false;
-                $multipleFile = false;
-                $multiLanguage = false;
+            $requiredFile = false;
+            $multipleFile = false;
+            $multiLanguage = false;
 
-                if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
-                    $requiredFile = true;
+            if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
+                $requiredFile = true;
+            }
+
+            if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
+                $multipleFile = true;
+            }
+
+            if (isset($fileDetails['multilanguage']) !== false AND $fileDetails['multilanguage']) {
+                $multiLanguage = true;
+            }
+
+            if (isset($uploadedFiles[$fileName]) !== false) {
+
+                $uploadParameters = [];
+
+                if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
+                    $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
                 }
 
-                if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
-                    $multipleFile = true;
+                if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
+                    $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
                 }
 
-                if (isset($fileDetails['multilanguage']) !== false AND $fileDetails['multilanguage']) {
-                    $multiLanguage = true;
+                if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
+                    $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
                 }
 
-                if (isset($this->get('request')->files[$fileName]) !== false) {
+                if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
+                    $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
+                }
 
-                    $uploadParameters = [];
+                if (isset($rows['title']) !== false) {
+                    $uploadParameters['name'] = $rows['title'];
+                } elseif (isset($rows['name']) !== false) {
+                    $uploadParameters['name'] = $rows['name'];
+                }
 
-                    if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
-                        $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
+                $fileLanguages = $multiLanguage ? array_keys($uploadedFiles[$fileName]) : [null];
+                foreach ($fileLanguages as $fileLanguage) {
+                        
+                    $tmpData = ! is_null($fileLanguage) 
+                        ? $uploadedFiles[$fileName][$fileLanguage]
+                        : $uploadedFiles[$fileName];
+
+                    if (isset($tmpData['tmp_name']) !== false) {
+                        $tmpData = [$tmpData];
                     }
 
-                    if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
-                        $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
-                    }
+                    $upload = $fileController
+                        ->directUpload(
+                            $this->module, 
+                            $tmpData, 
+                            $uploadParameters
+                        );
 
-                    if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
-                        $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
-                    }
+                    if (count($upload)) {
 
-                    if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
-                        $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
-                    }
+                        foreach ($upload as $uploadId => $uploadDetails) {
 
-                    $fileLanguages = $multiLanguage ? array_keys($this->get('request')->files[$fileName]) : [null];
-                    foreach ($fileLanguages as $fileLanguage) {
+                            if (! is_null($fileLanguage)) {
+                                $row[$fileName][$fileLanguage][] = $uploadId;
+                            } else {
+                                $row[$fileName][] = $uploadId;
+                            }
+                            $rollBack[] = $uploadId;
                             
-                        $tmpData = ! is_null($fileLanguage) 
-                            ? $this->get('request')->files[$fileName][$fileLanguage]
-                            : $this->get('request')->files[$fileName];
+                            $alerts[] = [
+                                'status' => 'success',
+                                'message' => Base::lang('base.file_successfully_uploaded') . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
+                            ];
 
-                        if (isset($tmpData['tmp_name']) !== false) {
-                            $tmpData = [$tmpData];
                         }
 
-                        $upload = $fileController
-                            ->directUpload(
-                                $this->module, 
-                                $tmpData, 
-                                $uploadParameters
-                            );
+                    } else {
 
-                        if (count($upload)) {
+                        $alerts[] = [
+                            'status' => 'warning',
+                            'message' => Base::lang('base.file_not_uploaded') 
+                            . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
+                        ];
 
-                            foreach ($upload as $uploadId => $uploadDetails) {
+                        $manipulation['#content'.($updateStep ? 'Edit' : 'Add').' [name="' . $fileName . (! is_null($fileLanguage) ? '['.$fileLanguage.']' : '') . ($multipleFile ? '[]' : '') . '"]'] = [
+                            'class' => ['is-invalid'],
+                        ];
+                    }
 
-                                if (! is_null($fileLanguage)) {
-                                    $insert[$fileName][$fileLanguage][] = $uploadId;
-                                } else {
-                                    $insert[$fileName][] = $uploadId;
-                                }
-                                $rollBack[] = $uploadId;
-                                
-                                $alerts[] = [
-                                    'status' => 'success',
-                                    'message' => Base::lang('base.file_successfully_uploaded') . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
-                                ];
+                }
 
-                            }
+                if ($multiLanguage AND count($availablaLanguages = Base::config('app.available_languages')) !== count($fileLanguages)) {
 
-                        } else {
-
+                    foreach ($availablaLanguages as $langKey) {
+                        if (isset($insert[$fileName][$langKey]) === false) {
                             $alerts[] = [
                                 'status' => 'warning',
                                 'message' => Base::lang('base.file_not_uploaded') 
-                                . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
+                                . ' (' . Base::lang($fileDetails['label']) . ' ['.$langKey.'])'
                             ];
 
-                            $arguments['manipulation']['#contentAdd [name="' . $fileName . (! is_null($fileLanguage) ? '['.$fileLanguage.']' : '') . ($multipleFile ? '[]' : '') . '"]'] = [
+                            $manipulation['#content'.($updateStep ? 'Edit' : 'Add').' [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
                                 'class' => ['is-invalid'],
                             ];
                         }
-
                     }
+                }
 
-                    if ($multiLanguage AND count($availablaLanguages = Base::config('app.available_languages')) !== count($fileLanguages)) {
+            } elseif ($requiredFile) {
 
-                        foreach ($availablaLanguages as $langKey) {
-                            if (isset($insert[$fileName][$langKey]) === false) {
-                                $alerts[] = [
-                                    'status' => 'warning',
-                                    'message' => Base::lang('base.file_not_uploaded') 
-                                    . ' (' . Base::lang($fileDetails['label']) . ' ['.$langKey.'])'
-                                ];
+                if ($updateStep AND ! $row[$fileName]) {
+                    continue;
+                }
 
-                                $arguments['manipulation']['#contentAdd [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
-                                    'class' => ['is-invalid'],
-                                ];
-                            }
-                        }
-
-                    }
-
-                } elseif ($requiredFile) {
-
-                    $alerts[] = [
-                        'status' => 'warning',
-                        'message' => Base::lang('base.file_not_uploaded') . ' (' . Base::lang($fileDetails['label']) . ')'
-                    ];
-                    if ($multiLanguage) {
-                        foreach (Base::config('app.available_languages') as $langKey) {
-                            $manipulation['#contentAdd [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
-                                'class' => ['is-invalid'],
-                            ];
-                        }
-                    } else {
-                        $manipulation['#contentAdd [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                $alerts[] = [
+                    'status' => 'warning',
+                    'message' => Base::lang('base.file_not_uploaded') . ' (' . Base::lang($fileDetails['label']) . ')'
+                ];
+                if ($multiLanguage) {
+                    foreach (Base::config('app.available_languages') as $langKey) {
+                        $manipulation['#content'.($updateStep ? 'Edit' : 'Add').' [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
                             'class' => ['is-invalid'],
                         ];
                     }
                 } else {
-
-                    $row[$fileName] = [];
+                    $manipulation['#content'.($updateStep ? 'Edit' : 'Add').' [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                        'class' => ['is-invalid'],
+                    ];
                 }
+
+            } else {
+
+                $row[$fileName] = [];
             }
         }
+
+        /*
+        $fileController = new FileController($this->get());
+
+        foreach ($files as $fileName => $fileDetails) {
+        
+            $requiredFile = false;
+            $multipleFile = false;
+            $multiLanguage = false;
+
+            if (isset($fileDetails['attributes']['required']) !== false AND $fileDetails['attributes']['required']) {
+                $requiredFile = true;
+            }
+
+            if (isset($fileDetails['attributes']['multiple']) !== false AND $fileDetails['attributes']['multiple']) {
+                $multipleFile = true;
+            }
+
+            if (isset($fileDetails['multilanguage']) !== false AND $fileDetails['multilanguage']) {
+                $multiLanguage = true;
+            }
+
+            if (isset($this->get('request')->files[$fileName]) !== false) {
+
+                $uploadParameters = [];
+
+                if (isset($fileDetails['external_parameters']['max_size']) !== false AND $fileDetails['external_parameters']['max_size']) {
+                    $uploadParameters['max_size'] = $fileDetails['external_parameters']['max_size'];
+                }
+
+                if (isset($fileDetails['attributes']['accept']) !== false AND $fileDetails['attributes']['accept']) {
+                    $uploadParameters['accept_mime'] = $fileDetails['attributes']['accept'];
+                }
+
+                if (isset($fileDetails['external_parameters']['convert']) !== false AND $fileDetails['external_parameters']['convert']) {
+                    $uploadParameters['convert'] = $fileDetails['external_parameters']['convert'];
+                }
+
+                if (isset($fileDetails['external_parameters']['size']) !== false AND $fileDetails['external_parameters']['size']) {
+                    $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
+                }
+
+                $fileLanguages = $multiLanguage ? array_keys($this->get('request')->files[$fileName]) : [null];
+                foreach ($fileLanguages as $fileLanguage) {
+                        
+                    $tmpData = ! is_null($fileLanguage) 
+                        ? $this->get('request')->files[$fileName][$fileLanguage]
+                        : $this->get('request')->files[$fileName];
+
+                    if (isset($tmpData['tmp_name']) !== false) {
+                        $tmpData = [$tmpData];
+                    }
+
+                    $upload = $fileController
+                        ->directUpload(
+                            $this->module, 
+                            $tmpData, 
+                            $uploadParameters
+                        );
+
+                    if (count($upload)) {
+
+                        foreach ($upload as $uploadId => $uploadDetails) {
+
+                            if (! is_null($fileLanguage)) {
+                                $update[$fileName][$fileLanguage][] = $uploadId;
+                            } else {
+                                $update[$fileName][] = $uploadId;
+                            }
+                            $rollBack[] = $uploadId;
+                            
+                            $alerts[] = [
+                                'status' => 'success',
+                                'message' => Base::lang('base.file_successfully_uploaded')
+                            ];
+
+                        }
+
+                    } else {
+
+                        $alerts[] = [
+                            'status' => 'error',
+                            'message' => Base::lang('base.file_upload_problem') 
+                            . ' (' . Base::lang($fileDetails['label']) . (! is_null($fileLanguage) ? ' ['.$fileLanguage.']' : '') . ')'
+                        ];
+                        $arguments['manipulation']['#contentEdit [name="' . $fileName . (! is_null($fileLanguage) ? '['.$fileLanguage.']' : '') . ($multipleFile ? '[]' : '') . '"]'] = [
+                            'class' => ['is-invalid'],
+                        ];
+                    }
+
+                    if ($multipleFile AND is_array(${'current_file_'.$fileName})) {
+                        if (! is_null($fileLanguage)) {
+                            $update[$fileName][$fileLanguage] = array_merge(
+                                (isset(${'current_file_'.$fileName}[$fileLanguage]) !== false ? ${'current_file_'.$fileName}[$fileLanguage] : []),
+                                (isset($update[$fileName][$fileLanguage]) !== false ? $update[$fileName][$fileLanguage] : [])
+                            );
+                        } else {
+                            $update[$fileName] = array_merge(
+                                (isset(${'current_file_'.$fileName}) !== false ? ${'current_file_'.$fileName} : []),
+                                (isset($update[$fileName]) !== false ? $update[$fileName] : [])
+                            );
+                        }
+                    }
+
+                }
+
+                if ($multiLanguage AND count($availableLanguages) !== count($fileLanguages)) {
+
+                    foreach ($availableLanguages as $langKey) {
+                        if (isset($update[$fileName][$langKey]) === false) {
+                            $alerts[] = [
+                                'status' => 'warning',
+                                'message' => Base::lang('base.file_not_uploaded') 
+                                . ' (' . Base::lang($fileDetails['label']) . ' ['.$langKey.'])'
+                            ];
+
+                            $arguments['manipulation']['#contentEdit [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
+                                'class' => ['is-invalid'],
+                            ];
+                        }
+                    }
+
+                }
+
+            } elseif ($requiredFile) {
+
+                if ($multiLanguage) {
+
+                    foreach ($availableLanguages as $langKey) {
+
+                        if (isset (${'current_file_'.$fileName}[$langKey]) === false OR !${'current_file_'.$fileName}[$langKey]) {
+
+                            $alerts[] = [
+                                'status' => 'warning',
+                                'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ' ['.$langKey.'])'
+                            ];
+
+                            $arguments['manipulation']['#contentEdit [name="' . $fileName . '['.$langKey.']' . ($multipleFile ? '[]' : '') . '"]'] = [
+                                'class' => ['is-invalid'],
+                            ];
+                        }
+                    }
+
+                } else {
+                    if (isset(${'current_file_'.$fileName}) === false OR !${'current_file_'.$fileName}) {
+                        $alerts[] = [
+                            'status' => 'warning',
+                            'message' => Base::lang('base.file_not_found') . ' (' . Base::lang($fileDetails['label']) . ')'
+                        ];
+
+                        $arguments['manipulation']['#contentEdit [name="' . $fileName . ($multipleFile ? '[]' : '') . '"]'] = [
+                            'class' => ['is-invalid'],
+                        ];
+                    }
+                }
+
+            } else {
+
+                $update[$fileName] = ${'current_file_'.$fileName} ? ${'current_file_'.$fileName} : [];
+            }
+        }
+
+        // reassign old ID.
+        if (isset($arguments['manipulation']) !== false AND count($arguments['manipulation']) AND isset($requiredAreas['files']) !== false) {
+            
+            foreach ($requiredAreas['files'] as $fileNameKey => $detail) {
+
+                foreach ($arguments['manipulation'] as $manipulationSelector => $manipulationDetails) {
+                    
+                    if (strpos($manipulationSelector, $fileNameKey) !== false) {
+
+                        if (isset($detail['multilanguage']) !== false AND $detail['multilanguage']) {
+
+                            if (count($availableLanguages) === count(${'current_file_'.$fileNameKey})) {
+                                unset($arguments['manipulation'][$manipulationSelector]);
+                            }
+
+                        } else {
+                            if (isset(${'current_file_'.$fileNameKey}) !== false AND (${'current_file_'.$fileNameKey})) {
+                                unset($arguments['manipulation'][$manipulationSelector]);
+                                if (isset($update[$fileNameKey]) === false OR !count($update[$fileNameKey])) 
+                                    $update[$fileNameKey] = ${'current_file_'.$fileNameKey};
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (! count($arguments['manipulation']))
+                unset($arguments['manipulation']);
+
+        }
         */
-
+        $return = [];
         $return['row'] = $row;
-        $return['manipulation'] = $manipulation;
-        $return['alerts'] = $alerts;
+        if (count($manipulation)) $return['manipulation'] = $manipulation;
+        if (count($alerts)) $return['alerts'] = $alerts;
 
-        // Base::dump($row);
-        // exit;
-        return [
-            'row' => $row,
-            'manipulation' => $manipulation,
-            'alerts' => $alerts
-        ];
+        return $return;
 
     }
 
