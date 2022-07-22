@@ -16,7 +16,6 @@
         "ext-pdo": "*",
         "ext-gd": "*",
         "ext-mbstring": "*",
-        "ext-magic": "*",
         "izniburak/pdox": "^1.6",
         "phpmailer/phpmailer": "^6.6",
         "verot/class.upload.php": "^2.1"
