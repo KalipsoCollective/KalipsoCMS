@@ -1634,15 +1634,26 @@ final class ContentController extends Controller {
                     $uploadParameters['dimension'] = $fileDetails['external_parameters']['size'];
                 }
 
-                if (isset($rows['title']) !== false) {
-                    $uploadParameters['name'] = $rows['title'];
+                if (isset($row['title']) !== false) {
+                    $newFileName = $row['title'];
                 } elseif (isset($rows['name']) !== false) {
-                    $uploadParameters['name'] = $rows['name'];
+                    $newFileName = $row['name'];
                 }
 
                 $fileLanguages = $multiLanguage ? array_keys($uploadedFiles[$fileName]) : [null];
                 foreach ($fileLanguages as $fileLanguage) {
-                        
+                    
+                    // file name revision
+                    if (! is_null($fileLanguage) ) {
+
+                        $newFileName = (isset($newFileName) === false) ? Base::tokenGenerator(8) : $newFileName;
+                        if (is_array($newFileName)) {
+                            $uploadParameters['name'] = $newFileName[($fileLanguage ? $fileLanguage : Base::lang('lang.code'))];
+                        }
+
+                        $uploadParameters['name'] = $uploadParameters['name'] . '_' . $fileLanguage;
+                    }
+
                     $tmpData = ! is_null($fileLanguage) 
                         ? $uploadedFiles[$fileName][$fileLanguage]
                         : $uploadedFiles[$fileName];
@@ -1662,8 +1673,16 @@ final class ContentController extends Controller {
 
                         foreach ($upload as $uploadId => $uploadDetails) {
 
+                            if (isset($row[$fileName]) === false OR ! is_array($row[$fileName]))
+                                $row[$fileName] = [];
+
                             if (! is_null($fileLanguage)) {
+
+                                if (isset($row[$fileName][$fileLanguage]) === false)
+                                    $row[$fileName][$fileLanguage] = [];
+
                                 $row[$fileName][$fileLanguage][] = $uploadId;
+
                             } else {
                                 $row[$fileName][] = $uploadId;
                             }
@@ -1690,7 +1709,7 @@ final class ContentController extends Controller {
                     }
 
                 }
-
+                
                 if ($multiLanguage AND count($availablaLanguages = Base::config('app.available_languages')) !== count($fileLanguages)) {
 
                     foreach ($availablaLanguages as $langKey) {
