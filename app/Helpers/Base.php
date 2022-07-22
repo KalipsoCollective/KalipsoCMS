@@ -249,12 +249,11 @@ class Base {
                     break;
 
                 case 'password':
-                case 'nulled_password': 
+                case 'nulled_password':
                     $data = password_hash(trim((string)$data), PASSWORD_DEFAULT); 
-                    if ($parameter === 'password')
+                    if ($parameter === 'nulled_password') {
                         $data = empty($data) ? null : $data;
-                    else 
-                        $data = ! empty($data) ? password_hash(trim((string)$data), PASSWORD_DEFAULT) : null; 
+                    }
                     break;
 
                 case 'date': 
