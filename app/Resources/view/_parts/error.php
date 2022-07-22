@@ -19,6 +19,9 @@
 					<a class="btn btn-light" href="<?php echo $this->url('/') ?>">
 						<i class="ti ti-arrow-left"></i> <?php echo KN\Helpers\Base::lang('base.go_to_home'); ?>
 					</a>
+					<a class="btn btn-light" href="<?php echo $this->url('/auth/login') ?>">
+						<i class="ti ti-login"></i> <?php echo KN\Helpers\Base::lang('base.login'); ?>
+					</a>
 				<?php
 				}	?>
 			</div>
