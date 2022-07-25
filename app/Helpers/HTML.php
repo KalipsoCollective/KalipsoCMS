@@ -181,11 +181,13 @@ class HTML {
      * @param string $menuKey
      * @param array $parameters
      * @param int $level
-     * @return string
+     * @param object $container for active class
+     * @param boolean $returnAsArray
+     * @return string|array
      **/
-    public static function generateMenu($menuKey, $parameters = [], $level = 1, $container = null) {
+    public static function generateMenu($menuKey, $parameters = [], $level = 1, $container = null, $returnAsArray = false) {
 
-        $return = '';
+        $return = $returnAsArray ? [] : '';
         $urls = is_string($menuKey) 
             ? (new \KN\Controllers\MenuController((object)['request' => '']))->getMenuDetails($menuKey)
             : $menuKey;
@@ -199,9 +201,10 @@ class HTML {
             if ($level > 1 AND isset($parameters['ul_dropdown_class']) !== false) {
                 $ulClass = $parameters['ul_dropdown_class'];
             }
-
-            $return .= '
-            <ul'.($ulClass != '' ? ' class="' . $ulClass . '"' : '').'>';
+            if (! $returnAsArray) {
+                $return .= '
+                <ul'.($ulClass != '' ? ' class="' . $ulClass . '"' : '').'>';
+            }
             foreach ($urls as $url) {
 
                 $liClass = '';
@@ -236,24 +239,33 @@ class HTML {
                     $aClass .= $container->currentLink($url['link']);
                 }
 
-                $return .= '
-                <li'.($liClass != '' ? ' class="' . $liClass . '"' : '').'>
-                    <a'.($aClass != '' ? ' class="' . $aClass . '"' : '').' 
-                        href="' . $url['link'] . '"
-                        '.($url['blank'] ? ' target="_blank"' : '')
-                        . ($aAttr != '' ? ' ' . $aAttr : '') . '>
-                        ' . $url['name'] . '
-                    </a>';
+                if ($returnAsArray) {
+                    $arrayData = $url;
+                } else {
 
-                if (isset($url['sub']) !== false) {
-                    $return .= self::generateMenu($url['sub'], $parameters, ($level+1), $container);
+                    $return .= '
+                    <li'.($liClass != '' ? ' class="' . $liClass . '"' : '').'>
+                        <a'.($aClass != '' ? ' class="' . $aClass . '"' : '').' 
+                            href="' . $url['link'] . '"
+                            '.($url['blank'] ? ' target="_blank"' : '')
+                            . ($aAttr != '' ? ' ' . $aAttr : '') . '>
+                            ' . $url['name'] . '
+                        </a>';
+
+                    if (isset($url['sub']) !== false) {
+                        $return .= self::generateMenu($url['sub'], $parameters, ($level+1), $container, $returnAsArray);
+                    }
+                    $return .= '
+                    </li>';
                 }
-                $return .= '
-                </li>';
+                if ($returnAsArray) {
+                    $return[] = $arrayData;
+                }
             }
-            $return .= '
-            </ul>';
-
+            if (! $returnAsArray) {
+                $return .= '
+                </ul>';
+            }
         }
         return $return;
 
