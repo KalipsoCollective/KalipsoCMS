@@ -241,6 +241,7 @@ final class ContentController extends Controller {
                         
                         $dataList = '';
                         $attributes = '';
+                        $iconPicker = false;
                         if (isset($input['attributes']) !== false) {
                             foreach ($input['attributes'] as $attribute => $val) {
                                 if (in_array($attribute, ['required', 'checked', 'selected']) !== false)
@@ -251,6 +252,10 @@ final class ContentController extends Controller {
 
                                     if (strpos($val, '"') !== false) $quote = '\'';
                                     else $quote = '"';
+
+                                    if ($attribute === 'data-kn-icon-picker') {
+                                        $iconPicker = true;
+                                    }
 
                                     if ($attribute === 'data-kn-autocomplete') {
                                         $dataList .= '
@@ -296,6 +301,7 @@ final class ContentController extends Controller {
                             case 'email':
                             case 'tel':
 
+
                                 if (! is_null($currentVal)) {
                                     $attributes .= 'value="'.$currentVal.'" ';
                                 }
@@ -304,10 +310,12 @@ final class ContentController extends Controller {
 
                                 $moduleForm .= '
                                 <div class="'.$col.'">
-                                    <div class="form-floating">
-                                        <input list="' . $idPrefix . '_' . $name . $lang . '_DataList" type="' . ($input['type'] == 'input' ? 'text' : $input['type']) . '" class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '" />
+                                    <div class="form-floating'.($iconPicker ? ' kn-iconpicker': '').'">
+                                        <input list="' . $idPrefix . '_' . $name . $lang . '_DataList" type="' . ($input['type'] == 'input' ? 'text' : $input['type']) . '" class="form-control" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '" placeholder="' . Base::lang($input['label']) . '"'.($iconPicker ? ' aria-haspopup="true" aria-controls="icon_list_' . $idPrefix . '_' . $name . $lang . '"' : '').' />
+                                        '.($iconPicker ? '<i id="icon_' . $idPrefix . '_' . $name . $lang . '" data-kn-icon class="'.(! is_null($currentVal) ? $currentVal : '').'"></i>' : '').'
                                         <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                         '.$dataList.'
+                                        '.($iconPicker ? '<ul id="icon_list_' . $idPrefix . '_' . $name . $lang . '" role="menu" aria-labelledby="' . $idPrefix . '_' . $name . $lang . '"></ul>' : '').'
                                     </div>
                                 </div>';
                                 break;
@@ -1771,6 +1779,66 @@ final class ContentController extends Controller {
         if (count($alerts)) $return['alerts'] = $alerts;
 
         return $return;
+
+    }
+
+
+    public function iconPicker() {
+
+        $alerts = [];
+        $arguments = [];
+        extract(Base::input([
+            'id'        => 'nulled_text',
+            'value'     => 'nulled_text'
+        ], $this->get('request')->params));
+
+        if (! is_null($id)) {
+            
+            $iconList = Base::path('app/Resources/icons.php');
+            if (file_exists($iconList)) {
+
+                $iconList = require_once $iconList;
+
+                $viewAll = is_null($value) ? true : false;
+                $selectedIcons = [];
+                foreach ($iconList as $iconClass => $iconTags) {
+                    
+                    if ($viewAll OR (stripos($iconClass, $value) !== false OR stripos($iconTags, $value) !== false)) {
+
+                        $selectedIcons[] = $iconClass;
+                    }
+
+                }
+
+                $iconUlList = '';
+                foreach ($selectedIcons as $selectedIcon) {
+                    $iconUlList .= '
+                    <li>
+                        <a data-kn-action="icon_pick" data-kn-id="'.$id.'" data-kn-icon-class="'.$selectedIcon.'" href="javascript:;"><i class="'.$selectedIcon.'"></i> '.$selectedIcon.'</a>
+                    </li>';
+                }
+
+                $arguments['manipulation']['#icon_list_'.$id] = [
+                    'html'  => $iconUlList,
+                ];
+
+                if ($iconUlList === '') {
+                    $arguments['manipulation']['#icon_list_'.$id]['remove_class'] = ['active'];
+                } else {
+                    $arguments['manipulation']['#icon_list_'.$id]['class'] = ['active'];
+                }
+
+            }
+
+        }
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => $arguments,
+            'alerts' => $alerts,
+            'view' => null
+        ];
 
     }
 

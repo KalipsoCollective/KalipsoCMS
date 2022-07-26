@@ -693,6 +693,89 @@ body.management-panel {
     font-size: 1.5rem;
 }
 
+.management-panel .kn-iconpicker {
+    position: relative;
+}
+
+.management-panel .kn-iconpicker i[data-kn-icon] {
+    position: absolute;
+    content: '';
+    color: #000000;
+    opacity: 0.5;
+    pointer-events: none;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.management-panel .kn-iconpicker ul {
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 0.1rem);
+    width: 100%;
+    background: #202020;
+    color: #9d9d9d;
+    list-style: none;
+    border-radius: 0.4rem;
+    box-shadow: 0 0.4rem 1rem rgb(0 0 0 / 20%);
+    margin: 0;
+    padding: 0;
+    max-height: 20rem;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s ease-out;
+}
+
+.management-panel .kn-iconpicker ul.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.management-panel .kn-iconpicker ul::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.management-panel .kn-iconpicker ul::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0
+}
+
+.management-panel .kn-iconpicker ul::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 0.5rem;
+}
+
+.management-panel .kn-iconpicker ul::-webkit-scrollbar-thumb:hover {
+    background: #777
+}
+
+.management-panel .kn-iconpicker a {
+    margin: 0.5rem;
+    padding: 0.6rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    color: #6e6e6e;
+    transition: 0.2s ease-out;
+}
+
+.management-panel .kn-iconpicker a i {
+    font-size: 2rem;
+    margin-right: 1rem;
+    color: #fff;
+}
+
+.management-panel .kn-iconpicker a:active, .management-panel .kn-iconpicker a:hover, .management-panel .kn-iconpicker a.focus, .management-panel .kn-iconpicker a:focus {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border-radius: 0.2rem;
+}
+
 @media (max-width: 1200px) {
     .management-panel nav.navbar-side {
         left: -16rem;

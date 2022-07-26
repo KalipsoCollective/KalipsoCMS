@@ -253,7 +253,7 @@
 							},
 							{
 								"searchable": {
-									"type": "date",
+									"type": "text",
 								},
 								"orderable": true,
 								"title": "<?php echo \KN\Helpers\Base::lang('base.birth_date'); ?>",
@@ -270,7 +270,7 @@
 							},
 							{
 								"searchable": {
-									"type": "date",
+									"type": "text",
 									"maxlength": 50
 								},
 								"orderable": true,
@@ -279,7 +279,7 @@
 							},
 							{
 								"searchable": {
-									"type": "date",
+									"type": "text",
 									"maxlength": 50
 								},
 								"orderable": true,
@@ -314,10 +314,6 @@
 						tableHeader: {
 							searchBar: true
 						},
-						tableFooter: {
-							visible: true,
-							searchBar: true
-						}
 					},
 					rolesTable: {
 						selector: "#rolesTable",

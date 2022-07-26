@@ -63,6 +63,7 @@ try {
             ['GET,POST', '/logs/:ip/block', 'AdminController@logIpBlock', ['Auth@with']],
 
             // Contents
+            ['GET,POST', '/icon-picker', 'ContentController@iconPicker', ['Auth@with']],
             ['GET,POST', '/:module', 'ContentController@contents', ['Auth@with']],
             ['GET,POST', '/:module/list', 'ContentController@contentList', ['Auth@with']],
             ['GET,POST', '/:module/add', 'ContentController@contentAdd', ['Auth@with']],

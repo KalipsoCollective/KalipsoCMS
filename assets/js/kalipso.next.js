@@ -315,6 +315,19 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 							} else if (action === 'remove' && e.target.getAttribute('data-kn-parent')) {
 
 								e.target.closest(e.target.getAttribute('data-kn-parent')).remove();
+							} else if (action === 'icon_pick' && e.target.getAttribute('data-kn-id') && e.target.getAttribute('data-kn-icon-class')) {
+
+								const iconEl = document.querySelector('i#icon_' + e.target.getAttribute('data-kn-id'));
+								const inputEl = document.querySelector('#' + e.target.getAttribute('data-kn-id'));
+								if (iconEl && inputEl) {
+									iconEl.setAttribute('class', e.target.getAttribute('data-kn-icon-class'));
+									inputEl.value = e.target.getAttribute('data-kn-icon-class');
+
+									console.log();
+									document.querySelector('ul#icon_list_' + e.target.getAttribute('data-kn-id')).addEventListener('blur', (event) => { 
+										event.target.classList.remove('active');
+									}, true);
+								}
 							}
 						}
 					}
@@ -405,6 +418,9 @@ async function actionTrigger(el, eventType, e) {
 				options.append('value', el.value);
 				keep = false;
 			}
+		} else if (el.getAttribute('data-kn-icon-picker')) {
+			options.append('id', el.id);
+			options.append('value', el.value);
 		}
 
 		if (! keep) {

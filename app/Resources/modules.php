@@ -125,7 +125,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -134,7 +134,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -405,7 +405,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -414,7 +414,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -596,7 +596,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -605,7 +605,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -926,7 +926,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -935,7 +935,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1127,7 +1127,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1136,7 +1136,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1333,7 +1333,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1342,7 +1342,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1405,7 +1405,12 @@ return [
 			'icon' => [
 				'label' => 'base.icon',
 				'type' => 'input',
-				'attributes' => ['required' => 'true'],
+				'attributes' => [
+					'required' => 'true',
+					'data-kn-icon-picker' => 'true',
+					'data-kn-input' => Base::base('/management/icon-picker'),
+					'autocomplete' => 'off',
+				],
 				'col' => 'col-12 col-md-2 pt-4',
 			],
 			'widget' => [
@@ -1509,7 +1514,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1518,7 +1523,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1715,7 +1720,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,
@@ -1724,7 +1729,7 @@ return [
 			],
 			[
 				"searchable" => [
-					"type" => "date",
+					"type" => "text",
 					"maxlength" => 50
 				],
 				"orderable" => true,

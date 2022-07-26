@@ -70,6 +70,7 @@ return [
         'management_logs_ip_block' => 'Management - Logs - IP Block',
         'management_settings' => 'Management - Settings',
         'management_settings_update' => 'Management - Settings - Edit',
+        'management_icon_picker' => 'Management - Icon Picker',
         'management_contents' => 'Management - Contents',
         'management_contents_list' => 'Management - Contents - List',
         'management_contents_add' => 'Management - Contents - Add',

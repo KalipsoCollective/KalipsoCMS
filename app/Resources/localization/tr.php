@@ -71,6 +71,7 @@ return [
         'management_settings' => 'Yönetim - Ayarlar',
         'management_settings_update' => 'Yönetim - Ayarlar - Düzenle',
         'management_contents' => 'Yönetim - İçerikler',
+        'management_icon_picker' => 'Yönetim - Simge Seçici',
         'management_contents_list' => 'Yönetim - İçerikler - Liste',
         'management_contents_add' => 'Yönetim - İçerikler - Ekle',
         'management_contents_detail' => 'Yönetim - İçerikler - Detay',

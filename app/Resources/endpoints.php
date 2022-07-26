@@ -85,6 +85,10 @@ return [
 		'default' => false,
 		'name' => 'auth.management_sessions_delete',
 	],
+	'management/icon-picker' => [
+		'default' => true,
+		'name' => 'auth.management_icon_picker',
+	],
 	'management/:module' => [
 		'default' => false,
 		'name' => 'auth.management_contents',
