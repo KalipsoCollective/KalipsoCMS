@@ -322,11 +322,6 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 								if (iconEl && inputEl) {
 									iconEl.setAttribute('class', e.target.getAttribute('data-kn-icon-class'));
 									inputEl.value = e.target.getAttribute('data-kn-icon-class');
-
-									console.log();
-									document.querySelector('ul#icon_list_' + e.target.getAttribute('data-kn-id')).addEventListener('blur', (event) => { 
-										event.target.classList.remove('active');
-									}, true);
 								}
 							}
 						}

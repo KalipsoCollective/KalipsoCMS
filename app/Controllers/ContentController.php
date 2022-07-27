@@ -315,7 +315,7 @@ final class ContentController extends Controller {
                                         '.($iconPicker ? '<i id="icon_' . $idPrefix . '_' . $name . $lang . '" data-kn-icon class="'.(! is_null($currentVal) ? $currentVal : '').'"></i>' : '').'
                                         <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                         '.$dataList.'
-                                        '.($iconPicker ? '<ul id="icon_list_' . $idPrefix . '_' . $name . $lang . '" role="menu" aria-labelledby="' . $idPrefix . '_' . $name . $lang . '"></ul>' : '').'
+                                        '.($iconPicker ? '<ul class="kn-iconpicker-list" id="icon_list_' . $idPrefix . '_' . $name . $lang . '" role="menu" aria-labelledby="' . $idPrefix . '_' . $name . $lang . '"></ul>' : '').'
                                     </div>
                                 </div>';
                                 break;
