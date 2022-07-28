@@ -465,22 +465,22 @@ body.management-panel {
     transform: translateY(8px);
 }
 
-.management-panel .side-opened .navbar-side-toggler {
+.side-opened .navbar-side-toggler {
     position: absolute;
     margin-left: 13rem;
     z-index: 1001;
 }
 
-.management-panel .side-opened .navbar-side-toggler .menu-btn span {
+.side-opened .navbar-side-toggler .menu-btn span {
     transform: scaleX(0);
 }
 
-.management-panel .side-opened .navbar-side-toggler .menu-btn:before {
+.side-opened .navbar-side-toggler .menu-btn:before {
     transform: rotate(45deg);
     border-color: #fff;
 }
 
-.management-panel .side-opened .navbar-side-toggler .menu-btn:after {
+.side-opened .navbar-side-toggler .menu-btn:after {
     transform: rotate(-45deg);
     border-color: #fff;
 }
@@ -781,7 +781,7 @@ body.management-panel {
         left: -16rem;
     }
 
-    .management-panel .side-opened nav.navbar-side {
+    .side-opened nav.navbar-side {
         left: 0rem;
     }
 
