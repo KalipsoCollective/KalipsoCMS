@@ -153,8 +153,6 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 	/* Async. Form Submit */
 	const forms = document.querySelectorAll('form[data-kn-form]');
 
-	// console.log();
-
 	for (let i = 0; i < forms.length; i++) {
 		forms[i].addEventListener("submit", async function(e) {
 			e = e || window.event;
@@ -257,6 +255,7 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 	if (firstLoad) {
 
 		document.addEventListener("click", async function(e) {
+
 			// Async. Action Buttons
 			if (e.target.nodeName.toUpperCase() === 'BUTTON' || e.target.nodeName.toUpperCase() === 'A') {
 				if (e.target.getAttribute('data-kn-action')) {
@@ -282,9 +281,19 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 						keep = false;
 					}
 
+					let action = e.target.getAttribute('data-kn-action');
+					if (action === 'icon_pick' && e.target.getAttribute('data-kn-id') && e.target.getAttribute('data-kn-icon-class')) {
+						const iconEl = document.querySelector('i#icon_' + e.target.getAttribute('data-kn-id'));
+						const inputEl = document.querySelector('#' + e.target.getAttribute('data-kn-id'));
+						if (iconEl && inputEl) {
+							iconEl.setAttribute('class', e.target.getAttribute('data-kn-icon-class'));
+							inputEl.value = e.target.getAttribute('data-kn-icon-class');
+						}
+						keep = false;
+					}
+
 					if (! keep) {
 
-						let action = e.target.getAttribute('data-kn-action');
 						try {
 
 							const url = new URL(action); // check valid url
@@ -315,14 +324,6 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 							} else if (action === 'remove' && e.target.getAttribute('data-kn-parent')) {
 
 								e.target.closest(e.target.getAttribute('data-kn-parent')).remove();
-							} else if (action === 'icon_pick' && e.target.getAttribute('data-kn-id') && e.target.getAttribute('data-kn-icon-class')) {
-
-								const iconEl = document.querySelector('i#icon_' + e.target.getAttribute('data-kn-id'));
-								const inputEl = document.querySelector('#' + e.target.getAttribute('data-kn-id'));
-								if (iconEl && inputEl) {
-									iconEl.setAttribute('class', e.target.getAttribute('data-kn-icon-class'));
-									inputEl.value = e.target.getAttribute('data-kn-icon-class');
-								}
 							}
 						}
 					}
@@ -361,6 +362,14 @@ function kalipsoInit(firstLoad = false, initSelector = null) {
 			}
 		});
 	}
+
+	document.addEventListener("click", async function(e) {
+		if (! e.target.closest('.kn-iconpicker')) {
+			[...document.querySelectorAll('.kn-iconpicker-list.active')].forEach((picker) => {
+				picker.classList.remove('active')
+			})
+		}
+	});
 	
 }
 
