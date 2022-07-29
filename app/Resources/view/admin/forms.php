@@ -7,6 +7,10 @@
 					<p><?php echo $description; ?></p>
 				</header>
 				<div class="col-12 dash-content">
+					<?php
+					if (isset($moduleDatas['info']) !== false) {
+						echo '<div class="alert alert-primary"><i class="ti ti-info-circle"></i> '.\KN\Helpers\Base::lang($moduleDatas['info']).'</div>';
+					}	?>
 					<div class="bg-white p-2 mb-2 rounded shadow-sm" 
 						id="formsTable" 
 						data-source="<?php echo $this->url('/management/forms/' . $form . '/list') ?>"

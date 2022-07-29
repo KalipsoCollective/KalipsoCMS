@@ -1,7 +1,8 @@
 # KalipsoCMS - Changelog
 
-## 29.07.2022 - **v1.0.0.9**
+## 29.07.2022 - **v1.0.1.0**
 - externalQuery parameter added to ContentController->getModuleData(). It can be used for specific data query.
+- If there is information text on the content and form management screens, it is provided to be displayed.
 
 ## 28.07.2022 - **v1.0.0.8**
 - The Base helper class has been updated with the KalipsoNext.
