@@ -1,7 +1,9 @@
 # KalipsoCMS - Changelog
 
-## 28.07.2022 - **v1.0.0.9**
-- Edited for the corruption that occurs in the case of porting with URL in the helper method that generates and decrypts the password.
+## 29.07.2022 - **v1.0.0.9**
+- externalQuery parameter added to ContentController->getModuleData(). It can be used for specific data query.
+
+## 28.07.2022 - **v1.0.0.8**
 - The Base helper class has been updated with the KalipsoNext.
 
 ## 27.07.2022 - **v1.0.0.7**

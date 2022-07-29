@@ -84,15 +84,27 @@ final class ContentController extends Controller {
 
     }
 
-    public function getModuleData($module = null, $id = null) {
+    public function getModuleData($module = null, $id = null, $externalQuery = []) {
+
 
         $model = (new Contents())->where('module', $module);
         if ($id) {
             $model->where('id', $id);
         }
-        
 
-        return $model->orderBy('id', 'desc')->get();
+        if (count($externalQuery))  {
+
+            foreach ($externalQuery as $col => $value) {
+                if (! in_array($col, ['id', 'created_at', 'created_by', 'updated_at', 'updated_by'])) {
+                    $col = '(JSON_UNQUOTE(JSON_EXTRACT(input, \'$.'.$col.'\')))';
+                }
+                $model->where($col, $value);
+            }
+
+        }
+
+        $model->orderBy('id', 'desc');
+        return $model->get();
 
     }
 
