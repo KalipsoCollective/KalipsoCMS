@@ -190,9 +190,9 @@ final class ContentController extends Controller {
                         <div class="form-floating">
                             <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '">
                                 '.(! $requiredWidget ?
-                                 '<option value=""></option>' : 
+                                 '<option value="-1"'.((isset($fillDatas->{$key}) !== false AND $fillDatas->{$key} == -1) ? ' selected' : '').'></option>' : 
                                  '').'
-                                <option value=""'.$allSelected.'>' . Base::lang('base.all') . '</option>
+                                <option value="0"'.$allSelected.'>' . Base::lang('base.all') . '</option>
                                 '.$options.'
                             </select>
                             <label for="' . $idPrefix . '_' . $key . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
