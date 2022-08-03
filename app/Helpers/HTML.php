@@ -209,7 +209,7 @@ class HTML {
 
             if (! $returnAsArray) {
                 $return .= '
-                <ul'.($ulClass != '' ? ' class="' . $ulClass . '"' : '').$ulAttr.'>';
+                <ul'.($ulClass != '' ? ' class="' . $ulClass . '"' : '').($ulAttr ? ' ' . $ulAttr : $ulAttr).'>';
             }
             foreach ($urls as $url) {
 
