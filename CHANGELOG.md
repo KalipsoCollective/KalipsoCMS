@@ -1,10 +1,11 @@
 # KalipsoCMS - Changelog
 
-## 03.08.2022 - **v1.0.1.4**
+## 03.08.2022 - **v1.0.1.5**
 - Base helper class synchronized with KalipsoNext version.
 - Manrope fonts updated to v13.
 - ul_attributes and li_levelx_append parameters append to HTML::generateMenu() method.
 - Field values left blank in required dynamic component selection fields are set to -1 for ContentController.
+- In the dynamic content module, when data can be obtained for the description field, content or title in the module definitions, it is provided to be taken as a variable for the description part of the page.
 
 ## 29.07.2022 - **v1.0.1.0**
 - externalQuery parameter added to ContentController->getModuleData(). It can be used for specific data query.

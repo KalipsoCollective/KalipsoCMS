@@ -509,74 +509,6 @@ final class ContentController extends Controller {
 
     }
 
-    public function contentList() {
-
-        $container = $this->get();
-        $moduleName = $this->module;
-        if (isset($this->modules[$moduleName]) !== false) {
-
-            $module = $this->modules[$moduleName];
-
-            $tables = $module['table'];
-            $tables['action'] = [
-                'exclude' => true,
-                'formatter' => function($row) use ($container, $moduleName) {
-
-                    $buttons = '';
-                    if ($container->authority('management/:module/:id')) {
-                        $buttons .= '
-                        <button type="button" class="btn btn-light" 
-                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id ).'">
-                            ' . Base::lang('base.view') . '
-                        </button>';
-                    }
-
-                    if ($container->authority('management/:module/:id/delete')) {
-                        $buttons .= '
-                        <button type="button" class="btn btn-danger" 
-                            data-kn-again="'.Base::lang('base.are_you_sure').'" 
-                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id . '/delete').'">
-                            ' . Base::lang('base.delete') . '
-                        </button>';
-                    }
-
-                    return '
-                    <div class="btn-group btn-group-sm" role="group" aria-label="'.Base::lang('base.action').'">
-                        '.$buttons.'
-                    </div>';
-                }
-            ];
-            $tableOp = (new KalipsoTable())
-                ->db((new Contents)->pdo)
-                ->from($module['from'])
-                ->process($tables)
-                ->output();
-
-            return [
-                'status' => true,
-                'statusCode' => 200,
-                'arguments' => $tableOp,
-                'view' => null
-            ];
-
-        } else {
-
-            return [
-                'status' => false,
-                'statusCode' => 404,
-                'redirect' => '/management',
-                'alerts' => [
-                    [
-                        'status' => 'error',
-                        'message' => Base::lang('error.module_not_found')
-                    ]
-                ],
-                'view' => null
-            ];
-        }
-
-    }
-
     public function contentAdd() {
 
         $alerts = [];
@@ -775,6 +707,74 @@ final class ContentController extends Controller {
             'alerts' => $alerts,
             'view' => null
         ];
+
+    }
+
+    public function contentList() {
+
+        $container = $this->get();
+        $moduleName = $this->module;
+        if (isset($this->modules[$moduleName]) !== false) {
+
+            $module = $this->modules[$moduleName];
+
+            $tables = $module['table'];
+            $tables['action'] = [
+                'exclude' => true,
+                'formatter' => function($row) use ($container, $moduleName) {
+
+                    $buttons = '';
+                    if ($container->authority('management/:module/:id')) {
+                        $buttons .= '
+                        <button type="button" class="btn btn-light" 
+                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id ).'">
+                            ' . Base::lang('base.view') . '
+                        </button>';
+                    }
+
+                    if ($container->authority('management/:module/:id/delete')) {
+                        $buttons .= '
+                        <button type="button" class="btn btn-danger" 
+                            data-kn-again="'.Base::lang('base.are_you_sure').'" 
+                            data-kn-action="'.$this->get()->url('/management/' . $moduleName . '/' . $row->id . '/delete').'">
+                            ' . Base::lang('base.delete') . '
+                        </button>';
+                    }
+
+                    return '
+                    <div class="btn-group btn-group-sm" role="group" aria-label="'.Base::lang('base.action').'">
+                        '.$buttons.'
+                    </div>';
+                }
+            ];
+            $tableOp = (new KalipsoTable())
+                ->db((new Contents)->pdo)
+                ->from($module['from'])
+                ->process($tables)
+                ->output();
+
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => $tableOp,
+                'view' => null
+            ];
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
+                'redirect' => '/management',
+                'alerts' => [
+                    [
+                        'status' => 'error',
+                        'message' => Base::lang('error.module_not_found')
+                    ]
+                ],
+                'view' => null
+            ];
+        }
 
     }
 
@@ -1499,107 +1499,6 @@ final class ContentController extends Controller {
 
     }
 
-    public function contentListPage() {
-
-        $extract = $this->extractContentData();
-
-        if ($extract AND is_array($extract)) {
-
-            $arguments = [];
-            $title = Base::lang($extract['module_detail']['name']);
-            $arguments['title'] = $title;
-            $arguments['detail'] = $extract['content_details'];
-            $arguments['moduleDetail'] = $extract['module_detail'];
-
-            if (isset($extract['module_detail']['routes']['description']['listing']) !== false) {
-                $arguments['description'] = Base::lang($extract['module_detail']['routes']['description']['listing']);
-            }
-
-            return [
-                'status' => true,
-                'statusCode' => 200,
-                'arguments' => $arguments,
-                'view' => $extract['module_detail']['routes']['view']['listing']
-            ];
-
-        } elseif (is_string($extract)) {
-
-            return [
-                'status' => false,
-                'statusCode' => 301,
-                'redirect' => $extract
-            ];
-
-        } else {
-
-            return [
-                'status' => false,
-                'statusCode' => 404,
-                'arguments' => [
-                    'error' => 404,
-                    'output' => Base::lang('error.page_not_found')
-                ],
-                'view' => ['error', 'error']
-            ];
-        }
-
-    }
-
-    public function contentDetailPage() {
-
-        $extract = $this->extractContentData();
-
-        if ($extract AND is_array($extract) AND isset($extract['content_details'][0]) !== false) {
-
-            $arguments = [];
-            $title = Base::lang($extract['module_detail']['name']);
-            
-            $arguments['detail'] = $extract['content_details'][0];
-
-            if (isset($contentDetails->{'description'}) !== false) {
-                $arguments['description'] = $contentDetails->{'description'};
-            } elseif (isset($contentDetails->{'content'}) !== false) {
-                $arguments['description'] = trim(strip_tags(htmlspecialchars_decode($contentDetails->{'content'})));
-            } elseif (isset($extract['module_detail']['routes']['description']['listing']) !== false) {
-                $arguments['description'] = Base::lang($extract['module_detail']['routes']['description']['listing']);
-            }
-
-            if (isset($arguments['detail']->{'title'}) !== false) {
-                $title = $arguments['detail']->{'title'} . ' | ' . $title;
-            }
-
-            $arguments['title'] = $title;
-            $arguments['moduleDetail'] = $extract['module_detail'];
-
-            return [
-                'status' => true,
-                'statusCode' => 200,
-                'arguments' => $arguments,
-                'view' => $extract['module_detail']['routes']['view']['detail']
-            ];
-
-        } elseif (is_string($extract)) {
-
-            return [
-                'status' => false,
-                'statusCode' => 301,
-                'redirect' => $extract
-            ];
-
-        } else {
-
-            return [
-                'status' => false,
-                'statusCode' => 404,
-                'arguments' => [
-                    'error' => 404,
-                    'output' => Base::lang('error.page_not_found')
-                ],
-                'view' => ['error', 'error']
-            ];
-        }
-    }
-
     public function contentFileUploader($files, $row, $updateStep = false) {
 
         $manipulation = [];
@@ -1794,7 +1693,6 @@ final class ContentController extends Controller {
 
     }
 
-
     public function iconPicker() {
 
         $alerts = [];
@@ -1852,6 +1750,111 @@ final class ContentController extends Controller {
             'view' => null
         ];
 
+    }
+
+    public function contentListPage() {
+
+        $extract = $this->extractContentData();
+
+        if ($extract AND is_array($extract)) {
+
+            $arguments = [];
+            $title = Base::lang($extract['module_detail']['name']);
+            $arguments['title'] = $title;
+            $arguments['detail'] = $extract['content_details'];
+            $arguments['moduleDetail'] = $extract['module_detail'];
+
+            if (isset($extract['module_detail']['routes']['description']['listing']) !== false) {
+                $arguments['description'] = Base::lang($extract['module_detail']['routes']['description']['listing']);
+            }
+
+            if (isset($extract['content_details']->description) !== false) {
+                $arguments['description'] = $extract['content_details']->description;
+            }
+
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => $arguments,
+                'view' => $extract['module_detail']['routes']['view']['listing']
+            ];
+
+        } elseif (is_string($extract)) {
+
+            return [
+                'status' => false,
+                'statusCode' => 301,
+                'redirect' => $extract
+            ];
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
+                'arguments' => [
+                    'error' => 404,
+                    'output' => Base::lang('error.page_not_found')
+                ],
+                'view' => ['error', 'error']
+            ];
+        }
+
+    }
+
+    public function contentDetailPage() {
+
+        $extract = $this->extractContentData();
+
+        if ($extract AND is_array($extract) AND isset($extract['content_details'][0]) !== false) {
+
+            $arguments = [];
+            $title = Base::lang($extract['module_detail']['name']);
+            
+            $arguments['detail'] = $extract['content_details'][0];
+
+            if (isset($arguments['detail']->{'description'}) !== false) {
+                $arguments['description'] = $arguments['detail']->{'description'};
+            } elseif (isset($arguments['detail']->{'content'}) !== false) {
+                $arguments['description'] = trim(strip_tags(htmlspecialchars_decode($arguments['detail']->{'content'})));
+            } elseif (isset($extract['module_detail']['routes']['description']['listing']) !== false) {
+                $arguments['description'] = Base::lang($extract['module_detail']['routes']['description']['listing']);
+            }
+
+            if (isset($arguments['detail']->{'title'}) !== false) {
+                $title = $arguments['detail']->{'title'} . ' | ' . $title;
+            }
+
+            $arguments['title'] = $title;
+            $arguments['moduleDetail'] = $extract['module_detail'];
+
+            return [
+                'status' => true,
+                'statusCode' => 200,
+                'arguments' => $arguments,
+                'view' => $extract['module_detail']['routes']['view']['detail']
+            ];
+
+        } elseif (is_string($extract)) {
+
+            return [
+                'status' => false,
+                'statusCode' => 301,
+                'redirect' => $extract
+            ];
+
+        } else {
+
+            return [
+                'status' => false,
+                'statusCode' => 404,
+                'arguments' => [
+                    'error' => 404,
+                    'output' => Base::lang('error.page_not_found')
+                ],
+                'view' => ['error', 'error']
+            ];
+        }
     }
 
 }
