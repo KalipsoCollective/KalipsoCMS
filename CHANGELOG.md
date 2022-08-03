@@ -1,7 +1,9 @@
 # KalipsoCMS - Changelog
 
-## 03.08.2022 - **v1.0.1.1**
+## 03.08.2022 - **v1.0.1.2**
 - Base helper class synchronized with KalipsoNext version.
+- Manrope fonts updated to v13.
+
 
 ## 29.07.2022 - **v1.0.1.0**
 - externalQuery parameter added to ContentController->getModuleData(). It can be used for specific data query.

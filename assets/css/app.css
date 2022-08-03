@@ -1,5 +1,8 @@
 /* You can start here for styling */
 
+body {
+	font-family: 'Manrope', sans-serif;
+}
 .wrap {
 	min-height: 92vh;
 	padding-top: 5rem;
