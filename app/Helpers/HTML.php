@@ -201,9 +201,15 @@ class HTML {
             if ($level > 1 AND isset($parameters['ul_dropdown_class']) !== false) {
                 $ulClass = $parameters['ul_dropdown_class'];
             }
+
+            $ulAttr = null;
+            if (isset($parameters['ul_attributes']) !== false) {
+                $ulAttr = $parameters['ul_attributes'];
+            }
+
             if (! $returnAsArray) {
                 $return .= '
-                <ul'.($ulClass != '' ? ' class="' . $ulClass . '"' : '').'>';
+                <ul'.($ulClass != '' ? ' class="' . $ulClass . '"' : '').$ulAttr.'>';
             }
             foreach ($urls as $url) {
 
@@ -263,6 +269,11 @@ class HTML {
                 }
             }
             if (! $returnAsArray) {
+
+                if (isset($parameters['li_level'.$level.'_append']) !== false) {
+                    $return .= $parameters['li_level'.$level.'_append'];
+                }
+
                 $return .= '
                 </ul>';
             }
