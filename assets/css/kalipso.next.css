@@ -548,6 +548,45 @@ body.management-panel {
     font-family: 'Manrope', sans-serif;
 }
 
+
+.management-panel button.ql-header svg {
+    display: none;
+}
+
+.management-panel .ql-header[value]:after {
+    clear: both;
+    display: table;
+    font-weight: 600;
+    margin-top: -2px;
+    margin-left: 1px;
+    font-size: 14px;
+    font-family: 'Manrope', sans-serif;
+}
+
+.management-panel .ql-header[value='6']:after {
+    content: "H6";
+}
+
+.management-panel .ql-header[value='5']:after {
+    content: "H5";
+}
+
+.management-panel .ql-header[value='4']:after {
+    content: "H4";
+}
+
+.management-panel .ql-header[value='3']:after {
+    content: "H3";
+}
+
+.management-panel .ql-header[value='2']:after {
+    content: "H2";
+}
+
+.management-panel .ql-header[value='1']:after {
+    content: "H1";
+}
+
 .management-panel img.table-image {
     width: 6rem;
     height: 3rem;
