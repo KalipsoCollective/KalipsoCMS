@@ -609,9 +609,13 @@ final class FileController extends Controller {
 
                             if ($dimensionVar[0]) 
                                 $handle->image_x      = $dimensionVar[0];
+                            else 
+                                $handle->image_ratio_x = true;
 
                             if ($dimensionVar[1]) 
                                 $handle->image_y      = $dimensionVar[1];
+                            else 
+                                $handle->image_ratio_y = true;
                             
                             $handle->process($path);
                             if ($handle->processed) {
