@@ -1,7 +1,8 @@
 # KalipsoCMS - Changelog
 
-## 04.08.2022 - **v1.0.1.6**
+## 04.08.2022 - **v1.0.1.7**
 - File auto dimension fix.
+- Quill Toolbar - Header buttons styles fixed.
 
 ## 03.08.2022 - **v1.0.1.5**
 - Base helper class synchronized with KalipsoNext version.
