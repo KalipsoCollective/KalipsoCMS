@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 04.08.2022 - **v1.0.1.6**
+- File auto dimension fix.
+
 ## 03.08.2022 - **v1.0.1.5**
 - Base helper class synchronized with KalipsoNext version.
 - Manrope fonts updated to v13.
