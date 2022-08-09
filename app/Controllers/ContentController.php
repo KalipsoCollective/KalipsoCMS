@@ -1195,8 +1195,13 @@ final class ContentController extends Controller {
 
                 $records = $records->getAll();
 
+                $fields = [];
                 foreach ($records as $record) {
-                    $html .= '<option value="'.$record->{$field}.'">';
+                    $fields[$record->{$field}] = $record->{$field};
+                }
+
+                foreach ($fields as $_field) {
+                    $html .= '<option value="'.$_field.'">';
                 }
 
                 $arguments['manipulation'] = [

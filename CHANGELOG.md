@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 09.08.2022 - **v1.0.1.9**
+- Fix for unique response in autocomplete feature.
+
 ## 04.08.2022 - **v1.0.1.8**
 - File auto dimension fix.
 - Quill Toolbar - Header buttons styles fixed.
