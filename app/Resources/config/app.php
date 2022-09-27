@@ -13,7 +13,7 @@ return [
 	'dev_mode'	=> true,
 	'session'	=> 'kalipso',
 	'charset'	=> 'utf-8',
-	'title_format' => '[TITLE] — [APP]',
+	'title_format' => '[TITLE] [SEPERATOR] [APP]',
 	'available_languages' => ['tr', 'en'],
 	'upload_accept' => 'image/*',
 	'upload_convert' => 'webp', // jpg, png, webp, jpeg, gif, bmp

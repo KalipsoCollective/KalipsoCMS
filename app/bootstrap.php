@@ -5,8 +5,8 @@
  **/
 define('KN_START', microtime(true)); // We use it for the exec. time recorded in the log.
 define('KN_ROOT',  rtrim($_SERVER["DOCUMENT_ROOT"], '/').'/');
-define('KN_VERSION', '1.0.1.9');
-define('KN_CORE_VERSION', '1.0.2.5');
+define('KN_VERSION', '1.0.2.0');
+define('KN_CORE_VERSION', '1.0.2.6');
 
 /**
  * Shutdown function registration

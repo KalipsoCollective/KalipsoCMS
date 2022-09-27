@@ -932,12 +932,16 @@ final class Factory
 
             if ($view) {
 
-                $arguments['title'] = isset($arguments['title']) !== false ? 
+                 $arguments['title'] = isset($arguments['title']) !== false ? 
                     str_replace(
-                        ['[TITLE]', '[APP]'], 
-                        [$arguments['title'], 
-                        Base::config('settings.name')], Base::config('app.title_format')) 
-                        : Base::config('settings.name');
+                        ['[TITLE]', '[SEPERATOR]', '[APP]'], 
+                        [
+                            $arguments['title'], 
+                            Base::config('settings.separator'),
+                            Base::config('settings.name'),
+                        ], 
+                    Base::config('app.title_format')) 
+                    : Base::config('settings.name');
 
                 extract($arguments);
 

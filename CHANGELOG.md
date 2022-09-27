@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 27.29.2022 - **v1.0.2.0**
+- KalipsoNext Core upgraded to v1.0.2.6.
+
 ## 09.08.2022 - **v1.0.1.9**
 - Fix for unique response in autocomplete feature.
 
