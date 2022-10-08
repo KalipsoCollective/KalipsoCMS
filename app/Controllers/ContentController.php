@@ -403,7 +403,7 @@ final class ContentController extends Controller {
                                         <select class="form-select" '.$attributes.'name="' . $inputName . '" id="' . $idPrefix . '_' . $name . $lang . '">
                                             '.$options.'
                                         </select>
-                                        <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($widget['label']) . $requiredBadge . '</label>
+                                        <label for="' . $idPrefix . '_' . $name . $lang . '">' . Base::lang($input['label']) . $requiredBadge . '</label>
                                     </div>
                                 </div>';
                                 break;
