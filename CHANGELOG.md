@@ -1,5 +1,11 @@
 # KalipsoCMS - Changelog
 
+## 09.10.2022 - **v1.0.2.2**
+- Fixed the ContentController to provide the corresponding content ID.
+
+## 08.10.2022 - **v1.0.2.1**
+- ContentController variable name fix for select type.
+
 ## 27.29.2022 - **v1.0.2.0**
 - KalipsoNext Core upgraded to v1.0.2.6.
 
