@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 10.10.2022 - **v1.0.2.3**
+- Added hook feature for content controller. In dynamic content modules, you can develop the output directly from the `app/Resources/hook.php` file.
+
 ## 09.10.2022 - **v1.0.2.2**
 - Fixed the ContentController to provide the corresponding content ID.
 

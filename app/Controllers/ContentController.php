@@ -1778,12 +1778,22 @@ final class ContentController extends Controller {
                 $arguments['description'] = $extract['content_details']->description;
             }
 
-            return [
+            $return = [
                 'status' => true,
                 'statusCode' => 200,
                 'arguments' => $arguments,
                 'view' => $extract['module_detail']['routes']['view']['listing']
             ];
+
+            $controllerHook = Base::path('app/Resources/hook.php');
+            if (file_exists($controllerHook)) {
+                $controllerHook = require_once $controllerHook;
+                if (is_object($controllerHook) AND $controllerHook = $controllerHook('listing', $this->container, $this, $extract, $return)) {
+                    $return = $controllerHook;
+                }
+            }
+
+            return $return;
 
         } elseif (is_string($extract)) {
 
@@ -1834,12 +1844,22 @@ final class ContentController extends Controller {
             $arguments['title'] = $title;
             $arguments['moduleDetail'] = $extract['module_detail'];
 
-            return [
+            $return = [
                 'status' => true,
                 'statusCode' => 200,
                 'arguments' => $arguments,
                 'view' => $extract['module_detail']['routes']['view']['detail']
             ];
+
+            $controllerHook = Base::path('app/Resources/hook.php');
+            if (file_exists($controllerHook)) {
+                $controllerHook = require_once $controllerHook;
+                if (is_object($controllerHook) AND $controllerHook = $controllerHook('detail', $this->container, $this, $extract, $return)) {
+                    $return = $controllerHook;
+                }
+            }
+
+            return $return;
 
         } elseif (is_string($extract)) {
 
