@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 11.10.2022 - **v1.0.2.4**
+- `ContentController->extractWidgetData()`: id export support.
+
 ## 10.10.2022 - **v1.0.2.3**
 - Added hook feature for content controller. In dynamic content modules, you can develop the output directly from the `app/Resources/hook.php` file.
 
