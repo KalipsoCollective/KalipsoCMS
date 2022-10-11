@@ -1239,7 +1239,7 @@ final class ContentController extends Controller {
 
     public function extractWidgetData($moduleName, $moduleInputs, $ids) {
 
-        $externalSelectColumns = [];
+        $externalSelectColumns = ['id'];
         $moduleContents = [];
 
         $model = new Contents;
