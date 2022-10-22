@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 22.10.2022 - **v1.0.2.5**
+- Direct upload dimension-free support.
+
 ## 11.10.2022 - **v1.0.2.4**
 - `ContentController->extractWidgetData()`: id export support.
 
