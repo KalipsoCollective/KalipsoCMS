@@ -607,15 +607,22 @@ final class FileController extends Controller {
                             $handle->image_ratio            = true;
                             $handle->image_ratio_crop       = true;
 
-                            if ($dimensionVar[0]) 
-                                $handle->image_x      = $dimensionVar[0];
-                            else 
-                                $handle->image_ratio_x = true;
+                            if ($dimensionVar[0] !== null AND $dimensionVar[1] !== null ) {
 
-                            if ($dimensionVar[1]) 
-                                $handle->image_y      = $dimensionVar[1];
-                            else 
-                                $handle->image_ratio_y = true;
+                                $handle->image_resize           = true;
+                                $handle->image_ratio            = true;
+                                $handle->image_ratio_crop       = true;
+
+                                if ($dimensionVar[0]) 
+                                    $handle->image_x      = $dimensionVar[0];
+                                else
+                                    $handle->image_ratio_x = true;
+
+                                if ($dimensionVar[1]) 
+                                    $handle->image_y      = $dimensionVar[1];
+                                else
+                                    $handle->image_ratio_y = true;
+                            }
                             
                             $handle->process($path);
                             if ($handle->processed) {
