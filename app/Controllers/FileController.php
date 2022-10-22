@@ -205,7 +205,7 @@ final class FileController extends Controller {
         ];
 
     }
-
+    /*
     public function userDetail() {
 
         $id = (int)$this->get('request')->attributes['id'];
@@ -406,6 +406,7 @@ final class FileController extends Controller {
         ];
 
     }
+    */
 
     public function mediaAdd() {
 
@@ -603,11 +604,11 @@ final class FileController extends Controller {
                                 $handle->webp_quality = $quality;
                             }
 
-                            $handle->image_resize           = true;
-                            $handle->image_ratio            = true;
-                            $handle->image_ratio_crop       = true;
-
                             if ($dimensionVar[0] !== null AND $dimensionVar[1] !== null ) {
+
+                                $handle->image_resize           = true;
+                                $handle->image_ratio            = true;
+                                $handle->image_ratio_crop       = true;
 
                                 $handle->image_resize           = true;
                                 $handle->image_ratio            = true;
