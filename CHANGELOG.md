@@ -1,8 +1,9 @@
 # KalipsoCMS - Changelog
 
-## 22.10.2022 - **v1.0.2.6**
+## 22.10.2022 - **v1.0.2.7**
 - Direct upload dimension-free support.
 - FormController variable name bug fixed.
+- TablerIcons upgraded to v1.106.0
 
 ## 11.10.2022 - **v1.0.2.4**
 - `ContentController->extractWidgetData()`: id export support.
