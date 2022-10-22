@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 22.10.2022 - **v1.0.2.3**
+- Direct upload dimension-free support.
+
 ## 09.10.2022 - **v1.0.2.2**
 - Fixed the ContentController to provide the corresponding content ID.
 
