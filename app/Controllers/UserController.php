@@ -490,7 +490,7 @@ final class UserController extends Controller {
 
             extract(Base::input([
                 'email' => 'nulled_email',
-                'password' => 'nulled_password',
+                'password' => 'nulled_text',
                 'token' => 'nulled_text',
             ], $this->get('request')->params));
 
@@ -550,7 +550,7 @@ final class UserController extends Controller {
 
                     $update = $users->where('id', $getUser->id)
                         ->update([
-                            'password' => $password,
+                            'password' => Base::filter($password, 'password'),
                             'token' => Base::tokenGenerator(80)
                         ]);
 
