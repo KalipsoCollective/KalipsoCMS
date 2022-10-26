@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 27.10.2022 - **v1.0.2.8**
+- KalipsoNext Core fixes.
+
 ## 22.10.2022 - **v1.0.2.7**
 - Direct upload dimension-free support.
 - FormController variable name bug fixed.
