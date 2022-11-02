@@ -1,7 +1,12 @@
 # KalipsoCMS - Changelog
 
+<<<<<<< HEAD
 ## 27.10.2022 - **v1.0.2.8**
 - KalipsoNext Core fixes.
+=======
+## 02.22.2022 - **v1.0.2.8**
+- While preparing the auto-complete list in the content controller, an arrangement has been made so that the records with a large number of content are displayed on the top.
+>>>>>>> 7b50d0f (While preparing the auto-complete list in the content controller, an arrangement has been made so that the records with a large number of content are displayed on the top.)
 
 ## 22.10.2022 - **v1.0.2.7**
 - Direct upload dimension-free support.

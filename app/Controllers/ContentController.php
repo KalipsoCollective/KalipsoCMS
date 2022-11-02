@@ -1197,11 +1197,15 @@ final class ContentController extends Controller {
 
                 $fields = [];
                 foreach ($records as $record) {
-                    $fields[$record->{$field}] = $record->{$field};
+                    if (!empty($record->{$field}) AND $record->{$field} !== 'null') {
+                        $fields[$record->{$field}] = isset($fields[$record->{$field}]) !== false ? ($fields[$record->{$field}] + 1) : 1;
+                    }
                 }
+                // for convenience, we sort by number of records.
+                arsort($fields);
 
-                foreach ($fields as $_field) {
-                    $html .= '<option value="'.$_field.'">';
+                foreach ($fields as $_val => $_count) {
+                    $html .= '<option value="'.$_val.'">';
                 }
 
                 $arguments['manipulation'] = [
