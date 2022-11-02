@@ -5,10 +5,14 @@
  **/
 define('KN_START', microtime(true)); // We use it for the exec. time recorded in the log.
 define('KN_ROOT',  rtrim($_SERVER["DOCUMENT_ROOT"], '/').'/');
+<<<<<<< HEAD
 define('KN_VERSION', '1.0.2.8');
 <<<<<<< HEAD
 define('KN_CORE_VERSION', '1.0.2.7');
 =======
+=======
+define('KN_VERSION', '1.0.2.7');
+>>>>>>> ee62a7d (remove)
 define('KN_CORE_VERSION', '1.0.2.6');
 >>>>>>> 7b50d0f (While preparing the auto-complete list in the content controller, an arrangement has been made so that the records with a large number of content are displayed on the top.)
 
