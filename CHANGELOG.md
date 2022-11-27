@@ -1,6 +1,9 @@
 # KalipsoCMS - Changelog
 
-## 02.22.2022 - **v1.0.2.9**
+## 27.11.2022 - **v1.0.3.0**
+- Translation files updated. Macedonian language support added.
+
+## 02.11.2022 - **v1.0.2.9**
 - While preparing the auto-complete list in the content controller, an arrangement has been made so that the records with a large number of content are displayed on the top.
 
 ## 27.10.2022 - **v1.0.2.8**

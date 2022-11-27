@@ -17,6 +17,7 @@ return [
     'langs' => [
         'tr' => 'Türkçe',
         'en' => 'İngilizce',
+        'mk' => 'Makedonca',
     ],
     'err' => 'Hata',
     'error' => [
