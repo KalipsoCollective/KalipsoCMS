@@ -3,6 +3,14 @@
 				<div class="row">
 					<div class="col-12 col-lg-3">
 						<div class="list-group shadow mb-3 sticky-top">
+							<?php
+							if ($this->authority('/management')) {
+
+								echo '
+								<a class="list-group-item list-group-item-action" href="'.$this->url('/management').'">
+									<i class="ti ti-layout-dashboard"></i>  '.KN\Helpers\Base::lang('base.management').'
+								</a>';
+							} ?>
 							<a class="list-group-item list-group-item-action<?php echo $this->currentLink('/auth'); ?>" href="<?php echo $this->url('/auth'); ?>">
 								<i class="ti ti-user"></i>  <?php echo KN\Helpers\Base::lang('base.account'); ?>
 							</a>
@@ -122,4 +130,3 @@
 				</div>
 			</div>
 		</div>
-		
