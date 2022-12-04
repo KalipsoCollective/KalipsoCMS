@@ -145,6 +145,20 @@ return [
         'maintenance_mode_info' => 'Siteyi ziyaretlere kapatmanızı sağlar. Oturumu açık olan yöneticiler hariç herkes bu ekranla karşılanır.',
         'maintenance_mode_desc' => 'Bakım Modu Mesajı',
         'maintenance_mode_desc_info' => 'Bakım modu karşılama sayfasında ziyaretçilere gösterilecek mesajdır.',
+        'map_embed_url' => 'Harita Yerleştirme Kodu',
+        'map_embed_url_info' => 'Harita yerleştirme kodu içindeki src içeriği olmalıdır.',
+        'address' => 'Adres',
+        'address_info' => 'İletişim kısımlarında görünecek adres bölümüdür.',
+        'phone' => 'Telefon',
+        'phone_info' => 'İletişim kısımlarında görünecek telefon bölümüdür.',
+        'facebook' => 'Facebook URL',
+        'facebook_info' => 'İletişim kısımlarında görünecek Facebook adresidir.',
+        'twitter' => 'Twitter URL',
+        'twitter_info' => 'İletişim kısımlarında görünecek Twitter adresidir.',
+        'linkedin' => 'LinkedIn URL',
+        'linkedin_info' => 'İletişim kısımlarında görünecek LinkedIn adresidir.',
+        'instagram' => 'Instagram URL',
+        'instagram_info' => 'İletişim kısımlarında görünecek Instagram adresidir.',
     ],
     'base' => [
         'byte' => 'Bayt',
@@ -445,6 +459,7 @@ return [
         'filter' => 'Filtre',
         'filter_option' => 'Filtre Ayarı',
         'filter_options' => 'Filtre Ayarları',
+        'scroll_to_top' => 'Yukarı Çık',
     ],
     'app' => [
     ]

@@ -146,6 +146,20 @@ return [
         'maintenance_mode_info' => 'It allows you to close the site to visits. Everyone is greeted with this screen, except the logged-in administrators.',
         'maintenance_mode_desc' => 'Maintenance Mode Message',
         'maintenance_mode_desc_info' => 'It is the message that will be shown to the visitors on the maintenance mode welcome page.',
+        'map_embed_url' => 'Map Embedding Code',
+        'map_embed_url_info' => 'The map embed code must have the src content inside.',
+        'address' => 'Address',
+        'address_info' => 'It is the address section that will appear in the contact sections.',
+        'phone' => 'Telephone',
+        'phone_info' => 'It is the phone section that will appear in the contact sections.',
+        'facebook' => 'Facebook URL',
+        'facebook_info' => 'It is the Facebook address that will appear in the contact sections.',
+        'twitter' => 'Twitter URL',
+        'twitter_info' => 'It is the Twitter address that will appear in the contact sections.',
+        'linkedin' => 'LinkedIn URL',
+        'linkedin_info' => 'It is the LinkedIn address that will appear in the contact sections.',
+        'instagram' => 'Instagram URL',
+        'instagram_info' => 'It is the Instagram address that will appear in the contact sections.',
     ],
     'base' => [
         'sandbox' => 'Sandbox',
@@ -445,6 +459,7 @@ return [
         'filter' => 'Filter',
         'filter_option' => 'Filter Option',
         'filter_options' => 'Filter Options',
+        'scroll_to_top' => 'Scroll to Top',
     ],
     'app' => [
     ]
