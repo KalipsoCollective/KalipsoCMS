@@ -376,6 +376,17 @@ final class ContentController extends Controller {
                                     }
                                 }
 
+                                if (isset($input['external_parameters']['size']) !== false AND is_array($input['external_parameters']['size']) AND count($input['external_parameters']['size'])) {
+
+                                    $dimTags = '';
+                                    foreach ($input['external_parameters']['size'] as $d => $s) {
+                                        $dimTags .= ', ' . $d . ': ' . (is_null($s[0]) ? '-' : $s[0]) . 'x' . (is_null($s[1]) ? '-' : $s[1]);
+                                    }
+                                    $dimTags = '('.trim($dimTags, ', ').')';
+                                    $requiredBadge = $dimTags . ' ' . $requiredBadge;
+
+                                }
+
                                 $moduleForm .= '
                                 <div class="'.$col.'">
                                     <div class="">
