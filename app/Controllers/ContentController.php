@@ -382,7 +382,7 @@ final class ContentController extends Controller {
                                     foreach ($input['external_parameters']['size'] as $d => $s) {
                                         $dimTags .= ', ' . $d . ': ' . (is_null($s[0]) ? '-' : $s[0]) . 'x' . (is_null($s[1]) ? '-' : $s[1]);
                                     }
-                                    $dimTags = '('.trim($dimTags, ', ').')';
+                                    $dimTags = ' ('.trim($dimTags, ', ').')';
                                     $requiredBadge = $dimTags . ' ' . $requiredBadge;
 
                                 }
