@@ -2,7 +2,7 @@
 
 /**
  *  KalipsoNext - Localization File
- *  English(en)
+ *  Macedonian(mk)
  **/
 
 return [
@@ -15,9 +15,10 @@ return [
         'plural_suffix' => 'лар',
     ],
     'langs' => [
-        'tr' => 'Turkish',
-        'en' => 'English',
-        'mk' => 'Македонца',
+        'tr' => 'турски',
+        'en' => 'Англиски',
+        'mk' => 'македонски',
+        'ar' => 'арапски',
     ],
     'err' => 'Грешка',
     'error' => [

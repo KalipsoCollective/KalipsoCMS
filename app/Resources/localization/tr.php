@@ -16,6 +16,7 @@ return [
     ],
     'langs' => [
         'tr' => 'Türkçe',
+        'ar' => 'Arapça',
         'en' => 'İngilizce',
         'mk' => 'Makedonca',
     ],
