@@ -15,8 +15,7 @@ async function kalipsoFetch(url = null, method = 'POST', data = {}) {
 	data = typeof data === 'string' ? JSON.parse(data) : data;
 	data = typeof data === 'object' ? data : {};
 
-	// Fetch
-	return await fetch(url, {
+	let fetchOptions = {
 		method: method,
 		mode: 'cors',
 		cache: 'no-cache',
@@ -26,9 +25,13 @@ async function kalipsoFetch(url = null, method = 'POST', data = {}) {
 		},
 		credentials: 'same-origin',
 		referrerPolicy: 'same-origin',
-		redirect: 'follow',
-		body: data
-	})
+		redirect: 'follow'
+	}
+	if (method !== 'GET' && method !== 'HEAD') {
+		fetchOptions.body = data
+	}
+	// Fetch
+	return await fetch(url, fetchOptions)
 	.then((response) => {
 		if (response.status >= 200 && response.status < 300) {
 			return response.json();

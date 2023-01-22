@@ -1,11 +1,12 @@
 # KalipsoCMS - Changelog
 
-## 01.22.2023 - **v1.0.3.7**
+## 01.22.2023 - **v1.0.3.8**
 - Translation files updated.
 - Controllers updated.
 - Auth middleware redirection parameters added.
 - Helper classes updated.
 - Cookie consent support added.
+- JS fetch body parameter fixed.
 
 ## 01.15.2023 - **v1.0.3.2**
 - Translation files updated. Arabic language support added.
