@@ -1329,6 +1329,14 @@ final class AdminController extends Controller {
 		}
 		$userRoles = $_userRoles;
 
+		$pages = (new ContentController($this->get()))->getModuleDatas('pages');
+		$_pages = [0 => ''];
+		foreach ($pages as $page) {
+			$page->input = json_decode($page->input, true);
+			$_pages[$page->id] = $page->input['title'][$this->get('lang')];
+		}
+		$pages = $_pages;
+
 		$languages = [];
 		foreach (Base::config('app.available_languages') as $lang) {
 			$languages[$lang] = Base::lang('langs.' . $lang);
