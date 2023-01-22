@@ -102,7 +102,6 @@ return [
         'management_menu_get_params' => 'Management - Menus - Get Menu Details',
     ],
     'settings' => [
-        'byte' => 'Byte',
         'basic_settings' => 'Basic Settings',
         'secure_settings' => 'Security Settings',
         'email_settings' => 'Email Settings',
@@ -171,6 +170,7 @@ return [
         'map_lat_lon_info' => 'It is used for the map to be opened from the contact page. It is entered as "latitude, longitude".',
     ],
     'base' => [
+        'byte' => 'Byte',
         'sandbox' => 'Sandbox',
         'sandbox_message' => 'You can access all the tools that will help you in the development process from this screen.',
         'clear_storage' => 'Clear Storage',
@@ -581,6 +581,9 @@ return [
         'ok' => 'OK',
         'cookie_desc' => 'This site uses cookies to provide its services and analyze traffic.',
         'get_info' => 'Get Info',
+        'check_languages' => 'Check Languages',
+        'check_languages_message' => 'Dil dosyalarını kontrol edip karşılaştırmasını yapar.',
+        'no_missing_definitions' => 'No missing definitions.',
     ],
     'app' => [
     ]

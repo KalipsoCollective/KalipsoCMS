@@ -102,7 +102,6 @@ return [
         'management_menu_get_params' => 'الإدارة - القوائم - الحصول على تفاصيل القائمة',
     ],
     'settings' => [
-        'byte' => 'بايت',
         'basic_settings' => 'الإعدادات الأساسية',
         'secure_settings' => 'اعدادات الامان',
         'email_settings' => 'إعدادات البريد الإلكتروني',
@@ -171,6 +170,7 @@ return [
         'map_lat_lon_info' => 'يتم استخدامه لفتح الخريطة من صفحة الاتصال. يتم إدخاله كـ "خطوط الطول والعرض".',
     ],
     'base' => [
+        'byte' => 'بايت',
         'sandbox' => 'صندوق الرمل',
         'sandbox_message' => 'يمكنك الوصول إلى جميع الأدوات التي ستساعدك في عملية التطوير من هذه الشاشة.',
         'clear_storage' => 'تخزين واضح',
@@ -581,6 +581,9 @@ return [
         'ok' => 'نعم',
         'cookie_desc' => 'يستخدم هذا الموقع ملفات تعريف الارتباط لتقديم خدماته وتحليل حركة المرور.',
         'get_info' => 'يحصل على معلومات',
+        'check_languages' => 'تحقق من اللغات',
+        'check_languages_message' => 'Dil dosyalarını kontrol edip karşılaştırmasını yapar.',
+        'no_missing_definitions' => 'لا يوجد تعريف مفقود.',
     ],
     'app' => [
     ]

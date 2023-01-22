@@ -102,7 +102,6 @@ return [
         'management_menu_get_params' => 'Yönetim - Menüler - Menü Detaylarını Getir',
     ],
     'settings' => [
-        'byte' => 'Byte',
         'basic_settings' => 'Temel Ayarlar',
         'secure_settings' => 'Güvenlik Ayarları',
         'email_settings' => 'Eposta Ayarları',
@@ -582,6 +581,9 @@ return [
         'ok' => 'Tamam',
         'cookie_desc' => 'Bu site, hizmetlerini sunmak ve trafiği analiz etmek için çerezlerden yararlanıyor.',
         'get_info' => 'Bilgi Al',
+        'check_languages' => 'Dilleri Kontrol Et',
+        'check_languages_message' => 'Dil dosyalarını kontrol edip karşılaştırmasını yapar.',
+        'no_missing_definitions' => 'Eksik tanım yok.',
     ],
     'app' => [
     ]
