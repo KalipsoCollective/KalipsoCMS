@@ -282,4 +282,113 @@ class HTML {
 
     }
 
+    /*
+    public static function getProductCatalogue() {
+
+        $return = null;
+        
+        $model = (new \KN\Model\Contents());
+            
+        $get = $model->select('
+            id,
+            REPLACE(
+                REPLACE(
+                    REPLACE(
+                        REPLACE(
+                            IFNULL(JSON_EXTRACT(input, \'$.catalogue\'), ""),
+                            " ",
+                            ""
+                        ),
+                        "\"",
+                        ""
+                    ),
+                    "]",
+                    ""
+                ),
+                "[",
+                ""
+            ) AS catalogue,
+            (SELECT JSON_ARRAYAGG(files) AS files FROM files WHERE FIND_IN_SET(id, catalogue)) AS catalogue_src
+        ');
+        $get = $get
+            ->where('module', 'home_contents');
+
+        $get = $get
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        if (!empty($get)) {
+
+            $get->catalogue_src = json_decode($get->catalogue_src);
+            foreach ($get->catalogue_src as $key => $fileData) {
+                if (is_string($fileData)) {
+                    $fileData = json_decode($fileData);
+                    $get->catalogue_src[$key] = (object)[];
+                }
+                foreach ($fileData as $dimension => $src) {
+                    $get->catalogue_src[$key]->{$dimension} = Base::base('upload/' . $src);
+                }
+            }
+
+            $get = $get->catalogue_src;
+            $temp = $get[0]->original;
+            $langCode = Base::lang('lang.code');
+            foreach ($get as $file) {
+                if (strpos($file->original, '-' . $langCode) !== false OR strpos($file->original, '_' . $langCode) !== false) {
+                    $get = $file->original;
+                    break;
+                }
+            }
+            $return = is_string($get) ? $get : $temp;
+
+        }
+
+        return $return;
+
+    }
+
+    public static function getCustomerServiceInfo() {
+
+        $data = (new \KN\Controllers\ContentController((object)['request' => '']))->getModuleData('contact_info', null, [
+            'type' => 'customer_service'
+        ]);
+
+        if (! empty($data)) {
+            $data = json_decode($data->input);
+        }
+
+        return $data;
+    }
+
+    public static function getContentData($type) {
+
+        $return = null;
+        switch ($type) {
+            case 'slogan':
+                
+                $model = (new \KN\Model\Contents());
+                $get = $model->select('
+                    id,
+                    IFNULL(JSON_UNQUOTE(JSON_EXTRACT(input, \'$.slogan.'.Base::lang('lang.code').'\')), "-") AS slogan
+                ');
+                $get = $get
+                    ->where('module', 'about');
+
+                $get = $get
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                if (!empty($get)) {
+
+                    $return = $get->slogan;
+
+                }
+                break;
+        }
+
+        return $return;
+
+    }
+    */
+
 }

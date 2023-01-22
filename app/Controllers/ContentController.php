@@ -1476,9 +1476,8 @@ final class ContentController extends Controller {
                                         );
 
                                         $moduleContents = array_merge($moduleContents, $widget);
+                                        $contentDetails[$index]->{$module} = $moduleContents;
                                     }
-                                    
-                                    $contentDetails[$index]->{$module} = $moduleContents;
                                 }
                             }
                         }

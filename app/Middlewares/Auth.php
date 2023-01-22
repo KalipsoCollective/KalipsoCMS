@@ -33,6 +33,7 @@ final class Auth extends Middleware {
                 'status' => false,
                 'statusCode' => 401,
                 'next'   => false,
+                'redirect' => '/auth/login',
                 'arguments' => [
                     'title' => Base::lang('err'),
                     'error' => '401',
@@ -55,7 +56,7 @@ final class Auth extends Middleware {
                 'status' => false,
                 'next'   => false,
                 'statusCode' => 302,
-                'redirect' => '/'
+                'redirect' => '/auth'
             ];
         }
 

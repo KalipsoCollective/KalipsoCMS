@@ -1404,12 +1404,22 @@ final class FormController extends Controller {
                 $arguments['form'] = $this->prepareForm($extract['form_detail']['inputs']);
             }
 
-            return [
+             $return = [
                 'status' => true,
                 'statusCode' => 200,
                 'arguments' => $arguments,
                 'view' => $extract['form_detail']['routes']['view'][$extract['extract_type']]
             ];
+
+            $controllerHook = Base::path('app/Resources/hook.php');
+            if (file_exists($controllerHook)) {
+                $controllerHook = require_once $controllerHook;
+                if (is_object($controllerHook) AND $controllerHook = $controllerHook('listing', $this->container, $this, $extract, $return)) {
+                    $return = $controllerHook;
+                }
+            }
+
+            return $return;
 
         } else {
 

@@ -587,7 +587,7 @@ final class FileController extends Controller {
                             elseif ($maxSize = Base::config('app.upload_max_size')) $handle->file_max_size = $maxSize;
 
                             if (isset($parameters['accept_mime']) !== false) $handle->allowed = $parameters['accept_mime'];
-                            elseif ($acceptMime = Base::config('app.upload_accept')) $handle->file_max_size = $maxSize;
+                            elseif ($acceptMime = Base::config('app.upload_accept')) $handle->allowed = $acceptMime;
 
                             if (isset($parameters['convert']) !== false) $handle->image_convert = $parameters['convert'];
                             elseif ($uploadConvert = Base::config('app.upload_convert')) $handle->image_convert = $uploadConvert;

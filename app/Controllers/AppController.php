@@ -481,4 +481,45 @@ final class AppController extends Controller {
 
     }
 
+    public function cookieConsent() {
+
+        $arguments = [];
+        $cacheFolder = Base::path('app/Storage');
+        if (! is_dir($cacheFolder)) {
+            mkdir($cacheFolder);
+        }
+        $cacheFolder .= '/cookie_consent';
+        if (! is_dir($cacheFolder)) {
+            mkdir($cacheFolder);
+        }
+
+        $name = md5(Base::getHeader() . Base::getIp()).'.txt';
+        $file = $cacheFolder . '/' . $name;
+        $content = '';
+        if (! file_exists($file)) {
+            touch($file);
+            $content = 'IP: ' . Base::getIp() . PHP_EOL .
+            'User-Agent: ' . Base::getHeader() . PHP_EOL . 
+            'AuthCode: ' . Base::authCode() . PHP_EOL . '---';
+        }
+        $content .=  PHP_EOL . 
+        'Accepted: ' . date('d.m.Y H:i:s');
+
+        file_put_contents($file, $content, FILE_APPEND | LOCK_EX);
+
+        $alerts[] = [
+            'status' => 'success',
+            'message' => Base::lang('base.save_success')
+        ];
+
+        return [
+            'status' => true,
+            'statusCode' => 200,
+            'arguments' => [],
+            'alerts' => $alerts,
+            'view' => null
+        ];
+
+    }
+
 }

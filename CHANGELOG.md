@@ -1,5 +1,11 @@
 # KalipsoCMS - Changelog
 
+## 01.22.2023 - **v1.0.3.6**
+- Translation files updated.
+- Controllers updated.
+- Auth middleware redirection parameters added.
+- Helper classes updated.
+
 ## 01.15.2023 - **v1.0.3.2**
 - Translation files updated. Arabic language support added.
 - File upload area image size info label added.
