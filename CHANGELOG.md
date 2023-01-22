@@ -1,5 +1,9 @@
 # KalipsoCMS - Changelog
 
+## 01.22.2023 - **v1.0.4.6**
+- Settings page required fields updated.
+- robots.txt updated.
+
 ## 01.22.2023 - **v1.0.4.4**
 - Translation files updated.
 - Controllers updated.
