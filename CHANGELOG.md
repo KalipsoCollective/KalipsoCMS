@@ -1,12 +1,18 @@
 # KalipsoCMS - Changelog
 
-## 01.22.2023 - **v1.0.3.8**
+## 01.22.2023 - **v1.0.4.4**
 - Translation files updated.
 - Controllers updated.
 - Auth middleware redirection parameters added.
 - Helper classes updated.
 - Cookie consent support added.
 - JS fetch body parameter fixed.
+- Tabler Icons packages updated to v1.119.0
+- Bootstrap packages updated to v5.3.0-alpha-1
+- vPjax package changed to jquery-pjax and added jquery-pjax support.
+- Added jQuery v3.6.3 package.
+- Fixed an error in language definitions that are not in the settings screen.
+- Language file checker method added to sandbox mode.
 
 ## 01.15.2023 - **v1.0.3.2**
 - Translation files updated. Arabic language support added.
