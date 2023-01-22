@@ -14,7 +14,7 @@ return [
 	'session'	=> 'kalipso',
 	'charset'	=> 'utf-8',
 	'title_format' => '[TITLE] [SEPERATOR] [APP]',
-	'available_languages' => ['tr', 'en'],
+	'available_languages' => ['tr', 'en', 'ar', 'mk'],
 	'upload_accept' => 'image/*',
 	'upload_convert' => 'webp', // jpg, png, webp, jpeg, gif, bmp
 	'upload_max_width' => 1920,
