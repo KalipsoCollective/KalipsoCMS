@@ -10,7 +10,6 @@ if (isset($_SERVER['HTTP_X_PJAX']) === false) {
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/quill.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/image-resize.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/draggable/draggable.bundle.min.js'); ?>"></script>
-		<!--
 		<script>
 			<?php 
 			$moduleList = [['value' => 'general', 'name' => KN\Helpers\Base::lang('base.general')]];
@@ -645,13 +644,13 @@ if (isset($_SERVER['HTTP_X_PJAX']) === false) {
 				}
 
 				for(const [key, value] of Object.entries(tableVariables)) {
-					window[key] = new KalipsoTable(value);
+					// window[key] = new KalipsoTable(value);
 				}
 
 				draggable();
 
 			}
-		</script> -->
+		</script>
 		<script src="<?php echo KN\Helpers\Base::assets('js/app.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('js/kalipso.next.js'); ?>"></script>
 	</body>

@@ -722,13 +722,15 @@ NProgress.start();
 (function() {
 
 	window.pjax = $(document).pjax('a:not([target="_blank"]):not([href="#!"])', '#wrap')
-	document.addEventListener("pjax:start", (e) => {
+	$(document).on("pjax:start", (e) => {
 		NProgress.start();
 	})
-	document.addEventListener("pjax:end", (xhr, textStatus, options) => {
+	$(document).on("pjax:end", (xhr, textStatus, options) => {
 		NProgress.done();
 		kalipsoInit();
-		console.log(xhr, textStatus, options);
+		let parser = new DOMParser();
+		const doc = parser.parseFromString(textStatus.responseText, 'text/html');
+		document.body.setAttribute('class', doc.querySelector('body').getAttribute('class'));
 	})
 	kalipsoInit(true);
 	setTimeout(() => {
