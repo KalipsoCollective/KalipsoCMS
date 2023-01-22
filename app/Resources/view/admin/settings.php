@@ -67,7 +67,7 @@
 																	foreach ($languages as $langCode => $langName) {
 																		$rightSection .= '
 																		<div class="form-floating mb-1">
-																			<input type="'.(isset($values['numeric']) !== false ? 'number' : 'text').'" class="form-control"' . (isset($values['required']) !== false ? ' required' : '') . ' name="' . $name . '['.$langCode.']" id="' . $name . $langCode . '" placeholder="' . $langName . '" value="' . $values['value'][$langCode] . '" />
+																			<input type="'.(isset($values['numeric']) !== false ? 'number' : 'text').'" class="form-control"' . (isset($values['required']) !== false ? ' required' : '') . ' name="' . $name . '['.$langCode.']" id="' . $name . $langCode . '" placeholder="' . $langName . '" value="' . (isset($values['value'][$langCode]) !== false ? $values['value'][$langCode] : '') . '" />
 																			 <label for="' . $name . $langCode . '">' . $langName . '</label>
 																		</div>';
 																	}
