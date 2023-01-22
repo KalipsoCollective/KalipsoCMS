@@ -735,3 +735,12 @@ NProgress.start();
 	}, 500)
 
 })();
+
+async function cookiePolicy() {
+
+	NProgress.start();
+	const res = await kalipsoFetch('/app/cookie-consent', 'GET');
+	responseFormatter(res);
+	NProgress.done();
+
+}
