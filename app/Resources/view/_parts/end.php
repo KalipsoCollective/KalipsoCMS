@@ -1,11 +1,16 @@
+<?php
+if (isset($_SERVER['HTTP_X_PJAX']) === false) {
+?>
+
+		<script src="<?php echo KN\Helpers\Base::assets('libs/jquery/jquery.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/bootstrap/bootstrap.bundle.min.js'); ?>"></script>
+		<script src="<?php echo KN\Helpers\Base::assets('libs/pjax/jquery.pjax.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/nprogress/nprogress.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/vpjax/vpjax.min.js'); ?>"></script>
-		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/l10n/tr.js'); ?>"></script>
-		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/kalipso.table.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/quill.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/image-resize.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/draggable/draggable.bundle.min.js'); ?>"></script>
+		<!--
 		<script>
 			<?php 
 			$moduleList = [['value' => 'general', 'name' => KN\Helpers\Base::lang('base.general')]];
@@ -646,8 +651,10 @@
 				draggable();
 
 			}
-		</script>
+		</script> -->
 		<script src="<?php echo KN\Helpers\Base::assets('js/app.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('js/kalipso.next.js'); ?>"></script>
 	</body>
 </html>
+<?php
+}	?>

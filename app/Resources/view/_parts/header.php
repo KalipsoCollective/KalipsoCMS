@@ -1,3 +1,6 @@
+<?php
+if (isset($_SERVER['HTTP_X_PJAX']) === false) {
+?>
 <!doctype html>
 <html lang="<?php echo KN\Helpers\Base::lang('lang.code'); ?>" dir="<?php echo KN\Helpers\Base::lang('lang.dir'); ?>">
 	<head>
@@ -26,5 +29,11 @@
 		<meta property="twitter:title" content="<?php echo $title; ?>">
 		<meta property="twitter:description" content="<?php echo $description; ?>">
 	</head>
-	<body id="wrap"<?php if (strpos($this->request->uri, '/management') !== false) echo ' class="management-panel"' ; ?>>
+<?php
+} else {
+?>
+<title><?php echo $title; ?></title>
+<?php
+}	?>
+<body id="wrap"<?php if (strpos($this->request->uri, '/management') !== false) echo ' class="management-panel"' ; ?>>
 		<?php echo \KN\Helpers\Base::sessionStoredAlert(); ?>

@@ -721,18 +721,19 @@ function navOpen() {
 NProgress.start();
 (function() {
 
-	window.vanillaPjax = new vPjax({selector: 'a:not([target="_blank"]):not([href="#!"])', wrap: '#wrap', timeOut: 3000}).init() // .form('[data-vpjax]')
-	document.addEventListener("vPjax:start", (e) => {
+	window.pjax = $(document).pjax('a:not([target="_blank"]):not([href="#!"])', '#wrap')
+	document.addEventListener("pjax:start", (e) => {
 		NProgress.start();
 	})
-	document.addEventListener("vPjax:finish", (e) => {
+	document.addEventListener("pjax:end", (xhr, textStatus, options) => {
 		NProgress.done();
 		kalipsoInit();
+		console.log(xhr, textStatus, options);
 	})
 	kalipsoInit(true);
 	setTimeout(() => {
 		NProgress.done()
-	}, 500)
+	}, 500);
 
 })();
 
