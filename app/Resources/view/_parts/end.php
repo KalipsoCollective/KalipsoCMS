@@ -6,7 +6,8 @@ if (isset($_SERVER['HTTP_X_PJAX']) === false) {
 		<script src="<?php echo KN\Helpers\Base::assets('libs/bootstrap/bootstrap.bundle.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/pjax/jquery.pjax.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/nprogress/nprogress.js'); ?>"></script>
-		<script src="<?php echo KN\Helpers\Base::assets('libs/vpjax/vpjax.min.js'); ?>"></script>
+		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/l10n/tr.js'); ?>"></script>
+		<script src="<?php echo KN\Helpers\Base::assets('libs/kalipsotable/kalipso.table.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/quill.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/quill/image-resize.min.js'); ?>"></script>
 		<script src="<?php echo KN\Helpers\Base::assets('libs/draggable/draggable.bundle.min.js'); ?>"></script>
@@ -644,7 +645,7 @@ if (isset($_SERVER['HTTP_X_PJAX']) === false) {
 				}
 
 				for(const [key, value] of Object.entries(tableVariables)) {
-					// window[key] = new KalipsoTable(value);
+					window[key] = new KalipsoTable(value);
 				}
 
 				draggable();
