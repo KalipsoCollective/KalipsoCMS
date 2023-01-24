@@ -1,5 +1,11 @@
 <?php
-
+	
+	use \KN\Helpers\Base;
+	use \KN\Controllers\ContentController;
+	use \KN\Controllers\FileController;
+	use \KN\Controllers\FormController;
+	use \KN\Model\Contents;
+	
 	/*
 		If you want to take action as a result of module-specific developments while the content controller is running, you can use hooks.
 		$type: Indicates in which method the function works. "detail" or "listing" values are displayed.
