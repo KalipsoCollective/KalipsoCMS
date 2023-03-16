@@ -1347,6 +1347,7 @@ final class ContentController extends Controller {
                     $externalColumns = [];
                     $relationalFields = [];
                     $selectColumns[] = 'id';
+                    $selectColumns[] = 'created_at';
                     foreach ($moduleDetail['inputs'] as $selectCol => $colAttributes) {
 
                         if ($selectCol === 'widget') {
