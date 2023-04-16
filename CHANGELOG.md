@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 04.16.2023 - **v1.0.4.7**
+- Multiple select support for widgets in ContentController.
+
 ## 01.22.2023 - **v1.0.4.6**
 - Settings page required fields updated.
 - robots.txt updated.
