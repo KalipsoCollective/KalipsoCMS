@@ -152,7 +152,7 @@ final class Factory
 
                         foreach ($l as $i => $v) {
 
-                            if (is_string($i)) {
+                            if (is_string($i) AND (is_array($v) OR is_object($v))) {
 
                                 foreach ($v as $i2 => $v2) { // multilanguage support
 
