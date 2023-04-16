@@ -155,7 +155,11 @@ final class ContentController extends Controller {
                             : $widgetInputs->{$widget['use_for_view']};
 
                         $selected = '';
-                        if (isset($fillDatas->{$key}) !== false AND $fillDatas->{$key} == $widgetData->id) {
+                        if (isset($fillDatas->{$key}) !== false AND 
+                            (
+                                $fillDatas->{$key} == $widgetData->id OR (is_array($fillDatas->{$key}) AND in_array($widgetData->id, $fillDatas->{$key}))
+                            )
+                        ) {
                             $selected = ' selected';
                         }
 
@@ -188,7 +192,7 @@ final class ContentController extends Controller {
                     $moduleForm .= '
                     <div class="' . $col . '">
                         <div class="form-floating">
-                            <select class="form-select" '.$attributes.'name="' . $key . '" id="' . $idPrefix . '_' . $key . '">
+                            <select class="form-select" '.$attributes.'name="' . $key . (isset($widget['attributes']['multiple']) !== false ? '[]' : '') . '" id="' . $idPrefix . '_' . $key . '">
                                 '.(! $requiredWidget ?
                                  '<option value="-1"'.((isset($fillDatas->{$key}) !== false AND $fillDatas->{$key} == -1) ? ' selected' : '').'></option>' : 
                                  '').'
