@@ -1261,6 +1261,8 @@ final class ContentController extends Controller {
         $externalSelectColumns = ['id'];
         $moduleContents = [];
 
+        $ids = str_replace(['[', ']'], '', $ids);
+
         $model = new Contents;
 
         foreach ($moduleInputs as $selectCol => $colAttributes) {
