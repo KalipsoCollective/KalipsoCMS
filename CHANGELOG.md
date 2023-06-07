@@ -1,5 +1,8 @@
 # KalipsoCMS - Changelog
 
+## 07.06.2023 - **v1.0.5.0**
+- fillFileLinks() `assign attemp` problem fixed.
+
 ## 04.16.2023 - **v1.0.4.9**
 - Multiple select support for widgets in ContentController.
 - File filter fixes in factory class.
