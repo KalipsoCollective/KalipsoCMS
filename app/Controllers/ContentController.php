@@ -1511,7 +1511,8 @@ final class ContentController extends Controller {
                     if (is_array($data->{$col})) {
 
                         foreach ($data->{$col} as $fileIndex => $fileDetail) {
-
+                            $fileDetail = is_string( $fileDetail) ? json_decode( $fileDetail ) : (object)[];
+                            $data->{$col}[$fileIndex] = (object)[];
                             foreach ($fileDetail as $fileSize => $fileLink) {
                                 $data->{$col}[$fileIndex]->{$fileSize} = Base::base('upload/' . $fileLink);
                             }
