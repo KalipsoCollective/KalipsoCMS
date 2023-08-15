@@ -1,3 +1,6 @@
+> **Warning**
+> This repo has been moved to the archive. For updated and modernized versions, please check the single repo at KalipsoCollective/KalipsoX.
+
 # KalipsoCMS - KalipsoNext-based, open source, powerful and experimental content management system.
 
 ## Requirements
